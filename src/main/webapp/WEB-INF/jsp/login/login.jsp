@@ -21,6 +21,7 @@
 <!-- CSS STYLING -->
 <style>
 .login-block {
+	box-shadow: 0 1px 5px rgba(0, 0.5, 0, 0.6);
 	width: 320px;
 	padding: 20px;
 	background: #fff;
@@ -107,7 +108,7 @@ input[type=checkbox] {
 <!-- CSS STYLING -->
 
 </head>
-<body>
+<body background="https://moj.tvz.hr/slika/back.png">
 	<header><jsp:include page="../static/a-header.jsp" /></header>
 
 	<div style="margin-top: 100px; margin-bottom: 85px" class="login-block">

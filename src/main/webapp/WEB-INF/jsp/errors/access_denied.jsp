@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Access denied</title>
 </head>
-<body>
+<body background="https://moj.tvz.hr/slika/back.png">
 	<header><jsp:include page="../static/header.jsp" /></header>
 	<h1>Access denied!</h1>
 	<footer><jsp:include page="../static/footer.jsp" /></footer>

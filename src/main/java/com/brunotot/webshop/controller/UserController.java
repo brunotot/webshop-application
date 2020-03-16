@@ -57,6 +57,13 @@ public class UserController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/settings", method = RequestMethod.GET)
+	public ModelAndView settings() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/user/settings");
+		return model;
+	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@ModelAttribute("userForm") UserForm userForm, BindingResult result,

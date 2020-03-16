@@ -22,6 +22,24 @@
 		'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+#dropdown-shoppingcart {
+	display: none;
+}
+
+#shopping-cart {
+    border: 1px solid transparent;
+	border-radius: 14px;
+	padding: 8px 11px 8px 8px;
+	margin-right: 18px;
+}
+
+#shopping-cart:hover {
+	cursor: pointer;
+	border: 1px solid rgb(0, 67, 122);
+	border-radius: 14px;
+	background: rgb(221,221,221);
+}
+
 .header-wrapper {
 	background: rgb(200, 232, 238);
 	height: 45px;
@@ -67,6 +85,12 @@
 	}
 	.dropdown:hover #user {
 		text-shadow: 1px 1px 3px rgb(0, 67, 122);
+	}
+	#shopping-cart {
+		display: none;
+	}
+	#dropdown-shoppingcart {
+		display: inherit;
 	}
 }
 
@@ -126,11 +150,13 @@
 	<div class="header-wrapper center-children">
 		<div class="header-content container">
 			<div class="user-container">
+				<i onclick="location.href='<c:url value="/shoppingcart"/>'" id="shopping-cart" class="fas fa-shopping-cart"></i>
 				<div class="dropdown">
 					<i id="user" class="far fa-user dropbtn">
 						<span id="my-account-span" class="noselect"> Anonymous</span>
 					</i>
 					<div class="dropdown-content">
+						<a id="dropdown-shoppingcart" href='<c:url value="/shoppingcart"/>'>Shopping cart</a> 
 						<a href='<c:url value="/login"/>'>Login</a> 
 						<a href='<c:url value="/user/signup"/>'>Register</a>
 					</div>

@@ -3,17 +3,37 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<title>Home</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Home</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+	integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+	crossorigin="anonymous">
+
+<!-- CSS STYLING -->
+<style>
+.page-content {
+	padding-top: 20px;
+}
+</style>
+<!-- CSS STYLING -->
+
 </head>
-<body>
+<body background="https://moj.tvz.hr/slika/back.png">
 	<header><jsp:include page="../static/a-header.jsp"/></header>
-	<h1>
-		Welcome anon!
-	</h1>
-	<br />
-	<a href='<c:url value="/user/list" />'>Users List</a>
+	
+	<div class="page-wrapper container">
+		<div class="page-content">
+			<p>Welcome anonymous</p>
+		</div>
+	</div>
+	
+	<!--ref='<c:url value="/user/list" />'>Users List</a>-->
 	<footer><jsp:include page="../static/footer.jsp"/></footer>
 </body>
 </html>

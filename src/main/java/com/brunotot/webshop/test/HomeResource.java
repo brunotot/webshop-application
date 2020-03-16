@@ -31,7 +31,7 @@ public class HomeResource {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
 		ModelAndView model = new ModelAndView();
-
+		
 		if (error != null) {
 			model.addObject("msg", "The username or password is incorrect!");
 		}
@@ -46,6 +46,19 @@ public class HomeResource {
 		return model;
 	}
 
+	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
+	public ModelAndView shoppingCart() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/a-shoppingcart");
+		
+		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		if (userCredentials != null && userCredentials != "anonymousUser") {
+			model.setViewName("home/shoppingcart");
+		}
+		
+		return model;
+	}
+	
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public ModelAndView home() {
 		ModelAndView model = new ModelAndView();

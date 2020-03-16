@@ -20,7 +20,8 @@
 
 <!-- CSS STYLING -->
 <style>
-.login-block {
+.signup-block {
+	box-shadow: 0 1px 5px rgba(0, 0.5, 0, 0.6);
 	width: 320px;
 	padding: 20px;
 	background: #fff;
@@ -29,7 +30,7 @@
 	margin: 0 auto;
 }
 
-.login-block h1 {
+.signup-block h1 {
 	text-align: center;
 	color: black;
 	font-size: 18px;
@@ -38,7 +39,7 @@
 	margin-bottom: 20px;
 }
 
-.login-block input {
+.signup-block input {
 	width: 100%;
 	height: 42px;
 	box-sizing: border-box;
@@ -51,35 +52,35 @@
 	outline: none;
 }
 
-.login-block input#username {
+.signup-block input#username {
 	background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px top
 		no-repeat;
 	background-size: 16px 80px;
 }
 
-.login-block input#username:focus {
+.signup-block input#username:focus {
 	background: #fff url('http://i.imgur.com/u0XmBmv.png') 20px bottom
 		no-repeat;
 	background-size: 16px 80px;
 }
 
-.login-block input#password, input#confirmPassword {
+.signup-block input#password, input#confirmPassword {
 	background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px top
 		no-repeat;
 	background-size: 16px 80px;
 }
 
-.login-block input#password:focus, input#confirmPassword:focus {
+.signup-block input#password:focus, input#confirmPassword:focus {
 	background: #fff url('http://i.imgur.com/Qf83FTt.png') 20px bottom
 		no-repeat;
 	background-size: 16px 80px;
 }
 
-.login-block input:active, .login-block input:focus {
+.signup-block input:active, .signup-block input:focus {
 	border: 1px solid #ff656c;
 }
 
-.login-block button {
+.signup-block button {
 	width: 100%;
 	height: 40px;
 	background: rgb(0, 67, 122);
@@ -95,7 +96,7 @@
 	cursor: pointer;
 }
 
-.login-block button:hover {
+.signup-block button:hover {
 	background: rgb(55, 118, 237);
 }
 
@@ -107,11 +108,11 @@ input[type=checkbox] {
 <!-- CSS STYLING -->
 
 </head>
-<body>
+<body background="https://moj.tvz.hr/slika/back.png">
 	<header><jsp:include page="../static/a-header.jsp" /></header>
 	<spring:url value="/user/register" var="registerURL" />
 
-	<div style="margin-top: 100px; margin-bottom: 85px" class="login-block">
+	<div style="margin-top: 100px; margin-bottom: 85px" class="signup-block">
 		<h1>Register</h1>
 		<form:form action="${registerURL}" modelAttribute="userForm"
 			method="post">
