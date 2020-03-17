@@ -1,4 +1,4 @@
-package com.brunotot.webshop.test;
+package com.brunotot.webshop.controller;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,13 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class HomeResource {
+public class MainController {
 
 	@Autowired
 	DataSource dataSource;
 	
 	private Statement getConnectionStatement() throws SQLException {
 		return dataSource.getConnection().createStatement();
+	}
+	
+
+	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
+	public ModelAndView shoppingCart() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/a-shoppingcart");
+		
+		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		if (userCredentials != null && userCredentials != "anonymousUser") {
+			model.setViewName("home/shoppingcart");
+		}
+		
+		return model;
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -45,19 +59,6 @@ public class HomeResource {
 		
 		return model;
 	}
-
-	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
-	public ModelAndView shoppingCart() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("home/a-shoppingcart");
-		
-		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		if (userCredentials != null && userCredentials != "anonymousUser") {
-			model.setViewName("home/shoppingcart");
-		}
-		
-		return model;
-	}
 	
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public ModelAndView home() {
@@ -66,7 +67,7 @@ public class HomeResource {
 		
 		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 		if (userCredentials != null && userCredentials == "anonymousUser") {
-			model.setViewName("home/home2");
+			model.setViewName("home/a-home");
 		}
 
 		return model;
@@ -88,7 +89,7 @@ public class HomeResource {
 		}
 
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home2");
+		model.setViewName("home/a-home");
 		return model;
 	}
 
@@ -105,10 +106,4 @@ public class HomeResource {
 		model.setViewName("home/home");
 		return model;
 	}
-	
-	@GetMapping("/admin")
-	public String admin() {
-		return ("<h1>Welcome admin</h1>");
-	}
-	
 }
