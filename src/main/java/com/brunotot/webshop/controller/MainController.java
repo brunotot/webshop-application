@@ -28,6 +28,13 @@ public class MainController {
 		return dataSource.getConnection().createStatement();
 	}
 	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println(request.getUserPrincipal());
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/a-home");
+		return model;
+	}
 
 	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
 	public ModelAndView shoppingCart() {

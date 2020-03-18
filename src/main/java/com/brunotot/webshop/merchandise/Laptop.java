@@ -1,6 +1,9 @@
 package com.brunotot.webshop.merchandise;
 
-public class Laptop {
+import com.brunotot.webshop.content.HtmlHelper;
+import com.brunotot.webshop.content.Item;
+
+public class Laptop implements Item {
 	private String name;
 	private String manufacturer;
 	private String gpu;	
@@ -9,9 +12,9 @@ public class Laptop {
 	private String ssd;
 	private String hdd;
 	private String imageUrl;
-	private String price;
+	private int price;
 	public Laptop(String name, String manufacturer, String gpu, String cpu, String ram, String ssd, String hdd,
-			String imageUrl, String price) {
+			String imageUrl, int price) {
 		super();
 		this.name = name;
 		this.manufacturer = manufacturer;
@@ -47,7 +50,7 @@ public class Laptop {
 	public String getImageUrl() {
 		return imageUrl;
 	}
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
 	public void setName(String name) {
@@ -74,7 +77,12 @@ public class Laptop {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	public void setPrice(String price) {
+	public void setPrice(int price) {
 		this.price = price;
+	}
+	
+	@Override
+	public String getDivElement() {
+		return HtmlHelper.getItemDiv(this.getName(), this.getPrice(), this.getImageUrl());
 	}
 }
