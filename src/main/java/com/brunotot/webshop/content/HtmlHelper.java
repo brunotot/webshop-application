@@ -4,38 +4,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.stereotype.Component;
-
 import com.brunotot.webshop.merchandise.Laptop;
 import com.brunotot.webshop.util.Constants;
+import com.brunotot.webshop.util.DatabaseUtil;
 
-@Component
 public class HtmlHelper {
-
-	@Autowired
-	DataSource dataSource;
-	
-	private Statement getConnectionStatement() throws SQLException {
-		return dataSource.getConnection().createStatement();
-	}
 	
 	private static String addLine(String line) {
 		return line + "\n";
 	}
 	
-	public static String test(String category) {
+	public static HtmlHelper getInstance() {
+		return new HtmlHelper();
+	}
+	
+	public String test(String category) {
 		String result = "";
 		try {
-			DriverManagerDataSource ds = new DriverManagerDataSource();
-			ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-			ds.setUrl("jdbc:mysql://localhost/shoppolis");
-			ds.setUsername("root");
-			ds.setPassword("");
-			Statement st = ds.getConnection().createStatement();
+			Statement st = DatabaseUtil.getDataSource().getConnection().createStatement();
 			String sql = "select * from " + category + ";";
 			ResultSet rs = st.executeQuery(sql);
 			if (rs != null) {
@@ -60,7 +46,7 @@ public class HtmlHelper {
 							imageUrl, 
 							price);
 					
-					result += addLine(laptop.getDivElement());		
+					result += HtmlHelper.addLine(laptop.getDivElement());		
 				}
 			}
 			return result;
@@ -71,22 +57,25 @@ public class HtmlHelper {
 	}
 	
 	public static String getItemDiv (String name, int price, String imageUrl) {
+		String formattedName = "";
+		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
+			formattedName = name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
+		} else {
+			formattedName = name;
+		}
+		
 		String div = "";
 		
 		div += addLine("<div class='item-wrapper'>");
 		div += addLine("<div class='item-content'>");
 		div += addLine("<img id='image' src='" + imageUrl + "'>");
-		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'>" + name + "</p></div>");
-		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'>" + price + "&euro;</p></div>");
-		div += addLine("<div class='parent-vertical button-wrapper'><button id='submit' class='child-vertical-middle' type='submit'>" + Constants.MORE_INFO + "</button></div>");
+		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'>" + formattedName + "</p></div>");
+		div += addLine("<div class='parent-vertical'><p id='price-paragraph' class='child-vertical-middle'>" + price + " &euro;</p></div>");
+		div += addLine("<div class='parent-vertical button-wrapper'><button class='child-vertical-middle my-button' type='submit'>" + Constants.ADD_TO_CART + "</button></div>");
 		div += addLine("</div>");
 		div += addLine("</div>");
 		div += addLine("<span class='item-wrapper-padding'></span>");
 		
 		return div;
-	}
-	
-	public static Laptop getTestLaptop() {
-		return new Laptop("Lenovo K120", "Lenovo", "Geforce GTX 720", "AMD FX-7300 6-cores", "8", "256", "1000", "https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/a/8ac00es_4.jpg", 1000);
 	}
 }

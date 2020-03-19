@@ -21,7 +21,7 @@
 			<p>Welcome <c:out value="${pageContext.request.userPrincipal.name}"/></p>
 			
 			<div class="items">
-		    	<%= HtmlHelper.test("laptops") %>    
+		    	<%= HtmlHelper.getInstance().test("laptops") %>    
 		    </div>
 		</div>
 	</div>

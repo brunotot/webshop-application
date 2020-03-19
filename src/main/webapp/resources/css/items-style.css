@@ -3,10 +3,20 @@
     height: 180px;
 }
 
-#submitBtn {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+.my-button {
+	border-radius: 96px 96px 96px 96px;
+	-moz-border-radius: 96px 96px 96px 96px;
+	-webkit-border-radius: 96px 96px 96px 96px;
+	border: 1px solid black;
+	top: 10px;
+}
+
+.my-button:hover {
+	background: rgb(221,221,221);
+}
+
+.my-button:active {
+	background: rgb(200,232,238);
 }
 
 .parent-vertical>.child-vertical-middle {
@@ -26,6 +36,9 @@
 }
 
 .item-content {
+	-webkit-box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 30px 1px rgba(0,0,0,0.75);
 	border: 1px solid aqua;
 	background: white;
 	height: 100%;
@@ -50,6 +63,11 @@
 .item-wrapper-padding {
 	border: 29px solid transparent;
 }       
+
+#price-paragraph {
+	font-size: 22px;
+  	text-shadow: 2px 2px 8px #FF0000;
+}
 
 /* SMALL DEVICES */
 @media (max-width: 768px) {

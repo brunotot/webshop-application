@@ -13,17 +13,15 @@
 <link rel="stylesheet" type="text/css" href="resources/css/main.css">
 <link rel="stylesheet" type="text/css" href="resources/css/a-header-style.css">
 <link rel="stylesheet" type="text/css" href="resources/css/footer-style.css">
+
 </head>
 <body>
 	<header><jsp:include page="../static/a-header.jsp"/></header>
 	
 	<div class="page-wrapper container">
 		<div class="page-content">
-			<p> TEST </p>
-			<p> TEST </p>
-			<p> TEST </p>
 			<div class="items">
-		    	<%= HtmlHelper.test("laptops") %>    
+		    	<%= HtmlHelper.getInstance().test("laptops") %>    
 		    </div>
 		</div>
 	</div>
