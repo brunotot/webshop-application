@@ -7,138 +7,14 @@
 <title>Home</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-	integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
-	crossorigin="anonymous">
-
-<!-- CSS STYLING -->
-<style>
-.page-content {
-	padding-top: 20px;
-	padding-bottom: 20px;
-}
-
-.item-wrapper{
-    width:60%; /* Change this depending on the resolution */
-} 
-    
-#image {
-    width:100%;
-    height: 180px;
-}
-
-p {
-    width: 100%; 
-    text-align: center;
-}
-
-#submitBtn {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-}
-
-.page-wrapper {
-
-}
-
-.parent-vertical>.child-vertical-middle {
-	padding: 9px;
-}
-
-.parent-vertical>p {
-	word-break: break-all;
-}
-
-        .items {
-
-        }
-        .item-wrapper {
-        	margin-left: 6px;
-            display: inline-block;
-            margin-top: 8px;
-            margin-bottom: 8px;
-            width: 220px;
-            padding: 6px;
-            height: 400px;
-        }
-
-        .item-content {
-			border: 1px solid aqua;
-			background: white;
-            height: 100%;
-
-            text-align: center;
-            position: relative;
-        }
-
-        #submit {
- 
-        }
-
-        #image {
-            width: 100%;
-        }
-        
-        .parent-vertical {
-            display: table;
-            width:100%;
-        }
-        .child-vertical-middle{
-            display: table-cell; 
-            vertical-align: middle;
-        }
-
-        .button-wrapper {
-            position: absolute;
-            bottom: 0;
-        }
-        
-        @media (max-width: 768px) {
-        	.item-wrapper {
-        		display: initial;
-        	}
-        	
-        	#image {
-        		height: 270px;
-        	}
-        	
-        	.item-content>div{
-        		padding: 12px;
-        	}
-        	
-        	.button-wrapper {
-        		position: initial;
-        	}
-        }
-        
-        .item-wrapper-padding {
-			border: 29px solid transparent;
-		}
-        
-		@media (min-width:768px) and (max-width:992px){
-			.item-wrapper-padding {
-				border: 109px solid transparent;
-			}
-		}
-		
-		@media (min-width:992px) and (max-width:1200px){
-			.item-wrapper-padding {
-				border-left: 57px solid transparent;
-				border-right: 57px solid transparent;
-			}
-		}
-
-</style>
-<!-- CSS STYLING -->
-
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="resources/css/items-style.css">
+<link rel="stylesheet" type="text/css" href="resources/css/main.css">
+<link rel="stylesheet" type="text/css" href="resources/css/a-header-style.css">
+<link rel="stylesheet" type="text/css" href="resources/css/footer-style.css">
 </head>
-<body background="https://moj.tvz.hr/slika/back.png">
+<body>
 	<header><jsp:include page="../static/a-header.jsp"/></header>
 	
 	<div class="page-wrapper container">

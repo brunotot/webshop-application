@@ -1,0 +1,13 @@
+#tvz-logo {
+	max-width: 100%;
+	cursor: pointer;
+	padding: 5px;
+}
+
+.footer-wrapper {
+	background: rgb(200, 232, 238);
+}
+
+.footer-content {
+	padding: 20px;
+}

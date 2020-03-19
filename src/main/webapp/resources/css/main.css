@@ -1,0 +1,18 @@
+* {
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+		'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+	background: url("https://moj.tvz.hr/slika/back.png");
+}
+
+.page-content {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+ 
+p {
+	width: 100%;
+	text-align: center;
+}

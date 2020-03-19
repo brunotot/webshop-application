@@ -6,10 +6,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Access denied</title>
+<link rel="stylesheet" type="text/css" href="resources/css/main.css">
+<link rel="stylesheet" type="text/css" href="resources/css/a-header-style.css">
+<link rel="stylesheet" type="text/css" href="resources/css/footer-style.css">
 </head>
-<body background="https://moj.tvz.hr/slika/back.png">
+<body>
 	<header><jsp:include page="../static/header.jsp" /></header>
-	<h1>Access denied!</h1>
+	
+	<div class="page-wrapper container">
+		<div class="page-content">
+			<h1>Access denied!</h1>
+		</div>
+	</div>
+	
 	<footer><jsp:include page="../static/footer.jsp" /></footer>
 </body>
 </html>
