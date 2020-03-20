@@ -4,10 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.stereotype.Controller;
+
 import com.brunotot.webshop.merchandise.Laptop;
 import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.DatabaseUtil;
+import com.brunotot.webshop.util.Helper;
 
+@Controller
 public class HtmlHelper {
 	
 	private static String addLine(String line) {
@@ -28,6 +32,7 @@ public class HtmlHelper {
 				while (rs.next()) {
 					String name = rs.getString("name");
 					int price = rs.getInt("price");
+					int id = rs.getInt("id");
 					String imageUrl = rs.getString("image");
 					String manufacturer = rs.getString("manufacturer");
 					String gpu = rs.getString("gpu");
@@ -36,6 +41,7 @@ public class HtmlHelper {
 					String hdd = rs.getString("hdd");
 					String ssd = rs.getString("ssd");
 					Laptop laptop = new Laptop(
+							id,
 							name, 
 							manufacturer, 
 							gpu, 
@@ -57,12 +63,7 @@ public class HtmlHelper {
 	}
 	
 	public static String getItemDiv (String name, int price, String imageUrl) {
-		String formattedName = "";
-		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
-			formattedName = name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
-		} else {
-			formattedName = name;
-		}
+		String formattedName = Helper.getFormattedName(name);
 		
 		String div = "";
 		
@@ -77,5 +78,24 @@ public class HtmlHelper {
 		div += addLine("<span class='item-wrapper-padding'></span>");
 		
 		return div;
+	}
+	
+	public static String getTableRow(String name, int price, String imageUrl) {
+		String tableRow = "";
+		
+		tableRow += addLine("<tr>");
+		tableRow += addLine("<td class='img-table'><img src='" + imageUrl + "'></td>");
+		tableRow += addLine("<td class='name-table'><div>" + name + "</div></td>");
+		tableRow += addLine("<td class='quantity-table'><input type='text'></td>");
+		tableRow += addLine("<td class='buttons-table btns'>");
+		tableRow += addLine("<div class='buttons-group-table btn-group'>");
+		tableRow += addLine("<button type='button' class='my-button'><i class='fas fa-sync'></i></button>");
+		tableRow += addLine("<button type='button' class='my-button'><i class='fas fa-times'></i></button>");
+		tableRow += addLine("</div>");
+		tableRow += addLine("</td>");
+		tableRow += addLine("<td class='price-table'>" + price + "&euro;</td>");
+		tableRow += addLine("</tr>");
+		
+		return tableRow;
 	}
 }

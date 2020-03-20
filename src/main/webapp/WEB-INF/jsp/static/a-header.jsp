@@ -3,7 +3,7 @@
 <div class="header-wrapper center-children">
 	<div class="header-content container">
 		<div class="user-container">
-			<i onclick="location.href='<c:url value="/shoppingcart"/>'" id="shopping-cart" class="fas fa-shopping-cart"></i>
+			<i onclick="location.href='<c:url value="/shoppingcart"/>'" id="shopping-cart" class="fas fa-shopping-cart my-button"></i>
 			<div class="dropdown">
 				<i id="user" class="far fa-user dropbtn">
 					<span id="my-account-span" class="noselect"> Anonymous</span>

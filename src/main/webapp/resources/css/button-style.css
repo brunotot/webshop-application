@@ -1,0 +1,16 @@
+.my-button {
+	border-radius: 96px 96px 96px 96px;
+	-moz-border-radius: 96px 96px 96px 96px;
+	-webkit-border-radius: 96px 96px 96px 96px;
+	border: 1px solid black;
+	top: 10px;
+}
+
+.my-button:hover {
+	background: rgb(221,221,221);
+	cursor: pointer;
+}
+
+.my-button:active {
+	background: rgb(200,232,238);
+}

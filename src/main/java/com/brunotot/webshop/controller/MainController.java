@@ -2,7 +2,9 @@ package com.brunotot.webshop.controller;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -11,12 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.brunotot.webshop.content.ShoppingCart;
+import com.brunotot.webshop.util.Helper;
+import com.google.gson.Gson;
 
 @RestController
 public class MainController {
@@ -28,26 +37,13 @@ public class MainController {
 		return dataSource.getConnection().createStatement();
 	}
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ModelAndView test(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println(request.getUserPrincipal());
-		ModelAndView model = new ModelAndView();
-		model.setViewName("home/a-home");
-		return model;
-	}
-
-	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET)
 	public ModelAndView shoppingCart() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/a-shoppingcart");
-		
-		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		if (userCredentials != null && userCredentials != "anonymousUser") {
-			model.setViewName("home/shoppingcart");
-		}
+		model.setViewName("home/shoppingcart");
 		
 		return model;
-	}
+	}*/
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
@@ -68,15 +64,19 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
-	public ModelAndView home() {
+	public ModelAndView home(HttpServletResponse response, @CookieValue(value = "cartitems", defaultValue = "null") String cartJson) {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("home/home");
 		
-		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		if (userCredentials != null && userCredentials == "anonymousUser") {
-			model.setViewName("home/a-home");
+		if (cartJson == "null") {
+			ShoppingCart cart = new ShoppingCart();
+			Cookie cookie = new Cookie("cart", new Gson().toJson(cart));
+			cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
+			response.addCookie(cookie);
+			model.addObject("cart", cart);
 		}
-
+		
+		
 		return model;
 	}
 
@@ -96,7 +96,7 @@ public class MainController {
 		}
 
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/a-home");
+		model.setViewName("home/home");
 		return model;
 	}
 
@@ -107,10 +107,27 @@ public class MainController {
 		return model;
 	}
 	
-	@GetMapping("/user")
-	public ModelAndView user() {
+	
+	
+	@GetMapping("/shoppingcart") 
+	public ModelAndView getCookie (@CookieValue(value = "color", defaultValue = "#fff") String color, @CookieValue(value = "cartitems", defaultValue = "{}") String cartJson, HttpServletRequest request, @RequestParam("color") Optional<String> colorChosen){
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home");
+		model.addObject("color", color);
+		model.setViewName("home/shoppingcart");
 		return model;
 	}
+	
+	@PostMapping("/shoppingcart")
+	public ModelAndView setCookie(HttpServletResponse response, @RequestParam("color") Optional<String> colorChosen) {
+		String color = "#fff";
+		if (colorChosen.get() != null) {
+			color = colorChosen.get();
+			response.addCookie(new Cookie("color", color));
+		}
+		ModelAndView model = new ModelAndView();
+		model.addObject("color", color);
+		model.setViewName("home/shoppingcart");
+		return model;
+	}
+	
 }
