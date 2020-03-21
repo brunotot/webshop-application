@@ -3,6 +3,7 @@ package com.brunotot.webshop.content;
 public class ShoppingCartItem {
 	private Item item;
 	private int count;
+	
 	public Item getItem() {
 		return item;
 	}
@@ -19,6 +20,11 @@ public class ShoppingCartItem {
 		super();
 		this.item = item;
 		this.count = count;
+	}
+	
+	@Override
+	public String toString() {
+		return "ShoppingCartItem [item=" + item.getId() + ", count=" + count + "]";
 	}
 	
 }

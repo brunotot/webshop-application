@@ -1,5 +1,8 @@
 package com.brunotot.webshop.merchandise;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 
@@ -14,6 +17,7 @@ public class Laptop implements Item {
 	private String hdd;
 	private String imageUrl;
 	private int price;
+	private String category = "laptops";
 	public Laptop() {}
 	public Laptop(int id, String name, String manufacturer, String gpu, String cpu, String ram, String ssd, String hdd,
 			String imageUrl, int price) {
@@ -29,6 +33,11 @@ public class Laptop implements Item {
 		this.imageUrl = imageUrl;
 		this.price = price;
 	}
+	
+	public static Laptop getInstance() {
+		return new Laptop();
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -92,11 +101,33 @@ public class Laptop implements Item {
 
 	@Override
 	public String getDivElement() {
-		return HtmlHelper.getItemDiv(this.getName(), this.getPrice(), this.getImageUrl());
+		return HtmlHelper.getItemDiv(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), this.category);
 	}
 	
 	@Override
-	public String getTableRowElement() {
-		return HtmlHelper.getTableRow(this.getName(), this.getPrice(), this.getImageUrl());
+	public String getTableRowElement(int count) {
+		return HtmlHelper.getTableRow(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), count, this.category);
+	}
+	@Override
+	public String getCategory() {
+		return this.category;
+	}
+	
+	@Override
+	public void setAllDataFromResultSet(ResultSet tableRowData) {
+		try {
+			this.id = tableRowData.getInt("id");
+			this.name = tableRowData.getString("name");
+			this.manufacturer = tableRowData.getString("manufacturer");
+			this.gpu = tableRowData.getString("gpu");
+			this.cpu = tableRowData.getString("cpu");
+			this.ram = tableRowData.getString("ram");
+			this.ssd = tableRowData.getString("ssd");
+			this.hdd = tableRowData.getString("hdd");
+			this.imageUrl = tableRowData.getString("image");
+			this.price = tableRowData.getInt("price");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

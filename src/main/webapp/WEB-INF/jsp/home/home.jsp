@@ -15,7 +15,53 @@
 <link rel="stylesheet" type="text/css" href="resources/css/header-style.css">
 <link rel="stylesheet" type="text/css" href="resources/css/footer-style.css">
 <link rel="stylesheet" type="text/css" href="resources/css/button-style.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+<script>
+	function addItem(id, category) {
+		var oldIds = getCookie('cart');
+		var newIds = oldIds + category + ':' + id + '~';
+		document.cookie = "cart=" + newIds + "; expires=" + setTimeForCookies(30) + "; path=/shoppolis";
+		
+		$.ajax({
+	        type: 'POST',
+	        url: 'additem',
+	        data: {
+	            id: id,
+	            category: category
+	        },
+	        success: function () {
+	            location.reload();
+	        }
+	    });
+		
+	}
+	
+	function setTimeForCookies (days) {
+		var now = new Date();
+		var time = now.getTime();
+	 
+		time += days * 60 * 24 * 60 * 1000;
+		now.setTime(time);
+		return now;
+	}
+	
+	function getCookie(cname) {
+		var name = cname + "=";
+		var decodedCookie = decodeURIComponent(document.cookie);
+		var ca = decodedCookie.split(';');
+		for(var i = 0; i <ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+</script>
 </head>
 <body>
 	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>

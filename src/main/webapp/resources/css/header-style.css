@@ -37,11 +37,24 @@
 	height: 30px;
 }
 
+#items-counter-mobile {
+	display: none;
+}
+
 /* SMALL DEVICES */
 @media ( max-width: 768px) {
 	#my-account-span {
 		display: none;
 	}
+	
+	#items-counter-mobile {
+		display: initial;
+	}
+	
+	#items-counter-desktop {
+		display: none;
+	}
+	
 	.header-content {
 		justify-content: center;
 	}

@@ -3,17 +3,29 @@ package com.brunotot.webshop.content;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+@Component
 public class ShoppingCart {
-	
-	public ShoppingCart() {}
 	
 	private List<ShoppingCartItem> items;
 	
-	//@Bean
-	public void setItems() { 
-		this.items = new ArrayList<ShoppingCartItem>(); 
+	@Bean
+	public ShoppingCart cart() { 
+		ShoppingCart cart = new ShoppingCart();
+		cart.setItems(new ArrayList<ShoppingCartItem>());
+		return cart;
 	}
 	
+	public List<ShoppingCartItem> getItems() {
+		return this.items;
+	}
+	
+	private void setItems(ArrayList<ShoppingCartItem> items) {
+		this.items = items;
+	}
+
 	public void removeAll() { 
 		this.items.clear(); 
 	}

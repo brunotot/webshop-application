@@ -40,15 +40,25 @@
 }
 
 .button-wrapper {
+	width: 100%;
     position: absolute;
     bottom: 0;
 }
 
+.button-wrapper>*:nth-child(2) {
+    padding: 10px;
+}
+
+.button-wrapper>*:nth-child(2)>button {
+    padding: 8px 16px;
+}
+        
 .item-wrapper-padding {
 	border: 29px solid transparent;
 }       
 
 #price-paragraph {
+	padding: 0px;
 	font-size: 22px;
   	text-shadow: 2px 2px 8px #FF0000;
 }
