@@ -30,23 +30,22 @@ public class ShoppingCart {
 		this.items.clear(); 
 	}
 	
-	public boolean removeOne(ShoppingCartItem item) {
+	public boolean remove(int id) {
 		for (ShoppingCartItem it : this.items) {
-			if (it.equals(item)) {
-				this.items.remove(item);
+			Item item = it.getItem();
+			if (item.getId() == id) {
+				this.items.remove(it);
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public boolean update(ShoppingCartItem item, int count) {
+	public boolean update(int id, int count) {
 		for (int i = 0; i < this.items.size(); i++) {
 			ShoppingCartItem it = this.items.get(i);
-			if (it.equals(item)) {
-				item.setCount(count);
-				this.items.remove(item);
-				this.items.add(i, item);
+			if (it.getItem().getId() == id) {
+				it.setCount(count);
 				return true;
 			}
 		}
@@ -57,4 +56,12 @@ public class ShoppingCart {
 		this.items.add(item); 
 	}
 	
+	public ShoppingCartItem getItemById(int id) {
+		for (ShoppingCartItem shoppingCartItem : this.getItems()) {
+			if (shoppingCartItem.getItem().getId() == id) {
+				return shoppingCartItem;
+			}
+		}
+		return null;
+	}
 }

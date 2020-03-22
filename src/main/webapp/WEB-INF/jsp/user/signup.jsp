@@ -32,8 +32,9 @@
 			<form:errors path="password" />
 			<form:input path="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
 			<form:errors path="confirmPassword" />
-			<button id="submit" type="submit">GO</button>
+			<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
 		</form:form>
+		<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
 	</div>
 
 	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>

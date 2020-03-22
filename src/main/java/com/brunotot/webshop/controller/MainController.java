@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,25 +37,133 @@ public class MainController {
 	@Autowired
 	ShoppingCart cart;
 	
-	@PostMapping("/additem") 
-	public ModelAndView appendNewItem(@RequestParam(value = "id") int id, @RequestParam(value = "category") String category, HttpServletRequest request) throws SQLException {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home");
+	@PostMapping("/instock") 
+	public boolean isInStock(@RequestParam(value = "id") int id, 
+							 @RequestParam(value = "category") String category, 
+							 @RequestParam(value = "wantedamount") int wantedAmount,
+							 @RequestParam(value = "start") String start,
+							 HttpServletRequest request) throws SQLException {
+		boolean exists = false;
 		
-		
-		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
-		for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
-			Item item = shoppingCartItem.getItem();
-			if (item.getId() == id) {
-				shoppingCartItem.setCount(shoppingCartItem.getCount() + 1);
-				return model;
+		Statement st = dataSource.getConnection().createStatement();
+		ResultSet rs = st.executeQuery("select * from `" + category + "`");
+		while (rs.next()) {
+			if (rs.getInt("id") == id) {
+				int totalInStock = rs.getInt("stock");
+				int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
+				
+				int currentTotalLeftInStock;
+				
+				if (start.equals("home")) {
+					currentTotalLeftInStock = totalInStock - itemCountInCart;
+				} else {
+					currentTotalLeftInStock = totalInStock; 
+				}
+				
+				if (currentTotalLeftInStock >= wantedAmount) {
+					exists = true;
+				}
+				
+				break;
 			}
 		}
 		
+		return exists;
+	}
+	
+	@PostMapping("/removeitem")
+	public ModelAndView removeItem(@RequestParam(value = "id") int id, 
+								   @RequestParam(value = "category") String category, 
+								   @CookieValue(value = "cart", defaultValue = "") String cartCookie, 
+								   HttpServletResponse response) {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/home");
+		
+		// remove deleted item from the shopping cart
+		cart.remove(id);
+
+		// remove deleted item from cookies
+		String currentCookieName = id + ":" + category + "~";
+		String newCookieValue = cartCookie.replace(currentCookieName, "");
+		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
+		cookie.setPath("/shoppolis");
+		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
+		response.addCookie(cookie);
+		
+		return model;
+	}
+	
+	@PostMapping("/additem") 
+	public ModelAndView appendNewItem(@RequestParam(value = "id") int id, 
+									  @RequestParam(value = "category") String category,
+									  @RequestParam(value = "quantity") int quantity,
+									  @RequestParam(value = "start") String start,
+									  @CookieValue(value = "cart", defaultValue = "") String cartCookie,
+									  HttpServletRequest request,
+									  HttpServletResponse response) throws SQLException {
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/home");
+		
+		// append if item already exists
+		String newCookieValue = "";
+		String currentCookieName = id + ":" + category + "~";
+		ShoppingCartItem shoppingCartItem = cart.getItemById(id);
+		if (shoppingCartItem != null) {
+			int itemCount = shoppingCartItem.getCount();
+			if (start.equals("home")) {
+				shoppingCartItem.setCount(itemCount + 1);
+				newCookieValue = cartCookie + id + ":" + category + "~";
+			} else {
+				shoppingCartItem.setCount(quantity);
+				newCookieValue = cartCookie.replace(currentCookieName, "");
+				for (int i = 0; i < quantity; i++) {
+					newCookieValue += currentCookieName;
+				}
+			}
+			Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
+			cookie.setPath("/shoppolis");
+			cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
+			response.addCookie(cookie);
+			return model;
+		}
+		
+		// add new item if one doesn't exist
 		Statement st = dataSource.getConnection().createStatement();
 		ResultSet tableRowData = Helper.getTableRowData(st, id, category);
-		Item item = Helper.getCategoryItemFromTableRowData(category, tableRowData);
+		Item item = Helper.getCategoryItemFromTableRowData(category, tableRowData, st);
 		cart.add(new ShoppingCartItem(item, 1));
+		
+		newCookieValue = cartCookie + currentCookieName;
+		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
+		cookie.setPath("/shoppolis");
+		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
+		response.addCookie(cookie);
+		
+		return model;
+	}
+	
+	@PostMapping("/updateitem") 
+	public ModelAndView updateItem(@RequestParam(value = "id") int id, 
+								   @RequestParam(value = "category") String category, 
+								   @RequestParam(value = "quantityvalue") int quantity, 
+								   @CookieValue(name = Constants.BEAN_SHOPPING_CART, defaultValue = "") String cartCookie, 
+								   HttpServletRequest request, 
+								   HttpServletResponse response) throws SQLException {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("shoppolis/shoppingcart");
+		
+		// update item in cart
+		cart.update(id, quantity);
+		
+		// update cookies
+		String valueToDelete = id + ":" + category + "~";
+		String newCookieValue = cartCookie.replace(valueToDelete, "");
+		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
+		cookie.setPath("/shoppolis");
+		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
+		response.addCookie(cookie);
+		
 		return model;
 	}
 	
@@ -105,17 +213,6 @@ public class MainController {
 	public ModelAndView home() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("home/home");
-		
-		/* Adds cookie for shopping cart */
-		/*if (cartJson.compareTo("null") == 0) {
-			String ids = "laptops:12340001~";
-			Cookie cookie = new Cookie("cart", ids);
-			cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
-			response.addCookie(cookie);
-			model.addObject("cart", ids);
-		}HttpServletResponse response, @CookieValue(value = "cart", defaultValue = "null") String cartJson*/
-		
-		
 		return model;
 	}
 

@@ -13,5 +13,7 @@ public interface Item {
 	String getCategory();
 	
 	void setAllDataFromResultSet(ResultSet rs);
+
+	void setMaxInStock(int stock);
 	
 }

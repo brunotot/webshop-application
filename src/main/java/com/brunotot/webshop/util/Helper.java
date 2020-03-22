@@ -1,7 +1,10 @@
 package com.brunotot.webshop.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,21 +15,12 @@ import org.springframework.web.util.UrlPathHelper;
 
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
+import com.brunotot.webshop.content.ShoppingCartItem;
 import com.brunotot.webshop.merchandise.Laptop;
 
-/**
- * NOTE: Refactor...
- * 
- * @author Bruno
- *
- */
 public class Helper {
 	
 	public static final String LAPTOP_UNIQUE_IDENTIFIER = "1234";
-
-	public static final String ROOT_DIRECTORY = "../../../../../../../../../../../../";
-	
-	public static final String JSP_PATH = Helper.ROOT_DIRECTORY + "WEB-INF/jsp/";
 	
 	public static final int JSP_PATH_DELIMITER = 4;
 	
@@ -60,63 +54,75 @@ public class Helper {
 		return jspRootPath;
 	}
 	
+	
 	public static boolean isUserAuthenticated(HttpServletRequest request) {
-		boolean result = false;
-		
 		if (request.isUserInRole("ROLE_USER") || request.isUserInRole("ROLE_ADMIN")) {
-			result = true;
+			return true;
+		} else {
+			return false;
 		}
-		
-		return result;
 	}
 	
 	public static String getHeaderPath(HttpServletRequest request) {
-		String result = "";
-		
 		String jspRootPath = Helper.getJspRootPath(request);
-		
 		if (Helper.isUserAuthenticated(request)) {
-			result += jspRootPath + "static/header.jsp"; 
+			return jspRootPath + "static/header.jsp"; 
 		} else {
-			result += jspRootPath + "static/a-header.jsp";
+			return jspRootPath + "static/a-header.jsp";
 		}
-		
-		return result;
 	}
 	
 	public static String getFooterPath(HttpServletRequest request) {
-		String result = "";
-		
-		String jspRootPath = Helper.getJspRootPath(request);
-		
-		result += jspRootPath + "static/footer.jsp";
-		
-		return result;
+		return Helper.getJspRootPath(request) + "static/footer.jsp";
 	}
 
-	public static Object getBeanFromRequest(HttpServletRequest request, String bean) {
-		ApplicationContext context =  WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
-		return context.getBean(bean);
+	public static Object getBeanFromRequest(HttpServletRequest request, String beanName) {
+		return WebApplicationContextUtils
+				.getWebApplicationContext(request.getServletContext())
+				.getBean(beanName);
 	}
 	
 	public static String getFormattedName(String name) {
-		String formattedName = "";
 		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
-			formattedName = name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
+			return name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
 		} else {
-			formattedName = name;
+			return name;
 		}
-		return formattedName;
 	}
 
-	public static Item getCategoryItemFromTableRowData(String category, ResultSet tableRowData) {
+	public static Item getCategoryItemFromTableRowData(String category, ResultSet tableRowData, Statement st) {
+		if (category.equals(Constants.CATEGORY_LAPTOPS)) {
+			return Helper.getResultItemByClass(Constants.CLASS_NAME_LAPTOP, category, tableRowData, st);
+		}
+		return null;
+	}
+
+	public static Item getResultItemByClass(String classCategoryName, String category, ResultSet tableRowData, Statement st) {
 		Item item = null;
-		if (category.equals(Constants.TABLE_LAPTOP)) {
-			Laptop laptop = Laptop.getInstance();
-			laptop.setAllDataFromResultSet(tableRowData);
-			item = laptop;
+		try {
+			Class<Item> clazz = (Class<Item>) Class.forName(Constants.PACKAGE_NAME_MERCHANDISE + classCategoryName);
+			item = clazz.getDeclaredConstructor().newInstance();
+			item.setAllDataFromResultSet(tableRowData);
+			
+			ResultSet rs = st.executeQuery("select * from `" + category + "` where id=" + item.getId());
+			rs.first();
+			int stock = rs.getInt("stock");
+			item.setMaxInStock(stock);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
+			e.printStackTrace();
 		}
 		return item;
+	}
+	
+	public static int getShoppingCartItemCountViaId(int id, HttpServletRequest request) {
+		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
+		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
+		for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
+			if (shoppingCartItem.getItem().getId() == id) {
+				return shoppingCartItem.getCount();
+			}
+		}
+		return 0;
 	}
 
 }

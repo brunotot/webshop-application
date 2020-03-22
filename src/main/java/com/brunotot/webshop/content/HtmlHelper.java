@@ -6,17 +6,16 @@ import java.sql.Statement;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 
 import org.springframework.stereotype.Controller;
 
 import com.brunotot.webshop.merchandise.Laptop;
 import com.brunotot.webshop.util.Constants;
-import com.brunotot.webshop.util.DatabaseUtil;
 import com.brunotot.webshop.util.Helper;
 
 @Controller
 public class HtmlHelper {
-	
 	private static String addLine(String line) {
 		return line + "\n";
 	}
@@ -25,13 +24,10 @@ public class HtmlHelper {
 		return new HtmlHelper();
 	}
 	
-	/**
-	 * NEEDS REFACTOR!!!
-	 */
-	public String test(String category) {
+	public String test(String category, HttpServletRequest request) {
 		String result = "";
 		try {
-			Statement st = DatabaseUtil.getDataSource().getConnection().createStatement();
+			Statement st = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection().createStatement();
 			String sql = "select * from " + category + ";";
 			ResultSet rs = st.executeQuery(sql);
 			if (rs != null) {
@@ -101,20 +97,20 @@ public class HtmlHelper {
 		return div;
 	}
 	
-	public static String getTableRow(int id, String name, int price, String imageUrl, int count, String category) {
+	public static String getTableRow(int id, String name, int price, String imageUrl, int count, String category, int maxInStock) {
 		String tableRow = "";
 		
 		tableRow += addLine("<tr>");
 		tableRow += addLine("<td class='img-table'><img src='" + imageUrl + "'></td>");
 		tableRow += addLine("<td class='name-table'><div>" + name + "</div></td>");
-		tableRow += addLine("<td class='quantity-table'><input type='text' value='" + count + "'></td>");
+		tableRow += addLine("<td class='quantity-table'><input type='number' id='quantity" + id + "' min='0' max='" + maxInStock + "' value='" + count + "'></td>");
 		tableRow += addLine("<td class='buttons-table btns'>");
 		tableRow += addLine("<div class='buttons-group-table btn-group'>");
-		tableRow += addLine("<button type='button' class='my-button'><i class='fas fa-sync'></i></button>");
-		tableRow += addLine("<button type='button' class='my-button'><i class='fas fa-times'></i></button>");
+		tableRow += addLine("<button type='button' class='my-button' onclick=\"updateItem(" + id + ", '" + category + "')\"><i class='fas fa-sync'></i></button>");
+		tableRow += addLine("<button type='button' class='my-button' onclick=\"removeItem(" + id + ", '" + category + "')\"><i class='fas fa-times'></i></button>");
 		tableRow += addLine("</div>");
 		tableRow += addLine("</td>");
-		tableRow += addLine("<td class='price-table'>" + price + "&euro;</td>");
+		tableRow += addLine("<td class='price-table'>" + (count*price) + "&euro;</td>");
 		tableRow += addLine("</tr>");
 		
 		return tableRow;

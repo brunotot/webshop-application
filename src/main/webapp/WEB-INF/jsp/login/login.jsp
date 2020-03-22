@@ -31,8 +31,9 @@
 					<td id="remember-me-checkbox"><input id="remember-me" type="checkbox" name="remember-me" /></td>
 				</tr>
 			</table>
-			<button id="submit" type="submit">GO</button>
+			<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
 		</form>
+		<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
 	</div>
 	
 	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>

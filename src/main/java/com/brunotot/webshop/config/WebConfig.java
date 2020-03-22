@@ -8,8 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -22,18 +20,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	DataSource dataSource;
-	
-	@Bean
-	public DataSource getDataSource() {
-		DriverManagerDataSource ds = new DriverManagerDataSource();
-		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://localhost/shoppolis");
-		ds.setUsername("root");
-		ds.setPassword("");
 
-		return ds;
-	}
-	
 	@Bean
 	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
 		return new NamedParameterJdbcTemplate(dataSource);

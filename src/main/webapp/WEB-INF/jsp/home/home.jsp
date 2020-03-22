@@ -10,30 +10,48 @@
 <title>Home</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="resources/css/items-style.css">
-<link rel="stylesheet" type="text/css" href="resources/css/main.css">
-<link rel="stylesheet" type="text/css" href="resources/css/header-style.css">
+<link rel="stylesheet" type="text/css" href="<%= Constants.SRC_PATH + Constants.CSS_PATH %>items-style.css">
+<link rel="stylesheet" type="text/css" href="<%= Constants.SRC_PATH + Constants.CSS_PATH %>main.css">
+<link rel="stylesheet" type="text/css" href="<%= Constants.SRC_PATH + Constants.CSS_PATH %>header-style.css">
 <link rel="stylesheet" type="text/css" href="resources/css/footer-style.css">
 <link rel="stylesheet" type="text/css" href="resources/css/button-style.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
 	function addItem(id, category) {
-		var oldIds = getCookie('cart');
-		var newIds = oldIds + category + ':' + id + '~';
-		document.cookie = "cart=" + newIds + "; expires=" + setTimeForCookies(30) + "; path=/shoppolis";
 		
-		$.ajax({
-	        type: 'POST',
-	        url: 'additem',
-	        data: {
-	            id: id,
-	            category: category
-	        },
-	        success: function () {
-	            location.reload();
-	        }
-	    });
+		function call_ajax() {
+			return $.ajax({
+		        type: 'POST',
+		        url: 'instock',
+		        data: {
+		            id: id,
+		            category: category,
+		            wantedamount: 1,
+		            start: 'home'
+		        }
+		    });
+		}
+		
+		$.when( call_ajax() ).done(function(response) {
+			if (response) {
+				$.ajax({
+			        type: 'POST',
+			        url: 'additem',
+			        data: {
+			            id: id,
+			            category: category,
+			            quantity: 1,
+			            start: 'home'
+			        },
+			        success: function () {
+			            location.reload();
+			        }
+			    });
+			} else {
+				alert("We no longer have this item in stock!");
+			}
+		});
 		
 	}
 	
@@ -69,7 +87,7 @@
 	<div class="page-wrapper container">
 		<div class="page-content">
 			<div class="items">
-		    	<%= HtmlHelper.getInstance().test("laptops") %>    
+		    	<%= HtmlHelper.getInstance().test("laptops", request) %>    
 		    </div>
 		</div>
 	</div>

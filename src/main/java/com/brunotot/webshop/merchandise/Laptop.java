@@ -18,6 +18,7 @@ public class Laptop implements Item {
 	private String imageUrl;
 	private int price;
 	private String category = "laptops";
+	private int maxInStock;
 	public Laptop() {}
 	public Laptop(int id, String name, String manufacturer, String gpu, String cpu, String ram, String ssd, String hdd,
 			String imageUrl, int price) {
@@ -68,6 +69,9 @@ public class Laptop implements Item {
 	public int getId() {
 		return id;
 	}
+	public int getMaxInStock() {
+		return maxInStock;
+	}
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -98,7 +102,12 @@ public class Laptop implements Item {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	@Override
+	public void setMaxInStock(int maxInStock) {
+		this.maxInStock = maxInStock;
+	}
+	
 	@Override
 	public String getDivElement() {
 		return HtmlHelper.getItemDiv(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), this.category);
@@ -106,8 +115,9 @@ public class Laptop implements Item {
 	
 	@Override
 	public String getTableRowElement(int count) {
-		return HtmlHelper.getTableRow(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), count, this.category);
+		return HtmlHelper.getTableRow(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
 	}
+	
 	@Override
 	public String getCategory() {
 		return this.category;
