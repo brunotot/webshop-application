@@ -6,7 +6,7 @@ import com.brunotot.webshop.model.UserInfo;
 
 public interface UserService {
 
-	public List list();
+	public List<?> list();
 
 	public UserInfo findUserByUsername(String username);
 

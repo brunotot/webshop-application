@@ -68,6 +68,14 @@
 	text-align: center;
 }
 
+#total-col {
+	text-align: right
+}
+
+#total-value-col {
+	text-align: center; 
+	padding: 5px;
+}
 
 @media (max-width: 768px) {
 	.shoppingcart-table tr > *:nth-child(1) {

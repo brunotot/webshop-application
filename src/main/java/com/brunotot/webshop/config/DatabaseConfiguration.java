@@ -1,5 +1,9 @@
 package com.brunotot.webshop.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -10,14 +14,26 @@ import org.springframework.stereotype.Component;
 public class DatabaseConfiguration {
 
 	@Bean
-	public DataSource getDataSource() {
-		DriverManagerDataSource ds = new DriverManagerDataSource();
-		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://localhost/shoppolis");
-		ds.setUsername("root");
-		ds.setPassword("");
-
-		return ds;
+	public static DataSource getDataSource() {
+		try {
+			Properties properties = new Properties();
+			InputStream inputStream = new DatabaseConfiguration()
+					.getClass()
+					.getClassLoader()
+					.getResourceAsStream("application.properties");
+			properties.load(inputStream);
+			
+			DriverManagerDataSource ds = new DriverManagerDataSource();
+			ds.setDriverClassName(properties.getProperty("jdbcdriverclass"));
+			ds.setUrl(properties.getProperty("jdbcurl"));
+			ds.setUsername(properties.getProperty("jdbcusername"));
+			ds.setPassword(properties.getProperty("jdbcpassword"));
+		
+			return ds;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

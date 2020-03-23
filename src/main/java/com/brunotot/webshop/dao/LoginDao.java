@@ -8,5 +8,5 @@ public interface LoginDao {
 
 	UserInfo findUserInfo(String username);
 
-	List getUserRoles(String username);
+	List<String> getUserRoles(String username);
 }

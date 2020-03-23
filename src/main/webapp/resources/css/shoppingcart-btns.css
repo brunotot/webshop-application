@@ -1,0 +1,26 @@
+.shoppingcart-btns {
+	width: 100%; 
+	text-align: right;
+	margin-top: 18px;
+}
+
+.shoppingcart-btns>*:nth-child(1) {
+	float: left;
+}
+
+#back-btn {
+	padding: 4px;
+}
+
+#clear-btn {
+	padding: 4px;
+}
+
+a {
+	display: inline-block;
+}
+
+#payment-div {
+	height: 100%; 
+	padding: 4px;
+}

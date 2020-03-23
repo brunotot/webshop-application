@@ -1,70 +1,46 @@
 package com.brunotot.webshop.content;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
-import org.springframework.stereotype.Controller;
-
-import com.brunotot.webshop.merchandise.Laptop;
 import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
-@Controller
 public class HtmlHelper {
+	
 	private static String addLine(String line) {
 		return line + "\n";
 	}
 	
-	public static HtmlHelper getInstance() {
-		return new HtmlHelper();
-	}
-	
-	public String test(String category, HttpServletRequest request) {
+	public static String getAllItemsFromCategory(String category, HttpServletRequest request) {
 		String result = "";
+		Connection conn = null;
+		ResultSet rs = null;
 		try {
-			Statement st = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection().createStatement();
-			String sql = "select * from " + category + ";";
-			ResultSet rs = st.executeQuery(sql);
+			conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
+			String preparedQuery = "select * from `" + Helper.escapeSql(category) + "`;";
+			rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			
 			if (rs != null) {
 				while (rs.next()) {
-					String name = rs.getString("name");
-					int price = rs.getInt("price");
-					int id = rs.getInt("id");
-					String imageUrl = rs.getString("image");
-					String manufacturer = rs.getString("manufacturer");
-					String gpu = rs.getString("gpu");
-					String cpu = rs.getString("cpu");
-					String ram = rs.getString("ram");
-					String hdd = rs.getString("hdd");
-					String ssd = rs.getString("ssd");
-					Laptop laptop = new Laptop(
-							id,
-							name, 
-							manufacturer, 
-							gpu, 
-							cpu,
-							ram, 
-							ssd, 
-							hdd,
-							imageUrl, 
-							price);
-					
-					result += HtmlHelper.addLine(laptop.getDivElement());		
+					Item item = Helper.getItemInstanceByCategory(category);
+					item.setAllDataFromResultSet(rs);
+					result += HtmlHelper.addLine(item.getDivElement());		
 				}
 			}
+
 			return result;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "fail";
 	}
 	
-	public static String test2(HttpServletRequest request) {
+	public static String getAllShoppingCartItems(HttpServletRequest request) {
 		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
 		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
 		String result = "";
@@ -106,7 +82,7 @@ public class HtmlHelper {
 		tableRow += addLine("<td class='quantity-table'><input type='number' id='quantity" + id + "' min='0' max='" + maxInStock + "' value='" + count + "'></td>");
 		tableRow += addLine("<td class='buttons-table btns'>");
 		tableRow += addLine("<div class='buttons-group-table btn-group'>");
-		tableRow += addLine("<button type='button' class='my-button' onclick=\"updateItem(" + id + ", '" + category + "')\"><i class='fas fa-sync'></i></button>");
+		tableRow += addLine("<button type='button' class='my-button' onclick=\"addItem(" + id + ", '" + category + "')\"><i class='fas fa-sync'></i></button>");
 		tableRow += addLine("<button type='button' class='my-button' onclick=\"removeItem(" + id + ", '" + category + "')\"><i class='fas fa-times'></i></button>");
 		tableRow += addLine("</div>");
 		tableRow += addLine("</td>");
@@ -115,4 +91,5 @@ public class HtmlHelper {
 		
 		return tableRow;
 	}
+	
 }

@@ -15,7 +15,7 @@ public class SignupValidator implements Validator {
 	@Autowired
 	UserService userService;
 
-	public boolean supports(Class clazz) {
+	public boolean supports(Class<?> clazz) {
 		return UserForm.class.isAssignableFrom(clazz);
 	}
 

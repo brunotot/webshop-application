@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 
-	public List list() {
+	public List<?> list() {
 		return userDao.list();
 	}
 

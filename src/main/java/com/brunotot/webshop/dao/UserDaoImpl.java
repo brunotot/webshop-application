@@ -23,10 +23,10 @@ public class UserDaoImpl implements UserDao {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
 
-	public List list() {
+	public List<?> list() {
 		String sql = "select username from users";
 
-		List list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(null, null), new UserMapper());
+		List<?> list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(null, null), new UserMapper());
 
 		return list;
 	}
@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDao {
 		return parameterSource;
 	}
 
-	private static final class UserMapper implements RowMapper {
+	private static final class UserMapper implements RowMapper<Object> {
 
 		public UserInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
 			UserInfo user = new UserInfo();
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
 	public UserInfo findUserByUsername(String username) {
 		String sql = "select username from users where username = :username";
 
-		List list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(username, null), new UserMapper());
+		List<?> list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(username, null), new UserMapper());
 
 		UserInfo userInfo = (UserInfo) list.get(0);
 		return userInfo;
@@ -81,7 +81,7 @@ public class UserDaoImpl implements UserDao {
 	public boolean userExists(String username) {
 		String sql = "select * from users where username = :username";
 
-		List list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(username, null), new UserMapper());
+		List<?> list = namedParameterJdbcTemplate.query(sql, getSqlParameterSource(username, null), new UserMapper());
 
 		if (list.size() > 0) {
 			return true;

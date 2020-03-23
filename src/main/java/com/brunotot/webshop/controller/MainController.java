@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
@@ -46,26 +45,22 @@ public class MainController {
 		boolean exists = false;
 		
 		Statement st = dataSource.getConnection().createStatement();
-		ResultSet rs = st.executeQuery("select * from `" + category + "`");
-		while (rs.next()) {
-			if (rs.getInt("id") == id) {
-				int totalInStock = rs.getInt("stock");
-				int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
-				
-				int currentTotalLeftInStock;
-				
-				if (start.equals("home")) {
-					currentTotalLeftInStock = totalInStock - itemCountInCart;
-				} else {
-					currentTotalLeftInStock = totalInStock; 
-				}
-				
-				if (currentTotalLeftInStock >= wantedAmount) {
-					exists = true;
-				}
-				
-				break;
-			}
+
+		ResultSet rs = Helper.getResultSetById(st, id, category);
+
+		int totalInStock = rs.getInt("stock");
+		int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
+		
+		int currentTotalLeftInStock;
+		
+		if (start.equals("home")) {
+			currentTotalLeftInStock = totalInStock - itemCountInCart;
+		} else {
+			currentTotalLeftInStock = totalInStock; 
+		}
+		
+		if (currentTotalLeftInStock >= wantedAmount) {
+			exists = true;
 		}
 		
 		return exists;
@@ -77,7 +72,7 @@ public class MainController {
 								   @CookieValue(value = "cart", defaultValue = "") String cartCookie, 
 								   HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home");
+		model.setViewName("home/shoppingcart");
 		
 		// remove deleted item from the shopping cart
 		cart.remove(id);
@@ -85,10 +80,7 @@ public class MainController {
 		// remove deleted item from cookies
 		String currentCookieName = id + ":" + category + "~";
 		String newCookieValue = cartCookie.replace(currentCookieName, "");
-		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
-		cookie.setPath("/shoppolis");
-		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
-		response.addCookie(cookie);
+		Helper.updateCookies(response, newCookieValue);
 		
 		return model;
 	}
@@ -104,65 +96,35 @@ public class MainController {
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("home/home");
+		request.setAttribute("category", category);
 		
 		// append if item already exists
 		String newCookieValue = "";
-		String currentCookieName = id + ":" + category + "~";
-		ShoppingCartItem shoppingCartItem = cart.getItemById(id);
-		if (shoppingCartItem != null) {
-			int itemCount = shoppingCartItem.getCount();
+		String selectedItemCookieName = id + ":" + category + "~";
+		if (cart.exists(id)) {
 			if (start.equals("home")) {
-				shoppingCartItem.setCount(itemCount + 1);
-				newCookieValue = cartCookie + id + ":" + category + "~";
+				cart.addOne(id);
+				newCookieValue = cartCookie + selectedItemCookieName;
 			} else {
-				shoppingCartItem.setCount(quantity);
-				newCookieValue = cartCookie.replace(currentCookieName, "");
+				cart.update(id, quantity);
+				newCookieValue = cartCookie.replace(selectedItemCookieName, "");
 				for (int i = 0; i < quantity; i++) {
-					newCookieValue += currentCookieName;
+					newCookieValue += selectedItemCookieName;
 				}
+				model.setViewName("home/shoppingcart");
 			}
-			Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
-			cookie.setPath("/shoppolis");
-			cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
-			response.addCookie(cookie);
+			Helper.updateCookies(response, newCookieValue);
 			return model;
 		}
 		
 		// add new item if one doesn't exist
 		Statement st = dataSource.getConnection().createStatement();
-		ResultSet tableRowData = Helper.getTableRowData(st, id, category);
+		ResultSet tableRowData = Helper.getResultSetById(st, id, category);
 		Item item = Helper.getCategoryItemFromTableRowData(category, tableRowData, st);
 		cart.add(new ShoppingCartItem(item, 1));
 		
-		newCookieValue = cartCookie + currentCookieName;
-		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
-		cookie.setPath("/shoppolis");
-		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
-		response.addCookie(cookie);
-		
-		return model;
-	}
-	
-	@PostMapping("/updateitem") 
-	public ModelAndView updateItem(@RequestParam(value = "id") int id, 
-								   @RequestParam(value = "category") String category, 
-								   @RequestParam(value = "quantityvalue") int quantity, 
-								   @CookieValue(name = Constants.BEAN_SHOPPING_CART, defaultValue = "") String cartCookie, 
-								   HttpServletRequest request, 
-								   HttpServletResponse response) throws SQLException {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("shoppolis/shoppingcart");
-		
-		// update item in cart
-		cart.update(id, quantity);
-		
-		// update cookies
-		String valueToDelete = id + ":" + category + "~";
-		String newCookieValue = cartCookie.replace(valueToDelete, "");
-		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
-		cookie.setPath("/shoppolis");
-		cookie.setMaxAge(Helper.COOKIE_EXPIRATION_SECONDS);
-		response.addCookie(cookie);
+		newCookieValue = cartCookie + selectedItemCookieName;
+		Helper.updateCookies(response, newCookieValue);
 		
 		return model;
 	}
@@ -170,10 +132,7 @@ public class MainController {
 	@RequestMapping(value = "shoppingcart/clearall", method = RequestMethod.GET)
 	public ModelAndView clearAllItems(HttpServletRequest request, HttpServletResponse response) {
 		// Remove cookies
-		Cookie cookie = new Cookie("cart", null);
-		cookie.setPath("/shoppolis");
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
+		Helper.updateCookies(response, null);
 		
 		// Remove from shopping cart
 		cart.getItems().clear();
@@ -200,7 +159,6 @@ public class MainController {
 		}
 		
 		model.setViewName("login/login");
-
 		String userCredentials = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 		if (userCredentials != null && userCredentials != "anonymousUser") {
 			model.setViewName("home/home");
@@ -209,10 +167,19 @@ public class MainController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/category")
+	public ModelAndView category(@RequestParam(value = "category", defaultValue = "") String category, HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		System.out.println(category);
+		model.setViewName("home/home");
+		request.setAttribute("category",  category);
+		return model;
+	}
+	
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public ModelAndView home() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home");
+		model.setViewName("home/index");
 		return model;
 	}
 
@@ -221,7 +188,7 @@ public class MainController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		/* Remove user's persistent login on logout */
-		String query = "delete from persistent_logins where username='" + auth.getName() + "'";
+		String query = "delete from " + Constants.TABLE_PERSISTENT_LOGINS + " where username='" + Helper.getEscapedQueryVariable(auth.getName()) + "'";
 		try {
 			this.dataSource.getConnection().createStatement().execute(query);
 		} catch (SQLException e) {

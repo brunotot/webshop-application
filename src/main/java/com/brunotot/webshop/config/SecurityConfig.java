@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.brunotot.webshop.service.LoginServiceImpl;
+import com.brunotot.webshop.util.Helper;
 
 @Configuration
 @EnableWebSecurity
@@ -52,9 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 		
 		http.authorizeRequests()
-			.antMatchers("/admin", "/user/list").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/user", "/user/settings").access("hasRole('ROLE_USER')")
-			.antMatchers("/").permitAll()
+			.antMatchers(Helper.getAntMatchersForAdminRole()).access("hasRole('ROLE_ADMIN')")
+			.antMatchers(Helper.getAntMatchersForUserRole()).access("hasRole('ROLE_USER')")
+			.antMatchers(Helper.getAntMatchersForAllRoles()).permitAll()
 			.and().formLogin().loginProcessingUrl("/j_spring_security_check").loginPage("/login")
 			.failureUrl("/login?error=true").usernameParameter("username").passwordParameter("password")
 			.and().rememberMe()

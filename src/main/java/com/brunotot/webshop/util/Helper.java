@@ -1,14 +1,17 @@
 package com.brunotot.webshop.util;
 
-import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.UrlPathHelper;
@@ -17,19 +20,14 @@ import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.content.ShoppingCartItem;
 import com.brunotot.webshop.merchandise.Laptop;
+import com.brunotot.webshop.merchandise.Phone;
 
 public class Helper {
 	
-	public static final String LAPTOP_UNIQUE_IDENTIFIER = "1234";
-	
-	public static final int JSP_PATH_DELIMITER = 4;
-	
-	public static final int COOKIE_EXPIRATION_SECONDS = 30 * 7 * 24 * 60 * 60;
-	
-	public static ResultSet getTableRowData(Statement st, int id, String dbName) {
-		String sql = "select * from " + dbName + ";";
+	public static ResultSet getResultSetById(Statement st, int id, String dbName) {
+		String sql = "select * from `" + Helper.getEscapedQueryVariable(dbName) + "`;";
 		try {
-			ResultSet rs = st.executeQuery(sql);
+			ResultSet rs = Helper.getResultSetByPreparedQuery(st.getConnection(), sql); 
 			while (rs.next()) {
 				if (id == rs.getInt("id")) {
 					return rs;
@@ -44,7 +42,7 @@ public class Helper {
 	public static String getJspRootPath(HttpServletRequest request) {
 		String requestUri = new UrlPathHelper().getRequestUri(request);
 		int slashCounter = StringUtils.countOccurrencesOf(requestUri, "/");
-		int backwardsIterationCount = slashCounter - Helper.JSP_PATH_DELIMITER;
+		int backwardsIterationCount = slashCounter - Constants.JSP_PATH_DELIMITER;
 		
 		String jspRootPath = "";
 		for(int i = 0; i < backwardsIterationCount; i++) {
@@ -53,7 +51,6 @@ public class Helper {
 		
 		return jspRootPath;
 	}
-	
 	
 	public static boolean isUserAuthenticated(HttpServletRequest request) {
 		if (request.isUserInRole("ROLE_USER") || request.isUserInRole("ROLE_ADMIN")) {
@@ -100,15 +97,17 @@ public class Helper {
 	public static Item getResultItemByClass(String classCategoryName, String category, ResultSet tableRowData, Statement st) {
 		Item item = null;
 		try {
+			@SuppressWarnings("unchecked")
 			Class<Item> clazz = (Class<Item>) Class.forName(Constants.PACKAGE_NAME_MERCHANDISE + classCategoryName);
 			item = clazz.getDeclaredConstructor().newInstance();
 			item.setAllDataFromResultSet(tableRowData);
 			
-			ResultSet rs = st.executeQuery("select * from `" + category + "` where id=" + item.getId());
+			String sql = "select * from `" + Helper.getEscapedQueryVariable(category) + "` where id=?";
+			ResultSet rs = Helper.getResultSetByPreparedQuery(st.getConnection(), sql, item.getId());
 			rs.first();
 			int stock = rs.getInt("stock");
 			item.setMaxInStock(stock);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return item;
@@ -118,11 +117,111 @@ public class Helper {
 		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
 		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
 		for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
-			if (shoppingCartItem.getItem().getId() == id) {
-				return shoppingCartItem.getCount();
+			Item item = shoppingCartItem.getItem();
+			/* PROBLEM KADA SE DODAJU LAPTOP I PC U ISTO VRIJEME */
+			if (item != null) {
+				if (shoppingCartItem.getItem().getId() == id) {
+					return shoppingCartItem.getCount();
+				}
 			}
 		}
 		return 0;
 	}
 
+	public static void updateCookies(HttpServletResponse response, String newCookieValue) {
+		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
+		cookie.setPath("/shoppolis");
+		cookie.setMaxAge(Constants.COOKIE_EXPIRATION_SECONDS);
+		response.addCookie(cookie);		
+	}
+
+	public static String getEscapedQueryVariable(String category) {
+		String escapedQueryVariable = "";
+		escapedQueryVariable = category.replaceAll("`", "``");
+		escapedQueryVariable = category.replaceAll("'", "''");
+		return escapedQueryVariable;
+	}
+
+	public static Statement getStatement(DataSource dataSource) {
+		try {
+			return dataSource.getConnection().createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static ResultSet getResultSetByPreparedQuery(Connection conn, String preparedQuery, Object... params) throws Exception {
+		int variableQuantity = StringUtils.countOccurrencesOf(preparedQuery, "?");
+		if (variableQuantity != params.length) {
+			throw new Exception("Number of variables (?) does not match number of parameters");
+		}
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(preparedQuery);
+			
+			for (int i = 0; i < params.length; i++) {
+				Object param = params[i];
+				if (param instanceof Integer) {
+					stmt.setInt(i + 1, (Integer) param);
+				} else if (param instanceof String) {
+					stmt.setString(i + 1, (String) param);
+				} else {
+					stmt.close();
+					throw new Exception("Wrong parameter type. Check syntax!");
+				}
+			}
+			
+			return stmt.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	public static String escapeSql(String category) {
+		if (category == null) {
+			return null;
+		}
+		return category.replaceAll("'", "''");
+	}
+	
+	public static String[] getAntMatchersForUserRole() {
+		String[] allowed = new String[3];
+
+		allowed[0] = "/user";
+		allowed[1] = "/user/settings";
+		allowed[2] = "/user/payment";
+		
+		return allowed;
+	}
+
+	public static String[] getAntMatchersForAdminRole() {
+		String[] allowed = new String[1];
+
+		allowed[0] = "/admin";
+		
+		return allowed;
+	}
+
+	public static String[] getAntMatchersForAllRoles() {
+		String[] allowed = new String[1];
+
+		allowed[0] = "/";
+		
+		return allowed;
+	}
+
+	public static Item getItemInstanceByCategory(String category) {
+		if (category.equals(Constants.TABLE_LAPTOPS)) {
+			return new Laptop();
+		} else if (category.equals(Constants.TABLE_PHONES)) {
+			return new Phone();
+		}
+		
+		return null;
+	}
+	
 }

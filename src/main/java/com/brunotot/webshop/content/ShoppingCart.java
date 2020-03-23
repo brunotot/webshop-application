@@ -64,4 +64,18 @@ public class ShoppingCart {
 		}
 		return null;
 	}
+
+	public void addOne(int id) {
+		ShoppingCartItem shoppingCartItem = this.getItemById(id);
+		shoppingCartItem.setCount(shoppingCartItem.getCount() + 1);
+	}
+
+	public boolean exists(int id) {
+		for (ShoppingCartItem shoppingCartItem : this.getItems()) {
+			if (shoppingCartItem.getItem().getId() == id) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

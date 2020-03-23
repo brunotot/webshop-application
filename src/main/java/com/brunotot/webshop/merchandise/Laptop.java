@@ -35,10 +35,6 @@ public class Laptop implements Item {
 		this.price = price;
 	}
 	
-	public static Laptop getInstance() {
-		return new Laptop();
-	}
-	
 	public String getName() {
 		return name;
 	}

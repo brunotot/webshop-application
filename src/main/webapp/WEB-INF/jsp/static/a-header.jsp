@@ -3,13 +3,11 @@
 <%@ page import="org.springframework.util.*" %>
 
 <%
-
 	Cookie cookie = WebUtils.getCookie(request, "cart");
 	int itemsCounter = 0;
 	if (cookie != null) {
 		itemsCounter = StringUtils.countOccurrencesOf(cookie.getValue(), "~");
 	}
-	
 %>
 
 <div class="header-wrapper center-children">

@@ -34,7 +34,7 @@ public class LoginServiceImpl implements UserDetailsService {
 
 		List<String> roles = loginDao.getUserRoles(username);
 
-		List grantList = new ArrayList();
+		List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
 
 		if (roles != null) {
 			for (String role : roles) {

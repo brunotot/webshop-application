@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="com.brunotot.webshop.content.*"%>
 <%@ page import="com.brunotot.webshop.util.*"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -11,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- PAGE TITLE -->
-<title><%=Constants.TITLE_HOME%></title>
+<title><%= Constants.TITLE_HOME %></title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -34,9 +35,9 @@
 		<div class="page-content">
 			<p>Pick a category:</p>
 			<ul>
-				<li><a href="#">Laptops</a></li>
-				<li><a href="#">Phones</a></li>
-				<li><a href="#">Desktops</a></li>
+				<li><a href='<c:url value="/category"><c:param name="category" value="laptops"/></c:url>'>Laptops</a></li>
+				<li><a href='<c:url value="/category"><c:param name="category" value="phones"/></c:url>'>Phones</a></li>
+				<li><a href='<c:url value="/category"><c:param name="category" value="desktops"/></c:url>'>Desktops</a></li>
 			</ul>
 		</div>
 	</div>
