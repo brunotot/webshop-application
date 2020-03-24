@@ -127,6 +127,7 @@ public class Helper {
 		}
 		return 0;
 	}
+	
 
 	public static void updateCookies(HttpServletResponse response, String newCookieValue) {
 		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
@@ -172,7 +173,6 @@ public class Helper {
 					throw new Exception("Wrong parameter type. Check syntax!");
 				}
 			}
-			
 			return stmt.executeQuery();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,4 +224,34 @@ public class Helper {
 		return null;
 	}
 	
+	public static int getLowestFromCategory(HttpServletRequest request, String category, String tableColumn) {
+		if (tableColumn.equals("ram")) return 4;
+		try {
+			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
+			
+			DataSource ds = (DataSource) Helper.getBeanFromRequest(request, "getDataSource");
+			ResultSet rs = Helper.getResultSetByPreparedQuery(ds.getConnection(), preparedQuery);
+			rs.first();
+			return rs.getInt("smallestPrice");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public static int getHighestFromCategory(HttpServletRequest request, String category, String tableColumn) {
+		if (tableColumn.equals("ram")) return 32;
+		try {
+			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
+			
+			DataSource ds = (DataSource) Helper.getBeanFromRequest(request, "getDataSource");
+			Connection conn = ds.getConnection();
+			ResultSet rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			rs.first();
+			return rs.getInt("largestPrice");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

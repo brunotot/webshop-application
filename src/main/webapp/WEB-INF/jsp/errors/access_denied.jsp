@@ -26,14 +26,18 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
+	<div class="main-container">
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
 	
-	<div class="page-wrapper container">
-		<div class="page-content">
-			<h1>Access denied!</h1>
+		<div class="main-wrapper">
+			<div class="page-wrapper container">
+				<div class="page-content">
+					<h1>Access denied!</h1>
+				</div>
+			</div>
 		</div>
+		
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
-	
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 </body>
 </html>

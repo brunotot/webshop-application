@@ -29,24 +29,27 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
-
-	<div class="login-block">
-		<h1>Login</h1>
-		<form name="loginForm" action='<c:url value="j_spring_security_check" />' method="post">
-			<input type="text" name="username" placeholder="Username" id="username" required /> 
-			<input type="password" name="password" placeholder="Password" id="password" required />
-			<table id="remember-me-table">
-				<tr>
-					<td id="remember-me-text">Remember me:</td>
-					<td id="remember-me-checkbox"><input id="remember-me" type="checkbox" name="remember-me" /></td>
-				</tr>
-			</table>
-			<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
-		</form>
-		<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
-	</div>
+	<div class="main-container">
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
 	
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
+		<div class="main-wrapper">
+			<div class="login-block">
+				<h1>Login</h1>
+				<form name="loginForm" action='<c:url value="j_spring_security_check" />' method="post">
+					<input type="text" name="username" placeholder="Username" id="username" required /> 
+					<input type="password" name="password" placeholder="Password" id="password" required />
+					<table id="remember-me-table">
+						<tr>
+							<td id="remember-me-text">Remember me:</td>
+							<td id="remember-me-checkbox"><input id="remember-me" type="checkbox" name="remember-me" /></td>
+						</tr>
+					</table>
+					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
+				</form>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
+			</div>
+		</div>
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
+	</div>
 </body>
 </html>

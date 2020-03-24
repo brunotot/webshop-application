@@ -29,19 +29,23 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%=Helper.getHeaderPath(request)%>" /></header>
+	<div class="main-container">
+		<header><jsp:include page="<%=Helper.getHeaderPath(request)%>" /></header>
 
-	<div class="page-wrapper container">
-		<div class="page-content">
-			<p>Pick a category:</p>
-			<ul>
-				<li><a href='<c:url value="/category"><c:param name="category" value="laptops"/></c:url>'>Laptops</a></li>
-				<li><a href='<c:url value="/category"><c:param name="category" value="phones"/></c:url>'>Phones</a></li>
-				<li><a href='<c:url value="/category"><c:param name="category" value="desktops"/></c:url>'>Desktops</a></li>
-			</ul>
+		<div class="main-wrapper">
+			<div class="page-wrapper container">
+				<div class="page-content">
+					<p>Pick a category:</p>
+					<ul>
+						<li><a href='<c:url value="/category"><c:param name="category" value="laptops"/></c:url>'>Laptops</a></li>
+						<li><a href='<c:url value="/category"><c:param name="category" value="phones"/></c:url>'>Phones</a></li>
+						<li><a href='<c:url value="/category"><c:param name="category" value="desktops"/></c:url>'>Desktops</a></li>
+					</ul>
+				</div>
+			</div>
 		</div>
+		
+		<footer><jsp:include page="<%=Helper.getFooterPath(request)%>" /></footer>
 	</div>
-
-	<footer><jsp:include page="<%=Helper.getFooterPath(request)%>" /></footer>
 </body>
 </html>

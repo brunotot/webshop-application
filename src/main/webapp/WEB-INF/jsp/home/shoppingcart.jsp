@@ -39,56 +39,60 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
-	
-	<div class="page-wrapper container">
-		<div class="page-content">
-			<p id="empty-cart-msg"></p>
-			<table id="cart-table" class="shoppingcart-table">
-				<thead>
-					<tr>
-						<th></th>
-						<th>Item</th>
-						<th>Qty</th>
-						<th></th>
-						<th>Price</th>
-					</tr>
-				</thead>
-				<tbody>
-					<%= HtmlHelper.getAllShoppingCartItems(request) %>
+	<div class="main-container">
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
+		
+		<div class="main-wrapper">
+			<div class="page-wrapper container">
+				<div class="page-content">
+					<p id="empty-cart-msg"></p>
+					<table id="cart-table" class="shoppingcart-table">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Item</th>
+								<th>Qty</th>
+								<th></th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%= HtmlHelper.getAllShoppingCartItems(request) %>
+							
+							<tr>
+								<td></td>
+								<td colspan="3" id="total-col">TOTAL: </td>
+								<td id="total-value-col"><span id="total-value"></span><span>&euro;</span></td>
+							</tr>
+						</tbody>
+					</table>
 					
-					<tr>
-						<td></td>
-						<td colspan="3" id="total-col">TOTAL: </td>
-						<td id="total-value-col"><span id="total-value"></span><span>&euro;</span></td>
-					</tr>
-				</tbody>
-			</table>
-			
-			
-			
-			<div class="shoppingcart-btns" id="cart-btns">
-				<div>
-					<button type="button" class="my-button" onclick="location.href='/shoppolis/'">
-						<div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div>
-					</button>
-					<a href='<c:url value="/shoppingcart/clearall"/>' id="clearall">
-						<button type="button" class="my-button">
-							<div id="clear-btn">CLEAR <i class="fas fa-shopping-cart"></i></div>
-						</button>
-					</a>
-				</div>
-				<div>
-					<a href='<c:url value="/user/payment"/>'>
-						<button type="button" id="payment-btn" class="my-button">
-							<div id="payment-div">PAYMENT <i class="far fa-money-bill-alt"></i></div>
-						</button>
-					</a>
+					
+					
+					<div class="shoppingcart-btns" id="cart-btns">
+						<div>
+							<button type="button" class="my-button" onclick="location.href='/shoppolis/'">
+								<div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div>
+							</button>
+							<a href='<c:url value="/shoppingcart/clearall"/>' id="clearall">
+								<button type="button" class="my-button">
+									<div id="clear-btn">CLEAR <i class="fas fa-shopping-cart"></i></div>
+								</button>
+							</a>
+						</div>
+						<div>
+							<a href='<c:url value="/user/payment"/>'>
+								<button type="button" id="payment-btn" class="my-button">
+									<div id="payment-div">PAYMENT <i class="far fa-money-bill-alt"></i></div>
+								</button>
+							</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+		
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
-	
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 </body>
 </html>

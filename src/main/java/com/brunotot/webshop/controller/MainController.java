@@ -170,7 +170,6 @@ public class MainController {
 	@RequestMapping(value = "/category")
 	public ModelAndView category(@RequestParam(value = "category", defaultValue = "") String category, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
-		System.out.println(category);
 		model.setViewName("home/home");
 		request.setAttribute("category",  category);
 		return model;
@@ -200,7 +199,7 @@ public class MainController {
 		}
 
 		ModelAndView model = new ModelAndView();
-		model.setViewName("home/home");
+		model.setViewName("home/index");
 		return model;
 	}
 

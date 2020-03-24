@@ -42,40 +42,44 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
-	
-	<div class="page-wrapper container">
-		<div class="page-content">
-			<script
-    			src="https://www.paypal.com/sdk/js?client-id=AZ96z4mNPJF0N3o-O-L7JcOCRpigZg1YcT5OAmXGjjhjpgsCe-Z1PQyDSanPJQTw27cvADijxClyhHrIJ_V">
-  			</script>
-			<div id="paypal-button-container"></div>
-
-  			<script>
-			  paypal.Buttons({
-			    createOrder: function(data, actions) {
-			      // This function sets up the details of the transaction, including the amount and line item details.
-			      return actions.order.create({
-			        purchase_units: [{
-			          amount: {
-			            value: '0.01'
-			          }
-			        }]
-			      });
-			    },
-			    onApprove: function(data, actions) {
-			      // This function captures the funds from the transaction.
-			      return actions.order.capture().then(function(details) {
-			        // This function shows a transaction success message to your buyer.
-			        alert('Transaction completed by ' + details.payer.name.given_name);
-			      });
-			    }
-			  }).render('#paypal-button-container');
-			  //This function displays Smart Payment Buttons on your web page.
-			</script>
+	<div class="main-container">
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
+		
+		<div class="main-wrapper">
+			<div class="page-wrapper container">
+				<div class="page-content">
+					<script
+		    			src="https://www.paypal.com/sdk/js?client-id=AZ96z4mNPJF0N3o-O-L7JcOCRpigZg1YcT5OAmXGjjhjpgsCe-Z1PQyDSanPJQTw27cvADijxClyhHrIJ_V">
+		  			</script>
+					<div id="paypal-button-container"></div>
+		
+		  			<script>
+					  paypal.Buttons({
+					    createOrder: function(data, actions) {
+					      // This function sets up the details of the transaction, including the amount and line item details.
+					      return actions.order.create({
+					        purchase_units: [{
+					          amount: {
+					            value: '0.01'
+					          }
+					        }]
+					      });
+					    },
+					    onApprove: function(data, actions) {
+					      // This function captures the funds from the transaction.
+					      return actions.order.capture().then(function(details) {
+					        // This function shows a transaction success message to your buyer.
+					        alert('Transaction completed by ' + details.payer.name.given_name);
+					      });
+					    }
+					  }).render('#paypal-button-container');
+					  //This function displays Smart Payment Buttons on your web page.
+					</script>
+				</div>
+			</div>
 		</div>
+		
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
-	
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 </body>
 </html>

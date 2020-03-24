@@ -27,14 +27,18 @@
 
 </head>
 <body>
-	<header><jsp:include page="../static/header.jsp"/></header>
-	
-	<div class="page-wrapper container">
-		<div class="page-content">
-			<p>Welcome to your settings</p>
+	<div class="main-container">
+		<header><jsp:include page="../static/header.jsp"/></header>
+		
+		<div class="main-wrapper">
+			<div class="page-wrapper container">
+				<div class="page-content">
+					<p>Welcome to your settings</p>
+				</div>
+			</div>
 		</div>
+		
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
-	
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 </body>
 </html>

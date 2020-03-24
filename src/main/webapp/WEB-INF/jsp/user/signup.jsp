@@ -30,23 +30,27 @@
 
 </head>
 <body>
-	<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
-	<spring:url value="/user/register" var="registerURL" />
-
-	<div class="signup-block">
-		<h1>Register</h1>
-		<form:form action="${registerURL}" modelAttribute="userForm" method="post">
-			<form:input path="username" type="text" placeholder="Username" id="username" required="true" />
-			<form:errors path="username" />
-			<form:input path="password" type="password" placeholder="Password" id="password" required="true" />
-			<form:errors path="password" />
-			<form:input path="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
-			<form:errors path="confirmPassword" />
-			<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
-		</form:form>
-		<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
+	<div class="main-container">
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
+		<spring:url value="/user/register" var="registerURL" />
+	
+		<div class="main-wrapper">
+			<div class="signup-block">
+				<h1>Register</h1>
+				<form:form action="${registerURL}" modelAttribute="userForm" method="post">
+					<form:input path="username" type="text" placeholder="Username" id="username" required="true" />
+					<form:errors path="username" />
+					<form:input path="password" type="password" placeholder="Password" id="password" required="true" />
+					<form:errors path="password" />
+					<form:input path="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
+					<form:errors path="confirmPassword" />
+					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
+				</form:form>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
+			</div>
+		</div>
+	
+		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
-
-	<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 </body>
 </html>

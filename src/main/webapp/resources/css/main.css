@@ -1,10 +1,27 @@
 * {
-	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-		'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	box-sizing: border-box;
+}
+
+*:before, *:after {
+	 box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	position: relative;
 }
 
 body {
 	background: url("https://moj.tvz.hr/slika/back.png");
+}
+
+.main-container {
+	min-height: 100vh; /* will cover the 100% of viewport */
+	overflow: hidden;
+	display: block;
+	position: relative;
+	padding-bottom: 150px; /* height of your footer */
 }
 
 .page-content {
@@ -12,7 +29,21 @@ body {
 	padding-bottom: 20px;
 }
  
+.main-wrapper {
+	width: 100%;
+	display: flex;
+ 	justify-content: center;
+ 	align-items: center;
+	margin: 90px auto;
+}
+ 
 p {
 	width: 100%;
 	text-align: center;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
 }

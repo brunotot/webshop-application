@@ -35,4 +35,6 @@ public class Constants {
 	public static final String TABLE_PERSISTENT_LOGINS = "persistent_logins";
 	public static final String LAPTOP_UNIQUE_IDENTIFIER = "1234";
 	public static final String PHONE_UNIQUE_IDENTIFIER = "4321";
+	public static final String CSS_FILTER_TABLE_STYLE = "filter-table-style.css";
+	public static final String JS_FILTER_TABLE = "filter-table.js";
 }
