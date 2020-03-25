@@ -2,6 +2,9 @@ package com.brunotot.webshop.merchandise;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
@@ -22,6 +25,11 @@ public class Phone implements Item {
 		this.price = price;
 		this.category = category;
 		this.maxInStock = maxInStock;
+	}
+	@Override
+	public String toString() {
+		return "Phone [id=" + id + ", name=" + name + ", imageUrl=" + imageUrl + ", price=" + price + ", category="
+				+ category + ", maxInStock=" + maxInStock + "]";
 	}
 	public int getId() {
 		return id;
@@ -62,11 +70,11 @@ public class Phone implements Item {
 	
 	@Override
 	public String getDivElement() {
-		return HtmlHelper.getItemDiv(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), this.category);
+		return HtmlHelper.getItemDiv(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), this.category);
 	}
 	@Override
 	public String getTableRowElement(int count) {
-		return HtmlHelper.getTableRow(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
+		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
 	}
 	@Override
 	public void setAllDataFromResultSet(ResultSet tableRowData) {
@@ -80,5 +88,23 @@ public class Phone implements Item {
 			e.printStackTrace();
 		}
 	}
-	
+	@Override
+	public String getFullName() {
+		return this.name;
+	}
+	@Override
+	public String getFilterElements(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
+		String result = "";
+		result += HtmlHelper.getSlider(request, category, "price", "&euro;", 10, 10);
+		result += HtmlHelper.getSlider(request, category, "ram", "GB", 10, 10);
+		result += HtmlHelper.getCheckboxRow(request, category, "manufacturer", filteredMap);
+		result += HtmlHelper.getCheckboxRow(request, category, "gpu", filteredMap);
+		return result;
+	}
+	@Override
+	public String[] getParameterNames() {
+		String[] parameterNames = new String[1];
+		parameterNames[0] = "manufacturer";
+		return parameterNames;
+	}
 }

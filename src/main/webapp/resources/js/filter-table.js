@@ -9,7 +9,7 @@ function getVals(){
   // Neither slider will clip the other, so make sure we determine which is larger
   if( slide1 > slide2 ){ var tmp = slide2; slide2 = slide1; slide1 = tmp; }
 
-  if (slides[0].name === "ram") {
+  if (slides[0].name.startsWith("ram")) {
 	  slide1 = Math.pow(2, slide1);
 	  slide2 = Math.pow(2, slide2);
   }

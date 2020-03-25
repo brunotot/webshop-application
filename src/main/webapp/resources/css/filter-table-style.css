@@ -157,8 +157,18 @@ section.range-slider input[type=range]::-moz-focus-outer {
 }
  
 .rangeValues2 {
- 	margin-right: 8px;
  	margin-top: 7px;
  	float: right;
  	text-align: right;
+}
+
+#last-span {
+	top: 7px;
+	position: relative; 
+	float: right;
+}
+
+#valute {
+	top: 7px; 
+	position: relative;
 }

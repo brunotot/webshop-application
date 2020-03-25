@@ -2,26 +2,40 @@ package com.brunotot.webshop.merchandise;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
+import com.brunotot.webshop.util.Helper;
 
 public class Laptop implements Item {
 	private int id;
 	private String name;
 	private String manufacturer;
 	private String gpu;	
-	private String cpu;
+	private String gpuName;
+	private String cpu;	
+	private String cpuName;
+	private int cpuCores;
 	private String ram;
-	private String ssd;
-	private String hdd;
+	private int ssd;
+	private int hdd;
 	private String imageUrl;
 	private int price;
 	private String category = "laptops";
 	private int maxInStock;
 	public Laptop() {}
-	public Laptop(int id, String name, String manufacturer, String gpu, String cpu, String ram, String ssd, String hdd,
-			String imageUrl, int price) {
+	@Override
+	public String toString() {
+		return "Laptop [id=" + id + ", name=" + name + ", manufacturer=" + manufacturer + ", gpu=" + gpu + ", gpuName="
+				+ gpuName + ", cpu=" + cpu + ", cpuName=" + cpuName + ", cpuCores=" + cpuCores + ", ram=" + ram
+				+ ", ssd=" + ssd + ", hdd=" + hdd + ", imageUrl=" + imageUrl + ", price=" + price + ", category="
+				+ category + ", maxInStock=" + maxInStock + "]";
+	}
+	public Laptop(int id, String name, String manufacturer, String gpu, String cpu, String ram, int ssd, int hdd,
+			String imageUrl, int price, String cpuName, int cpuCores, String gpuName) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -33,6 +47,9 @@ public class Laptop implements Item {
 		this.hdd = hdd;
 		this.imageUrl = imageUrl;
 		this.price = price;
+		this.cpuName = cpuName;
+		this.cpuCores = cpuCores;
+		this.gpuName = gpuName;
 	}
 	
 	public String getName() {
@@ -50,10 +67,10 @@ public class Laptop implements Item {
 	public String getRam() {
 		return ram;
 	}
-	public String getSsd() {
+	public int getSsd() {
 		return ssd;
 	}
-	public String getHdd() {
+	public int getHdd() {
 		return hdd;
 	}
 	public String getImageUrl() {
@@ -83,10 +100,10 @@ public class Laptop implements Item {
 	public void setRam(String ram) {
 		this.ram = ram;
 	}
-	public void setSsd(String ssd) {
+	public void setSsd(int ssd) {
 		this.ssd = ssd;
 	}
-	public void setHdd(String hdd) {
+	public void setHdd(int hdd) {
 		this.hdd = hdd;
 	}
 	public void setImageUrl(String imageUrl) {
@@ -106,12 +123,12 @@ public class Laptop implements Item {
 	
 	@Override
 	public String getDivElement() {
-		return HtmlHelper.getItemDiv(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), this.category);
+		return HtmlHelper.getItemDiv(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), this.category);
 	}
 	
 	@Override
 	public String getTableRowElement(int count) {
-		return HtmlHelper.getTableRow(this.getId(), this.getName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
+		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
 	}
 	
 	@Override
@@ -126,14 +143,74 @@ public class Laptop implements Item {
 			this.name = tableRowData.getString("name");
 			this.manufacturer = tableRowData.getString("manufacturer");
 			this.gpu = tableRowData.getString("gpu");
+			this.gpuName = tableRowData.getString("gpuName");
 			this.cpu = tableRowData.getString("cpu");
 			this.ram = tableRowData.getString("ram");
-			this.ssd = tableRowData.getString("ssd");
-			this.hdd = tableRowData.getString("hdd");
+			this.ssd = tableRowData.getInt("ssd");
+			this.hdd = tableRowData.getInt("hdd");
 			this.imageUrl = tableRowData.getString("image");
 			this.price = tableRowData.getInt("price");
+			this.cpuName = tableRowData.getString("cpuname");
+			this.cpuCores = tableRowData.getInt("cpucores");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public String getCpuName() {
+		return cpuName;
+	}
+	public void setCpuName(String cpuName) {
+		this.cpuName = cpuName;
+	}
+	public int getCpuCores() {
+		return cpuCores;
+	}
+	public void setCpuCores(int cpuCores) {
+		this.cpuCores = cpuCores;
+	}
+	public String getGpuName() {
+		return gpuName;
+	}
+	public void setGpuName(String gpuName) {
+		this.gpuName = gpuName;
+	}
+	@Override
+	public String getFullName() {
+		return this.manufacturer + " " +
+			   this.name + " " +
+			   this.cpu + " " +
+			   this.cpuName + " " +
+			   Helper.getNumberOfCoresAsWord(this.cpuCores) + "-" + "Core, " +
+			   this.gpu + " " + 
+			   this.gpuName + " " +
+			   this.ram + "GB RAM" + 
+			   (this.ssd == 0 ? "" : (", " + this.ssd + "GB SSD")) + 
+			   (this.hdd == 0 ? "" : (", " + this.hdd + "GB HDD"));
+	}
+	@Override
+	public String getFilterElements(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
+		String result = "";
+		int price1 = -1;
+		int price2 = -1;
+		int ram1 = -1;
+		int ram2 = -1;
+		if (filteredMap != null) {
+			price1 = Integer.parseInt(filteredMap.get("price1")[0]);
+			price2 = Integer.parseInt(filteredMap.get("price2")[0]);
+			ram1 = Integer.parseInt(filteredMap.get("ram1")[0]);
+			ram2 = Integer.parseInt(filteredMap.get("ram2")[0]);
+		}
+		result += HtmlHelper.getSlider(request, category, "price", "&euro;", price1, price2);
+		result += HtmlHelper.getSlider(request, category, "ram", "GB", ram1, ram2);
+		result += HtmlHelper.getCheckboxRow(request, category, "manufacturer", filteredMap);
+		result += HtmlHelper.getCheckboxRow(request, category, "gpu", filteredMap);
+		return result;
+	}
+	@Override
+	public String[] getParameterNames() {
+		String[] parameterNames = new String[2];
+		parameterNames[0] = "manufacturer";
+		parameterNames[1] = "gpu";
+		return parameterNames;
 	}
 }

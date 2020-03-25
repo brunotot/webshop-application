@@ -4,11 +4,16 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.content.ShoppingCartItem;
@@ -216,4 +222,30 @@ public class MainController {
 		model.setViewName("home/shoppingcart");
 		return model;
 	}
+	
+	@PostMapping("/filter") 
+	public ModelAndView submitFilter(@RequestParam(value = "category") String category, HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		
+		HtmlHelper.getAllItemsFromCategory(category, request);
+		
+		Map<String, String[]> map = request.getParameterMap();
+
+		String preparedQuery = Helper.getSubmitFormQuery(category, map);
+		
+		ResultSet rs = null;
+		try {
+			rs = Helper.getResultSetByPreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		model.setViewName("home/home");
+		model.addObject("category", category);
+		model.addObject("filteredResultSet", rs);
+		model.addObject("filteredMap", map);
+		
+		return model;
+	}
+
 }

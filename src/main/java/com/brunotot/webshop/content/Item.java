@@ -1,6 +1,9 @@
 package com.brunotot.webshop.content;
 
 import java.sql.ResultSet;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface Item {
 	
@@ -16,4 +19,9 @@ public interface Item {
 
 	void setMaxInStock(int stock);
 	
+	String getFullName();
+	
+	String getFilterElements(HttpServletRequest request, String category, Map<String, String[]> filteredMap);
+
+	String[] getParameterNames();
 }

@@ -5,13 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.UrlPathHelper;
@@ -152,6 +156,7 @@ public class Helper {
 		return null;
 	}
 
+	
 	public static ResultSet getResultSetByPreparedQuery(Connection conn, String preparedQuery, Object... params) throws Exception {
 		int variableQuantity = StringUtils.countOccurrencesOf(preparedQuery, "?");
 		if (variableQuantity != params.length) {
@@ -254,4 +259,137 @@ public class Helper {
 		}
 		return 0;
 	}
+	
+	public static String getNumberOfCoresAsWord(int numberOfCores) {
+		if (numberOfCores == 2) {
+			return "Dual";
+		} else if (numberOfCores == 4) {
+			return "Quad";
+		} else if (numberOfCores == 6) {
+			return "Six";
+		} else if (numberOfCores == 8) {
+			return "Octa";
+		} else {
+			return numberOfCores + "";
+		}
+		
+		
+	}
+
+	public static String getLeftColName(String element) {
+		if (element.equals("manufacturer")) {
+			return "Manufacturers";
+		} else {
+			return "GPU brands";
+		}
+	}
+
+	public static String getOptionDescription(String element) {
+		if (element.equals("manufacturer")) {
+			return "Select manufacturers";
+		} else {
+			return "Select GPU brand";
+		}
+	}
+
+	public static String getSubmitFormQuery(String category, Map<String, String[]> map) {
+		String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "` where ";
+		Map<String, List<String>> checkboxes = getCheckboxesMap(map);
+		String checkboxesConditions = getCheckboxesConditions(checkboxes);
+		for (Map.Entry<String, String[]> entry : map.entrySet()) {
+			String key = entry.getKey();
+			if (key.equals("category") || key.contains("~")) {
+				continue;
+			}
+
+			String[] val = entry.getValue();
+			String currentValue = val[0];
+			if (NumberUtils.isCreatable(currentValue)) {
+				if (key.charAt(key.length() - 1) == '1') {
+					
+					if (key.startsWith("ram")) {
+						preparedQuery += key.substring(0, key.length() - 1) + ">=" + (int)Math.pow(2, Integer.parseInt(currentValue)) + " AND ";
+					} else {
+						preparedQuery += key.substring(0, key.length() - 1) + ">=" + currentValue + " AND ";
+					}
+				} else if (key.charAt(key.length() - 1) == '2') {
+					if (key.startsWith("ram")) {
+						preparedQuery += key.substring(0, key.length() - 1) + "<=" + (int)Math.pow(2, Integer.parseInt(currentValue)) + " AND ";
+					} else {
+						preparedQuery += key.substring(0, key.length() - 1) + "<=" + currentValue + " AND ";
+					}
+				} else {
+					preparedQuery += key + "=" + currentValue + " AND ";
+				}
+			} else {
+				preparedQuery += key + "='" + currentValue + "' AND ";
+			}
+		}
+		
+		if (checkboxesConditions == "") {
+			return preparedQuery.substring(0, preparedQuery.length() - 5);
+		} else {
+			return preparedQuery + checkboxesConditions;
+		}
+	}
+	
+	private static String getCheckboxesConditions(Map<String, List<String>> checkboxes) {
+		String checkboxesConditions = "";
+		boolean flagg = false;
+		for (Map.Entry<String, List<String>> entry : checkboxes.entrySet()) {
+			if (flagg) {
+				checkboxesConditions += " AND ";
+			}
+			checkboxesConditions += "(";
+			String key = entry.getKey();
+			List<String> val = entry.getValue();
+			boolean flag = false;
+			for (String sqlVal : val) {
+				if (flag) {
+					checkboxesConditions += " OR ";
+				}
+				if (NumberUtils.isCreatable(sqlVal)) {
+					checkboxesConditions += key + "=" + sqlVal + " ";
+				} else {
+					checkboxesConditions += key + "='" + sqlVal + "'";
+				}
+				flag = true;
+			}
+			checkboxesConditions += ")";
+			flagg = true;
+		}
+		return checkboxesConditions;
+	}
+
+	public static Map<String, List<String>> getCheckboxesMap(Map<String, String[]> map) {
+		Map<String, List<String>> resultMap = new HashMap<String, List<String>>();
+		for (Map.Entry<String, String[]> entry : map.entrySet()) {
+			String key = entry.getKey();
+			if (!key.contains("~")) {
+				continue;
+			}
+			
+			String val = entry.getValue()[0];
+			
+			if (val.equals("on")) {
+				String sqlKey = key.substring(0, key.indexOf('~'));
+				String sqlValue = key.substring(key.indexOf('~') + 1);
+				addCheckbox(resultMap, sqlKey, sqlValue);
+			}
+		}
+		return resultMap;
+	}
+
+	public static void addCheckbox(Map<String, List<String>> resultMap, String sqlKey, String sqlValue) {
+		List<String> getVal = resultMap.get(sqlKey);
+		if (getVal != null) {
+			getVal.add(sqlValue);
+			resultMap.put(sqlKey, getVal);
+		} else {
+			List<String> listVal = new ArrayList<String>();
+			listVal.add(sqlValue);
+			resultMap.put(sqlKey, listVal);
+		}
+	}
+
 }

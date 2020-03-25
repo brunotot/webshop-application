@@ -2,7 +2,9 @@ package com.brunotot.webshop.content;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -16,14 +18,28 @@ public class HtmlHelper {
 		return line + "\n";
 	}
 	
-	public static String getAllItemsFromCategory(String category, HttpServletRequest request) {
+	public static String getAllItemsFromCategory(String category, HttpServletRequest request, ResultSet... filter) {
 		String result = "";
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
-			conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
-			String preparedQuery = "select * from `" + Helper.escapeSql(category) + "`;";
-			rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			boolean flag = false;
+			if (filter == null || filter.length == 0) {
+				flag = true;
+			} else {
+				if (filter[0] == null) {
+					flag = true;
+				} else {
+					flag = false;
+				}
+			}
+			if (flag) {
+				conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
+				String preparedQuery = "select * from `" + Helper.escapeSql(category) + "`;";
+				rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			} else {
+				rs = filter[0];
+			}
 			
 			if (rs != null) {
 				while (rs.next()) {
@@ -91,5 +107,94 @@ public class HtmlHelper {
 		
 		return tableRow;
 	}
+
+	public static String getCheckboxRow(HttpServletRequest request, String category, String element, Map<String, String[]> filteredMap) {
+		String tableRow = "";
+		
+		Map<String, String> map = new HashMap<>();
+		try {
+			Connection conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
+			String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "`;";
+			ResultSet rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			while (rs.next()) {
+				String elem = rs.getString(element);
+				map.put(elem, elem);
+			}
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		tableRow += addLine("<tr>");
+		tableRow += addLine("<td id='left-col'>" + Helper.getLeftColName(element) + ":</td>");
+		tableRow += addLine("<td id='right-col'>");
+		tableRow += addLine("<div class='multiselect'>");
+		tableRow += addLine("<div class='selectBox' onclick=\"showCheckboxes('" + element + "')\">");
+		tableRow += addLine("<select>");
+		tableRow += addLine("<option>" + Helper.getOptionDescription(element) + "</option>");
+		tableRow += addLine("</select>");
+		tableRow += addLine("<div class='overSelect'></div>");
+		tableRow += addLine("</div>");
+		tableRow += addLine("<div id='" + element + "'>");
+		tableRow += addLine("<div class='checkboxes'>");
+		for (Map.Entry<String, String> key : map.entrySet()) {
+			String elem = key.getKey();
+			
+			String checked = "";
+			if (filteredMap != null) {
+				String[] values = filteredMap.get(element + "~" + elem.toLowerCase());
+				if (values != null && values.length > 0) {
+					if (values[0].equals("on")) {
+						checked = "checked";
+					}
+				}
+			}
+			
+			tableRow += addLine("<label for='" + elem.toLowerCase() + "'>");
+			tableRow += addLine("<input type='checkbox' name='" + element + "~" + elem.toLowerCase() + "' id='" + elem.toLowerCase() + "'" + checked + "/>" + elem + "</label>");
+		}
+		tableRow += addLine("</div>");
+		tableRow += addLine("</div>");
+		tableRow += addLine("</div>");
+		tableRow += addLine("</td>");
+		tableRow += addLine("</tr>");
+		
+		return tableRow;
+	}
 	
+	public static String getSlider(HttpServletRequest request, String category, String element, String valute, int currentLow, int currentHigh) {
+		String tableRow = "";
+	
+		int low = Helper.getLowestFromCategory(request, category, element);
+		int high = Helper.getHighestFromCategory(request, category, element);
+		
+		if (element.equals("ram")) {
+			low = (int) (Math.log(low) / Math.log(2));
+			high = (int) (Math.log(high) / Math.log(2));
+		}
+		
+		tableRow += addLine("<tr>");
+		tableRow += addLine("<td id='left-col'>" + Helper.getLeftColName(element) + ":</td>");
+		tableRow += addLine("<td id='right-col-slider'>");
+		tableRow += addLine("<section class='range-slider'>");
+		tableRow += addLine("<span class='rangeValues1'></span><span id='valute'>" + valute + "</span>");
+		tableRow += addLine("<input value='" + (currentLow == -1 ? low : currentLow) + "' min='" + low + "' max='" + high + "' step='1' type='range' name='" + element + "1" + "'>");
+		tableRow += addLine("<input value='" +  (currentHigh == -1 ? high : currentHigh) + "' min='" + low + "' max='" + high + "' step='1' type='range' name='" + element + "2" + "'>");
+		tableRow += addLine("<span id='last-span'>" + valute + "</span><span class='rangeValues2'></span>");
+		tableRow += addLine("</section>");
+		tableRow += addLine("</td>");
+		tableRow += addLine("</tr>");
+		
+		return tableRow;
+	}
+
+	public static String getAllFilterElementsFromCategory(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
+		String filterElements = "";
+				
+		Item item = Helper.getItemInstanceByCategory(category);
+		filterElements += item.getFilterElements(request, category, filteredMap);
+		
+		return filterElements;
+	}
+
 }
