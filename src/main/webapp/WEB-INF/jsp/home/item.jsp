@@ -12,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- PAGE TITLE -->
-<title><%= Constants.TITLE_HOME %></title>
+<title>Item</title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -21,27 +21,31 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
 <!-- CSS STYLING -->
-<link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_ITEMS_STYLE%>">
 <link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN%>">
 <link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_HEADER_STYLE%>">
 <link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE%>">
 <link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE%>">
 
+<%
+	String id = (String) request.getAttribute("id");
+%>
+
 </head>
 <body>
 	<div class="main-container">
 		<header><jsp:include page="<%=Helper.getHeaderPath(request)%>" /></header>
-
+		
+		
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
-				<div class="page-content">
-					<p>Pick a category:</p>
-					<ul>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_LAPTOPS %>"/></c:url>'>Laptops</a></li>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_PHONES %>"/></c:url>'>Phones</a></li>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_DESKTOPS %>"/></c:url>'>Desktops</a></li>
-					</ul>
-				</div>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px;">
+					BACK <i class="fas fa-arrow-left"></i>
+				</button>
+				
+				<table style="width: 100%; border: 1px solid black">
+					<%= HtmlHelper.getItemInfo(id, request) %>
+				</table>
+				
 			</div>
 		</div>
 		

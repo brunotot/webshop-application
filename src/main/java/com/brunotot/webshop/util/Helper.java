@@ -23,6 +23,7 @@ import org.springframework.web.util.UrlPathHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.content.ShoppingCartItem;
+import com.brunotot.webshop.merchandise.Desktop;
 import com.brunotot.webshop.merchandise.Laptop;
 import com.brunotot.webshop.merchandise.Phone;
 
@@ -94,6 +95,10 @@ public class Helper {
 	public static Item getCategoryItemFromTableRowData(String category, ResultSet tableRowData, Statement st) {
 		if (category.equals(Constants.CATEGORY_LAPTOPS)) {
 			return Helper.getResultItemByClass(Constants.CLASS_NAME_LAPTOP, category, tableRowData, st);
+		} else if (category.equals(Constants.CATEGORY_PHONES)) {
+			return Helper.getResultItemByClass(Constants.CLASS_NAME_PHONE, category, tableRowData, st);
+		} else if (category.equals(Constants.CATEGORY_DESKTOPS)) {
+			return Helper.getResultItemByClass(Constants.CLASS_NAME_DESKTOP, category, tableRowData, st);
 		}
 		return null;
 	}
@@ -156,7 +161,6 @@ public class Helper {
 		return null;
 	}
 
-	
 	public static ResultSet getResultSetByPreparedQuery(Connection conn, String preparedQuery, Object... params) throws Exception {
 		int variableQuantity = StringUtils.countOccurrencesOf(preparedQuery, "?");
 		if (variableQuantity != params.length) {
@@ -224,13 +228,15 @@ public class Helper {
 			return new Laptop();
 		} else if (category.equals(Constants.TABLE_PHONES)) {
 			return new Phone();
+		} else if (category.equals(Constants.TABLE_DESKTOPS)) {
+			return new Desktop();
 		}
 		
 		return null;
 	}
 	
 	public static int getLowestFromCategory(HttpServletRequest request, String category, String tableColumn) {
-		if (tableColumn.equals("ram")) return 4;
+		//if (tableColumn.equals("ram")) return 4;
 		try {
 			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
 			
@@ -245,7 +251,7 @@ public class Helper {
 	}
 
 	public static int getHighestFromCategory(HttpServletRequest request, String category, String tableColumn) {
-		if (tableColumn.equals("ram")) return 32;
+		//if (tableColumn.equals("ram")) return 32;
 		try {
 			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
 			
@@ -279,6 +285,10 @@ public class Helper {
 	public static String getLeftColName(String element) {
 		if (element.equals("manufacturer")) {
 			return "Manufacturers";
+		} else if (element.equals("ram")){
+			return "RAM";
+		} else if (element.equals("price")) {
+			return "Price";
 		} else {
 			return "GPU brands";
 		}
@@ -390,6 +400,17 @@ public class Helper {
 			listVal.add(sqlValue);
 			resultMap.put(sqlKey, listVal);
 		}
+	}
+
+	public static String getCategoryById(String id) {
+		if (id.startsWith(Constants.LAPTOP_UNIQUE_IDENTIFIER)) {
+			return Constants.CATEGORY_LAPTOPS;
+		} else if (id.startsWith(Constants.PHONE_UNIQUE_IDENTIFIER)) {
+			return Constants.CATEGORY_PHONES;
+		} else if (id.startsWith(Constants.DESKTOP_UNIQUE_IDENTIFIER)) {
+			return Constants.CATEGORY_DESKTOPS;
+		}
+		return null;
 	}
 
 }

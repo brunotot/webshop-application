@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- TITLE -->
-<title>Shopping cart</title>
+<title><%= Constants.TITLE_SHOPPING_CART %></title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -80,8 +80,9 @@
 								</button>
 							</a>
 						</div>
+
 						<div>
-							<a href='<c:url value="/user/payment"/>'>
+							<a onclick="payment()">
 								<button type="button" id="payment-btn" class="my-button">
 									<div id="payment-div">PAYMENT <i class="far fa-money-bill-alt"></i></div>
 								</button>

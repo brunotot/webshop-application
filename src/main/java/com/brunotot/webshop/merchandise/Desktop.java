@@ -10,7 +10,7 @@ import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.util.Helper;
 
-public class Laptop implements Item {
+public class Desktop implements Item {
 	private int id;
 	
 	private String name;
@@ -37,11 +37,11 @@ public class Laptop implements Item {
 	
 	private int price;
 	
+	private String category = "desktops";
+	
 	private int maxInStock;
 	
-	private String category = "laptops";
-	
-	public Laptop() {
+	public Desktop() {
 		
 	}
 	
@@ -232,13 +232,8 @@ public class Laptop implements Item {
 
 	@Override
 	public String getAllItemInformation() {
-		String itemInfo = "";
-		
-		String valueLeft = "RAM";
-		String valueRight = "8GB";
-		itemInfo += HtmlHelper.getItemInfoRow(valueLeft, valueRight);
-		
-		return itemInfo;
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

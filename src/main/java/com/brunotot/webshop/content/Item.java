@@ -22,6 +22,7 @@ public interface Item {
 	String getFullName();
 	
 	String getFilterElements(HttpServletRequest request, String category, Map<String, String[]> filteredMap);
-
-	String[] getParameterNames();
+	
+	String getAllItemInformation();
+	
 }

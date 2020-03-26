@@ -35,8 +35,15 @@ public class Constants {
 	public static final String TABLE_PERSISTENT_LOGINS = "persistent_logins";
 	public static final String LAPTOP_UNIQUE_IDENTIFIER = "1234";
 	public static final String PHONE_UNIQUE_IDENTIFIER = "4321";
+	public static final String DESKTOP_UNIQUE_IDENTIFIER = "5678";
 	public static final String CSS_FILTER_TABLE_STYLE = "filter-table-style.css";
 	public static final String CSS_FILTER_STYLE = "filter-style.css";
 	public static final String JS_FILTER_TABLE = "filter-table.js";
 	public static final String JS_FILTER_CHECKBOXES = "filter-checkboxes.js";
+	public static final String CATEGORY_PHONES = "phones";
+	public static final String CLASS_NAME_PHONE = "Phone";
+	public static final String CLASS_NAME_DESKTOP = "Desktop";
+	public static final String CATEGORY_DESKTOPS = "desktops";
+	public static final String TABLE_DESKTOPS = "desktops";
+	public static final String TITLE_SHOPPING_CART = "Shopping cart";
 }

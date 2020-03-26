@@ -1,5 +1,7 @@
 package com.brunotot.webshop.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.form.UserForm;
 import com.brunotot.webshop.service.UserService;
+import com.brunotot.webshop.util.Helper;
 import com.brunotot.webshop.validator.SignupValidator;
 
 @Controller
@@ -55,9 +59,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/payment", method = RequestMethod.GET)
-	public ModelAndView payment() {
+	public ModelAndView payment(HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/user/payment");
+		
+		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, "cart");
+		if (cart.getItems() == null || cart.getItems().size() == 0) {
+			model.setViewName("/home/shoppingcart");
+		}
+		
 		return model;
 	}
 

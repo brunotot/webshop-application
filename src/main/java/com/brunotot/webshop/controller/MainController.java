@@ -4,21 +4,18 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -248,4 +245,14 @@ public class MainController {
 		return model;
 	}
 
+	@GetMapping("/item") 
+	public ModelAndView visitItem(@RequestParam(value = "id") String id, HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("home/item");
+		String category = Helper.getCategoryById(id);
+		model.addObject("category", category);
+		model.addObject("id", id);
+		return model;
+	}
+	
 }

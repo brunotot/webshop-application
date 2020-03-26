@@ -77,7 +77,7 @@ public class HtmlHelper {
 		div += addLine("<div class='item-wrapper'>");
 		div += addLine("<div class='item-content'>");
 		div += addLine("<img id='image' src='" + imageUrl + "'>");
-		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'><a href='#'>" + formattedName + "</a></p></div>");
+		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'><a href='item?id=" + id + "'>" + formattedName + "</a></p></div>");
 		div += addLine("<div class='button-wrapper'>");
 		div += addLine("<div class='parent-vertical'><p id='price-paragraph' class='child-vertical-middle'>" + price + " &euro;</p></div>");
 		div += addLine("<div><button class='my-button' onclick=\"addItem(" + id + ", '" + category + "')\">" + Constants.ADD_TO_CART + "</button></div>");
@@ -197,4 +197,25 @@ public class HtmlHelper {
 		return filterElements;
 	}
 
+	public static String getItemInfo(String id, HttpServletRequest request) {
+		String itemInfo = "";
+		
+		String category = Helper.getCategoryById(id);
+		Item item = Helper.getItemInstanceByCategory(category);
+		itemInfo += item.getAllItemInformation();
+		
+		return itemInfo;
+	}
+
+	public static String getItemInfoRow(String valueLeft, String valueRight) {
+		String itemInfoRow = "";
+		
+		itemInfoRow += addLine("<tr>");
+		itemInfoRow += addLine("<td style='width: 40%; background; grey; padding: 4px;'>" + valueLeft + "</td>");
+		itemInfoRow += addLine("<td style='width: 60%; padding: 4px;'>" + valueRight + "</td>");
+		itemInfoRow += addLine("</tr>");
+		
+		return itemInfoRow;
+	}
+	
 }

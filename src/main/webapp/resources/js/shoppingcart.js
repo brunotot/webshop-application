@@ -16,3 +16,13 @@ $(function() {
 		document.getElementById("payment-btn").disabled = false;
 	}
 });
+
+function payment() {
+	var empty = document.getElementById("payment-btn").disabled; 
+	if (empty) {
+		return;
+	}
+	
+	var value = 'user/payment?empty=' + empty;
+	location.href = value;
+}

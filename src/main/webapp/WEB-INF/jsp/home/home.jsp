@@ -2,6 +2,7 @@
 <%@ page import="com.brunotot.webshop.content.*" %>
 <%@ page import="com.brunotot.webshop.util.*" %>
 <%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.util.Map" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -39,11 +40,14 @@
 <script src="<%= Constants.PATH_SRC + Constants.PATH_JS + Constants.JS_FILTER_CHECKBOXES %>"></script>
 
 <%
-	String category = (String) request.getAttribute("category");
+	String category = null;
+	category = (String) request.getAttribute("category");
+	
 	ResultSet filteredResultSet = null;
 	filteredResultSet = (ResultSet) request.getAttribute("filteredResultSet");
-	java.util.Map<String, String[]> filteredMap = null;
-	filteredMap = (java.util.Map<String, String[]>) request.getAttribute("filteredMap");
+	
+	Map<String, String[]> filteredMap = null;
+	filteredMap = (Map<String, String[]>) request.getAttribute("filteredMap");
 %>
 
 </head>
@@ -54,7 +58,9 @@
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
 				<div class="page-content">
-				
+					<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px;">
+						BACK <i class="fas fa-arrow-left"></i>
+					</button>
 					<form action="filter?category=<%= category %>" method="post">
 						<div class="filter">
 						<table id="cart-table" class="shoppingcart-table">
