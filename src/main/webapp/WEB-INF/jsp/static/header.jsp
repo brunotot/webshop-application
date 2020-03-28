@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="org.springframework.web.util.*" %>
 <%@ page import="org.springframework.util.*" %>
+<%@ page import="com.brunotot.webshop.util.*" %>
 
 <%
 	Cookie cookie = WebUtils.getCookie(request, "cart");
@@ -23,7 +24,10 @@
 				</i>
 				<div class="dropdown-content">
 					<a id="dropdown-shoppingcart" href='<c:url value="/shoppingcart"/>'>Shopping cart <span id="items-counter-mobile">(<%= itemsCounter %>)</span></a>
-					<a href='<c:url value="/user/settings"/>'>Settings</a> 
+					<a href='<c:url value="/user/settings"/>'>Settings</a>
+					<c:if test="<%= Helper.isUserAuthenticated(request) %>">
+         				<a href='<c:url value="/admin/panel"/>'>Admin panel</a>
+      				</c:if> 
 					<a href='<c:url value="/logout"/>'>Logout</a>
 				</div>
 			</div>

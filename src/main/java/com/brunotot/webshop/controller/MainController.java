@@ -207,7 +207,7 @@ public class MainController {
 	@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
 	public ModelAndView accessDenied() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("errors/access_denied");
+		model.setViewName("errors/access-denied");
 		return model;
 	}
 	
@@ -248,11 +248,10 @@ public class MainController {
 	}
 	
 	@PostMapping("/user/purchase") 
-	public void purchase(HttpServletRequest request) throws SQLException {
+	public boolean purchase(HttpServletRequest request) throws SQLException {
 		try {
 			String username = request.getUserPrincipal().getName();
 			Connection conn = ((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection();
-			ShoppingCart cart = ((ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART));
 			List<ShoppingCartItem> list = cart.getItems();
 			String preparedQuery = "INSERT INTO `purchased`(`username`,`id`, `count`, `date`, `name`, `image`, `price`) VALUES (?,?,?,?,?,?,?);";
 			Date date = new Date(Calendar.getInstance().getTimeInMillis());
@@ -267,5 +266,6 @@ public class MainController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 }

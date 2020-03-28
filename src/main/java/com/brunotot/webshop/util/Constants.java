@@ -39,13 +39,15 @@ public class Constants {
 	
 	public static final String TITLE_SHOPPING_CART = "Shopping cart";
 	public static final String TITLE_HOME = "Home";
-	public static final String TITLE_ACCESS_DENIED = "access_denied.jsp";
+	public static final String TITLE_ACCESS_DENIED = "Access denied";
 	public static final String TITLE_LOGIN = "Login";
 	public static final String TITLE_SETTINGS = "Settings";
 	public static final String TITLE_REGISTRATION = "Registration";
 	public static final String TITLE_PAYMENT = "Payment";
 	public static final String TITLE_PURCHASED_ITEMS = "Purchased items";
-	
+	public static final String TITLE_ADMIN_PANEL = "Admin panel";
+	public static final String TITLE_ADMIN_USERS = "Users";
+
 	public static final String UNIQUE_IDENTIFIER_LAPTOP = "1234";
 	public static final String UNIQUE_IDENTIFIER_PHONE = "4321";
 	public static final String UNIQUE_IDENTIFIER_DESKTOP = "5678";

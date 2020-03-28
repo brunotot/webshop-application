@@ -191,6 +191,7 @@ public class Laptop implements Item {
 			this.price = tableRowData.getInt("price");
 			this.cpuName = tableRowData.getString("cpuname");
 			this.cpuCores = tableRowData.getInt("cpucores");
+			this.maxInStock = tableRowData.getInt("stock");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

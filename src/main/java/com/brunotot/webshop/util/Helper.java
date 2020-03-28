@@ -196,9 +196,13 @@ public class Helper {
 	}
 
 	public static String[] getAntMatchersForAdminRole() {
-		String[] allowed = new String[1];
+		String[] allowed = new String[5];
 
 		allowed[0] = "/admin";
+		allowed[1] = "/admin/panel";
+		allowed[2] = "/user";
+		allowed[3] = "/user/settings";
+		allowed[4] = "/user/payment";
 		
 		return allowed;
 	}
@@ -301,7 +305,6 @@ public class Helper {
 			String currentValue = val[0];
 			if (NumberUtils.isCreatable(currentValue)) {
 				if (key.charAt(key.length() - 1) == '1') {
-					
 					if (key.startsWith("ram")) {
 						preparedQuery += key.substring(0, key.length() - 1) + ">=" + (int)Math.pow(2, Integer.parseInt(currentValue)) + " AND ";
 					} else {
@@ -409,5 +412,8 @@ public class Helper {
 		
 		return valid;
 	}
-
+	
+	public static boolean isUserAuthenticated(HttpServletRequest request) {
+		return request.isUserInRole("ROLE_ADMIN");
+	}
 }

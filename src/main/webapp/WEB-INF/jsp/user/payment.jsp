@@ -101,17 +101,17 @@
 					    },
 					    onApprove: function(data, actions) {
 					      return actions.order.capture().then(function(details) {
-					        $.ajax({
+				        	$.ajax({
 						        type: 'POST',
 						        url: 'purchase'
 						    });
-					        
-					        $.ajax({
+				        	
+					        alert('Transaction completed! You can find purchased items in User -> Settings -> Previous transactions');
+
+				        	$.ajax({
 						        type: 'GET',
 						        url: '../shoppingcart/clearall'
 						    });
-					        
-					        alert('Transaction completed! You can find purchased items in User -> Settings -> Previous transactions');
 					        location.href = "/shoppolis/";
 					      });
 					    }

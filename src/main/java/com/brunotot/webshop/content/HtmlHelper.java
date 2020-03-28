@@ -268,4 +268,27 @@ public class HtmlHelper {
 		return result;
 	}
 
+	public static String getAllUsersData(HttpServletRequest request) {
+		String usersData = "";
+		
+		ResultSet rs = null;
+		try {
+			String preparedQuery = "select * from `users`;";
+			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
+			while (rs.next()) {
+				String username = rs.getString("username");
+				usersData += addLine("<p>" + username + "</p>");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return usersData;
+	}
 }
