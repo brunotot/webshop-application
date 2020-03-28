@@ -2,4 +2,4 @@
 .settings
 /target/
 /sql/
-push-all-to-git.bat
+*.bat
