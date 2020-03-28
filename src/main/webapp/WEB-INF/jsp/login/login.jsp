@@ -18,7 +18,10 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <!-- FONT AWESOME -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
 
 <!-- CSS STYLING -->
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_LOGIN_STYLE %>">
@@ -46,7 +49,7 @@
 					</table>
 					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
 				</form>
-				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">HOMEPAGE <i class="fas fa-arrow-left"></i></div></button>
 			</div>
 		</div>
 		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>

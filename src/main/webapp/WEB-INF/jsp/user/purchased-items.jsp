@@ -12,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- PAGE TITLE -->
-<title><%= Constants.TITLE_HOME %></title>
+<title><%= Constants.TITLE_PURCHASED_ITEMS %></title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -24,11 +24,13 @@
 <link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
 
 <!-- CSS STYLING -->
-<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_ITEMS_STYLE %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_ITEMS_STYLE %> ">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_HEADER_STYLE %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_BTNS %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_TABLE_STYLE %>">
 
 </head>
 <body>
@@ -38,12 +40,24 @@
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
 				<div class="page-content">
-					<p>Pick a category:</p>
-					<ul>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_LAPTOPS %>"/></c:url>'>Laptops</a></li>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_PHONES %>"/></c:url>'>Phones</a></li>
-						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_DESKTOPS %>"/></c:url>'>Desktops</a></li>
-					</ul>
+					<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px; margin-bottom: 14px;">
+						HOMEPAGE <i class="fas fa-arrow-left"></i>
+					</button>
+					
+					<table id="cart-table" class="shoppingcart-table">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Item</th>
+								<th>Qty</th>
+								<th>Date</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%= HtmlHelper.getPurchasedShoppingCartItems(request) %>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

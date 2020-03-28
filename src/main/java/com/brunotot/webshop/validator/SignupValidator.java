@@ -8,6 +8,7 @@ import org.springframework.validation.Validator;
 
 import com.brunotot.webshop.form.UserForm;
 import com.brunotot.webshop.service.UserService;
+import com.brunotot.webshop.util.Helper;
 
 @Component
 public class SignupValidator implements Validator {
@@ -26,6 +27,11 @@ public class SignupValidator implements Validator {
 		ValidationUtils.rejectIfEmpty(errors, "password", "notEmpty.password");
 		ValidationUtils.rejectIfEmpty(errors, "confirmPassword", "notEmpty.confirmPassword");
 
+		String username = user.getUsername();
+		if (!Helper.isValid(username)) {
+			errors.rejectValue("username", "invalid.username");
+		}
+		
 		if (user.getPassword() != null && user.getConfirmPassword() != null
 				&& !user.getPassword().equals(user.getConfirmPassword())) {
 			errors.rejectValue("password", "notMatch.confirmPassword");

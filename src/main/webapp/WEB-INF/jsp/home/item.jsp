@@ -20,11 +20,21 @@
 <!-- FONT AWESOME -->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+
 <!-- CSS STYLING -->
-<link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN%>">
-<link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_HEADER_STYLE%>">
-<link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE%>">
-<link rel="stylesheet" type="text/css" href="<%=Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE%>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_HEADER_STYLE %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE %>">
+<link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_ITEM_INFO %>">
+
+<!-- JQUERY -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- JS -->
+<script src="<%= Constants.PATH_SRC + Constants.PATH_JS + Constants.JS_ACTIONS %>"></script>
 
 <%
 	String id = (String) request.getAttribute("id");
@@ -38,13 +48,17 @@
 		
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
-				<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px;">
-					BACK <i class="fas fa-arrow-left"></i>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding: 6px 20px;">
+					HOMEPAGE <i class="fas fa-arrow-left"></i>
 				</button>
 				
-				<table style="width: 100%; border: 1px solid black">
+				<table style="width: 100%; margin-top: 20px;">
 					<%= HtmlHelper.getItemInfo(id, request) %>
 				</table>
+				
+				<div style="width: 100%; text-align: center">
+					<button style="margin-top: 20px; padding: 8px 20px;" class='my-button' onclick="addItem(<%= id %>, '<%= Helper.getCategoryById(id) %>')"> <%= Constants.ADD_TO_CART %></button>
+				</div>
 				
 			</div>
 		</div>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,7 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.form.UserForm;
+import com.brunotot.webshop.model.UserInfo;
 import com.brunotot.webshop.service.UserService;
+import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 import com.brunotot.webshop.validator.SignupValidator;
 
@@ -31,7 +34,6 @@ public class UserController {
 	public ModelAndView signup() {
 		ModelAndView model = new ModelAndView("user/signup");
 		model.addObject("userForm", new UserForm());
-
 		return model;
 	}
 	
@@ -43,9 +45,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(@ModelAttribute("userForm") UserForm userForm, BindingResult result,
-			RedirectAttributes redirectAttributes) {
-
+	public String register(@ModelAttribute("userForm") UserForm userForm, BindingResult result, RedirectAttributes redirectAttributes) {
 		signupValidator.validate(userForm, result);
 
 		if (result.hasErrors()) {
@@ -53,7 +53,6 @@ public class UserController {
 		} else {
 			userService.add(userForm.getUsername(), userForm.getPassword());
 			redirectAttributes.addFlashAttribute("msg", "Your account has been created successfully!");
-
 			return "redirect:/login";
 		}
 	}
@@ -63,11 +62,18 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/user/payment");
 		
-		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, "cart");
+		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
 		if (cart.getItems() == null || cart.getItems().size() == 0) {
 			model.setViewName("/home/shoppingcart");
 		}
 		
+		return model;
+	}
+	
+	@RequestMapping(value = "/purchaseditems", method = RequestMethod.GET)
+	public ModelAndView purchasedItems(HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/user/purchased-items");
 		return model;
 	}
 

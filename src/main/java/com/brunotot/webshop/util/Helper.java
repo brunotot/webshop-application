@@ -1,6 +1,7 @@
 package com.brunotot.webshop.util;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +35,7 @@ public class Helper {
 	public static ResultSet getResultSetById(Statement st, int id, String dbName) {
 		String sql = "select * from `" + Helper.getEscapedQueryVariable(dbName) + "`;";
 		try {
-			ResultSet rs = Helper.getResultSetByPreparedQuery(st.getConnection(), sql); 
+			ResultSet rs = Helper.executePreparedQuery(st.getConnection(), sql); 
 			while (rs.next()) {
 				if (id == rs.getInt("id")) {
 					return rs;
@@ -57,17 +60,9 @@ public class Helper {
 		return jspRootPath;
 	}
 	
-	public static boolean isUserAuthenticated(HttpServletRequest request) {
-		if (request.isUserInRole("ROLE_USER") || request.isUserInRole("ROLE_ADMIN")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public static String getHeaderPath(HttpServletRequest request) {
 		String jspRootPath = Helper.getJspRootPath(request);
-		if (Helper.isUserAuthenticated(request)) {
+		if (request.isUserInRole("ROLE_USER") || request.isUserInRole("ROLE_ADMIN")) {
 			return jspRootPath + "static/header.jsp"; 
 		} else {
 			return jspRootPath + "static/a-header.jsp";
@@ -84,14 +79,6 @@ public class Helper {
 				.getBean(beanName);
 	}
 	
-	public static String getFormattedName(String name) {
-		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
-			return name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
-		} else {
-			return name;
-		}
-	}
-
 	public static Item getCategoryItemFromTableRowData(String category, ResultSet tableRowData, Statement st) {
 		if (category.equals(Constants.CATEGORY_LAPTOPS)) {
 			return Helper.getResultItemByClass(Constants.CLASS_NAME_LAPTOP, category, tableRowData, st);
@@ -112,10 +99,12 @@ public class Helper {
 			item.setAllDataFromResultSet(tableRowData);
 			
 			String sql = "select * from `" + Helper.getEscapedQueryVariable(category) + "` where id=?";
-			ResultSet rs = Helper.getResultSetByPreparedQuery(st.getConnection(), sql, item.getId());
-			rs.first();
-			int stock = rs.getInt("stock");
-			item.setMaxInStock(stock);
+			ResultSet rs = Helper.executePreparedQuery(st.getConnection(), sql, item.getId());
+			if (rs != null) {
+				rs.first();
+				int stock = rs.getInt("stock");
+				item.setMaxInStock(stock);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,7 +126,6 @@ public class Helper {
 		return 0;
 	}
 	
-
 	public static void updateCookies(HttpServletResponse response, String newCookieValue) {
 		Cookie cookie = new Cookie(Constants.BEAN_SHOPPING_CART, newCookieValue);
 		cookie.setPath("/shoppolis");
@@ -161,7 +149,7 @@ public class Helper {
 		return null;
 	}
 
-	public static ResultSet getResultSetByPreparedQuery(Connection conn, String preparedQuery, Object... params) throws Exception {
+	public static ResultSet executePreparedQuery(Connection conn, String preparedQuery, Object... params) throws Exception {
 		int variableQuantity = StringUtils.countOccurrencesOf(preparedQuery, "?");
 		if (variableQuantity != params.length) {
 			throw new Exception("Number of variables (?) does not match number of parameters");
@@ -177,9 +165,16 @@ public class Helper {
 					stmt.setInt(i + 1, (Integer) param);
 				} else if (param instanceof String) {
 					stmt.setString(i + 1, (String) param);
+				} else if (param instanceof Date){
+					stmt.setDate(i + 1, (Date) param);
 				} else {
 					stmt.close();
 					throw new Exception("Wrong parameter type. Check syntax!");
+				}
+				if (i == params.length - 1) {
+					stmt.execute();
+					stmt.close();
+					return null;
 				}
 			}
 			return stmt.executeQuery();
@@ -190,13 +185,6 @@ public class Helper {
 		return null;
 	}
 
-	public static String escapeSql(String category) {
-		if (category == null) {
-			return null;
-		}
-		return category.replaceAll("'", "''");
-	}
-	
 	public static String[] getAntMatchersForUserRole() {
 		String[] allowed = new String[3];
 
@@ -224,11 +212,11 @@ public class Helper {
 	}
 
 	public static Item getItemInstanceByCategory(String category) {
-		if (category.equals(Constants.TABLE_LAPTOPS)) {
+		if (category.equals(Constants.CATEGORY_LAPTOPS)) {
 			return new Laptop();
-		} else if (category.equals(Constants.TABLE_PHONES)) {
+		} else if (category.equals(Constants.CATEGORY_PHONES)) {
 			return new Phone();
-		} else if (category.equals(Constants.TABLE_DESKTOPS)) {
+		} else if (category.equals(Constants.CATEGORY_DESKTOPS)) {
 			return new Desktop();
 		}
 		
@@ -236,14 +224,14 @@ public class Helper {
 	}
 	
 	public static int getLowestFromCategory(HttpServletRequest request, String category, String tableColumn) {
-		//if (tableColumn.equals("ram")) return 4;
 		try {
-			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
+			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallest FROM `" + Helper.getEscapedQueryVariable(category) + "`;"; 
 			
-			DataSource ds = (DataSource) Helper.getBeanFromRequest(request, "getDataSource");
-			ResultSet rs = Helper.getResultSetByPreparedQuery(ds.getConnection(), preparedQuery);
-			rs.first();
-			return rs.getInt("smallestPrice");
+			ResultSet rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
+			rs.next();
+			int smallest = rs.getInt("smallest");
+			rs.close();
+			return smallest;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -251,15 +239,14 @@ public class Helper {
 	}
 
 	public static int getHighestFromCategory(HttpServletRequest request, String category, String tableColumn) {
-		//if (tableColumn.equals("ram")) return 32;
 		try {
-			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largestPrice FROM `" + Helper.escapeSql(category) + "`;"; 
+			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largest FROM `" + Helper.getEscapedQueryVariable(category) + "`;"; 
 			
-			DataSource ds = (DataSource) Helper.getBeanFromRequest(request, "getDataSource");
-			Connection conn = ds.getConnection();
-			ResultSet rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
-			rs.first();
-			return rs.getInt("largestPrice");
+			ResultSet rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
+			rs.next();
+			int largest = rs.getInt("largest");
+			rs.close();
+			return largest;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -278,8 +265,6 @@ public class Helper {
 		} else {
 			return numberOfCores + "";
 		}
-		
-		
 	}
 
 	public static String getLeftColName(String element) {
@@ -403,14 +388,26 @@ public class Helper {
 	}
 
 	public static String getCategoryById(String id) {
-		if (id.startsWith(Constants.LAPTOP_UNIQUE_IDENTIFIER)) {
+		if (id.startsWith(Constants.UNIQUE_IDENTIFIER_LAPTOP)) {
 			return Constants.CATEGORY_LAPTOPS;
-		} else if (id.startsWith(Constants.PHONE_UNIQUE_IDENTIFIER)) {
+		} else if (id.startsWith(Constants.UNIQUE_IDENTIFIER_PHONE)) {
 			return Constants.CATEGORY_PHONES;
-		} else if (id.startsWith(Constants.DESKTOP_UNIQUE_IDENTIFIER)) {
+		} else if (id.startsWith(Constants.UNIQUE_IDENTIFIER_DESKTOP)) {
 			return Constants.CATEGORY_DESKTOPS;
 		}
 		return null;
+	}
+
+	public static boolean isValid(String username) {
+		boolean valid = true;
+		
+	    Pattern p = Pattern.compile("[^A-Za-z0-9]");
+	    Matcher m = p.matcher(username);
+	    if (m.find()) {
+	    	valid = false;
+	    }
+		
+		return valid;
 	}
 
 }

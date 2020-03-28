@@ -15,4 +15,5 @@ public interface UserService {
 	public void add(String username, String password);
 
 	public boolean userExists(String username);
+	
 }

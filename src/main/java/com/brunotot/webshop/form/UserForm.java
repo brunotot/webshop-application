@@ -1,8 +1,11 @@
 package com.brunotot.webshop.form;
 
 public class UserForm {
+	
 	private String username;
+	
 	private String password;
+	
 	private String confirmPassword;
 
 	public String getUsername() {
@@ -28,4 +31,5 @@ public class UserForm {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	
 }

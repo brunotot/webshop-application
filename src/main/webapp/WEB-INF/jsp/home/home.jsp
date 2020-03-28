@@ -31,6 +31,9 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FILTER_TABLE_STYLE %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FILTER_STYLE %>">
 
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+
 <!-- JQUERY -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -58,8 +61,8 @@
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
 				<div class="page-content">
-					<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px;">
-						BACK <i class="fas fa-arrow-left"></i>
+					<button type="button" class="my-button" onclick="location.href='/shoppolis/'" style="padding:6px 20px; margin-bottom: 14px;">
+						HOMEPAGE <i class="fas fa-arrow-left"></i>
 					</button>
 					<form action="filter?category=<%= category %>" method="post">
 						<div class="filter">

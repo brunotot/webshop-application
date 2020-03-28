@@ -1,9 +1,13 @@
 package com.brunotot.webshop.controller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.content.ShoppingCartItem;
@@ -44,26 +47,28 @@ public class MainController {
 							 @RequestParam(value = "category") String category, 
 							 @RequestParam(value = "wantedamount") int wantedAmount,
 							 @RequestParam(value = "start") String start,
-							 HttpServletRequest request) throws SQLException {
+							 HttpServletRequest request) {
 		boolean exists = false;
 		
-		Statement st = dataSource.getConnection().createStatement();
-
-		ResultSet rs = Helper.getResultSetById(st, id, category);
-
-		int totalInStock = rs.getInt("stock");
-		int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
+		try {
+			ResultSet rs = Helper.getResultSetById(dataSource.getConnection().createStatement(), id, category);
+			
+			int totalInStock = rs.getInt("stock");
+			int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
 		
-		int currentTotalLeftInStock;
+			int currentTotalLeftInStock;
 		
-		if (start.equals("home")) {
-			currentTotalLeftInStock = totalInStock - itemCountInCart;
-		} else {
-			currentTotalLeftInStock = totalInStock; 
-		}
-		
-		if (currentTotalLeftInStock >= wantedAmount) {
-			exists = true;
+			if (start.equals("home")) {
+				currentTotalLeftInStock = totalInStock - itemCountInCart;
+			} else {
+				currentTotalLeftInStock = totalInStock; 
+			}
+			
+			if (currentTotalLeftInStock >= wantedAmount) {
+				exists = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return exists;
@@ -77,10 +82,8 @@ public class MainController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("home/shoppingcart");
 		
-		// remove deleted item from the shopping cart
 		cart.remove(id);
 
-		// remove deleted item from cookies
 		String currentCookieName = id + ":" + category + "~";
 		String newCookieValue = cartCookie.replace(currentCookieName, "");
 		Helper.updateCookies(response, newCookieValue);
@@ -101,7 +104,6 @@ public class MainController {
 		model.setViewName("home/home");
 		request.setAttribute("category", category);
 		
-		// append if item already exists
 		String newCookieValue = "";
 		String selectedItemCookieName = id + ":" + category + "~";
 		if (cart.exists(id)) {
@@ -120,10 +122,9 @@ public class MainController {
 			return model;
 		}
 		
-		// add new item if one doesn't exist
 		Statement st = dataSource.getConnection().createStatement();
-		ResultSet tableRowData = Helper.getResultSetById(st, id, category);
-		Item item = Helper.getCategoryItemFromTableRowData(category, tableRowData, st);
+		Item item = Helper.getCategoryItemFromTableRowData(category, Helper.getResultSetById(st, id, category), st);
+		st.close();
 		cart.add(new ShoppingCartItem(item, 1));
 		
 		newCookieValue = cartCookie + selectedItemCookieName;
@@ -134,21 +135,19 @@ public class MainController {
 	
 	@RequestMapping(value = "shoppingcart/clearall", method = RequestMethod.GET)
 	public ModelAndView clearAllItems(HttpServletRequest request, HttpServletResponse response) {
-		// Remove cookies
 		Helper.updateCookies(response, null);
 		
-		// Remove from shopping cart
 		cart.getItems().clear();
 		
 		ModelAndView model = new ModelAndView();
 		model.setViewName("home/shoppingcart");
 		
-		// Problems with counter not refreshing after 'return model;'
 		try {
 			response.sendRedirect("/shoppolis/shoppingcart");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		model.addObject(Constants.BEAN_SHOPPING_CART, "");
 		return model;
 	}
@@ -189,7 +188,6 @@ public class MainController {
 	public ModelAndView logoutPage(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
-		/* Remove user's persistent login on logout */
 		String query = "delete from " + Constants.TABLE_PERSISTENT_LOGINS + " where username='" + Helper.getEscapedQueryVariable(auth.getName()) + "'";
 		try {
 			this.dataSource.getConnection().createStatement().execute(query);
@@ -222,25 +220,20 @@ public class MainController {
 	
 	@PostMapping("/filter") 
 	public ModelAndView submitFilter(@RequestParam(value = "category") String category, HttpServletRequest request) {
-		ModelAndView model = new ModelAndView();
-		
-		HtmlHelper.getAllItemsFromCategory(category, request);
-		
 		Map<String, String[]> map = request.getParameterMap();
-
 		String preparedQuery = Helper.getSubmitFormQuery(category, map);
-		
 		ResultSet rs = null;
 		try {
-			rs = Helper.getResultSetByPreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
+			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		model.setViewName("home/home");
+
+		ModelAndView model = new ModelAndView();
 		model.addObject("category", category);
 		model.addObject("filteredResultSet", rs);
 		model.addObject("filteredMap", map);
+		model.setViewName("home/home");
 		
 		return model;
 	}
@@ -248,11 +241,31 @@ public class MainController {
 	@GetMapping("/item") 
 	public ModelAndView visitItem(@RequestParam(value = "id") String id, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
+		model.addObject("category", Helper.getCategoryById(id));
 		model.setViewName("home/item");
-		String category = Helper.getCategoryById(id);
-		model.addObject("category", category);
 		model.addObject("id", id);
 		return model;
 	}
 	
+	@PostMapping("/user/purchase") 
+	public void purchase(HttpServletRequest request) throws SQLException {
+		try {
+			String username = request.getUserPrincipal().getName();
+			Connection conn = ((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection();
+			ShoppingCart cart = ((ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART));
+			List<ShoppingCartItem> list = cart.getItems();
+			String preparedQuery = "INSERT INTO `purchased`(`username`,`id`, `count`, `date`, `name`, `image`, `price`) VALUES (?,?,?,?,?,?,?);";
+			Date date = new Date(Calendar.getInstance().getTimeInMillis());
+			for (ShoppingCartItem item : list) {
+				int id = item.getItem().getId();
+				int count = item.getCount();
+				String name = item.getItem().getFullName();
+				String image = item.getItem().getImageUrl();
+				int price = item.getItem().getPrice();
+				Helper.executePreparedQuery(conn, preparedQuery, username, id, count, date, name, image, price);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

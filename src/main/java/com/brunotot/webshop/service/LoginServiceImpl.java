@@ -29,7 +29,7 @@ public class LoginServiceImpl implements UserDetailsService {
 		UserInfo userInfo = loginDao.findUserInfo(username);
 
 		if (userInfo == null) {
-			throw new UsernameNotFoundException("username was not found in the database");
+			throw new UsernameNotFoundException("Username was not found in the database");
 		}
 
 		List<String> roles = loginDao.getUserRoles(username);

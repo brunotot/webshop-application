@@ -21,6 +21,9 @@
 <!-- FONT AWESOME -->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+
 <!-- CSS STYLING -->
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SIGNUP_STYLE %>">
@@ -46,7 +49,7 @@
 					<form:errors path="confirmPassword" />
 					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
 				</form:form>
-				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div></button>
+				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">HOMEPAGE <i class="fas fa-arrow-left"></i></div></button>
 			</div>
 		</div>
 	

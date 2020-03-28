@@ -1,7 +1,9 @@
 package com.brunotot.webshop.model;
 
 public class UserInfo {
+	
 	private String username;
+	
 	private String password;
 
 	public UserInfo() {

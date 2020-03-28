@@ -15,6 +15,7 @@ public class DatabaseConfiguration {
 
 	@Bean
 	public static DataSource getDataSource() {
+		DriverManagerDataSource ds = null;
 		try {
 			Properties properties = new Properties();
 			InputStream inputStream = new DatabaseConfiguration()
@@ -22,18 +23,16 @@ public class DatabaseConfiguration {
 					.getClassLoader()
 					.getResourceAsStream("application.properties");
 			properties.load(inputStream);
+			ds = new DriverManagerDataSource();
 			
-			DriverManagerDataSource ds = new DriverManagerDataSource();
 			ds.setDriverClassName(properties.getProperty("jdbcdriverclass"));
 			ds.setUrl(properties.getProperty("jdbcurl"));
 			ds.setUsername(properties.getProperty("jdbcusername"));
 			ds.setPassword(properties.getProperty("jdbcpassword"));
-		
-			return ds;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return ds;
 	}
 	
 }

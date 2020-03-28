@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
+import com.brunotot.webshop.content.PurchasedShoppingCartItem;
 import com.brunotot.webshop.util.Helper;
 
 public class Desktop implements Item {
+	
 	private int id;
 	
 	private String name;
@@ -128,6 +130,30 @@ public class Desktop implements Item {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public String getCpuName() {
+		return cpuName;
+	}
+	
+	public void setCpuName(String cpuName) {
+		this.cpuName = cpuName;
+	}
+	
+	public int getCpuCores() {
+		return cpuCores;
+	}
+	
+	public void setCpuCores(int cpuCores) {
+		this.cpuCores = cpuCores;
+	}
+	
+	public String getGpuName() {
+		return gpuName;
+	}
+	
+	public void setGpuName(String gpuName) {
+		this.gpuName = gpuName;
+	}
 	
 	@Override
 	public void setMaxInStock(int maxInStock) {
@@ -140,8 +166,8 @@ public class Desktop implements Item {
 	}
 	
 	@Override
-	public String getTableRowElement(int count) {
-		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
+	public String getTableRowElement(int count, boolean inPayment) {
+		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock, inPayment, null);
 	}
 	
 	@Override
@@ -168,30 +194,6 @@ public class Desktop implements Item {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public String getCpuName() {
-		return cpuName;
-	}
-	
-	public void setCpuName(String cpuName) {
-		this.cpuName = cpuName;
-	}
-	
-	public int getCpuCores() {
-		return cpuCores;
-	}
-	
-	public void setCpuCores(int cpuCores) {
-		this.cpuCores = cpuCores;
-	}
-	
-	public String getGpuName() {
-		return gpuName;
-	}
-	
-	public void setGpuName(String gpuName) {
-		this.gpuName = gpuName;
 	}
 	
 	@Override
@@ -231,9 +233,13 @@ public class Desktop implements Item {
 	}
 
 	@Override
-	public String getAllItemInformation() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAllItemInformation(HttpServletRequest request) {
+		return HtmlHelper.getAllItemInformation(this.id, request);
+	}
+
+	@Override
+	public String getTableRowElement(PurchasedShoppingCartItem purchasedShoppingCartItemObject) {
+		return HtmlHelper.getTableRow(-1, purchasedShoppingCartItemObject.getName(), purchasedShoppingCartItemObject.getPrice(), purchasedShoppingCartItemObject.getImageUrl(), purchasedShoppingCartItemObject.getCount(), "category", -1, true, purchasedShoppingCartItemObject.getDate());
 	}
 	
 }

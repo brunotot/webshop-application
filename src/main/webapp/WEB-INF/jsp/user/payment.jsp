@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- TITLE -->
-<title>Shopping cart</title>
+<title><%= Constants.TITLE_PAYMENT %></title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -30,6 +30,9 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_BTNS %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_TABLE_STYLE %>">
 
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+
 <!-- JQUERY -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -40,6 +43,16 @@
 <!-- PAYPAL -->
 <script src="https://www.paypal.com/sdk/js?client-id=sb"></script>
 
+<style>
+	#paypal-button-container {
+		text-align: center;
+	}
+	
+	.shoppingcart-table tr > *:nth-child(4) {
+	    display: none;
+	}
+</style>
+
 </head>
 <body>
 	<div class="main-container">
@@ -48,32 +61,61 @@
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
 				<div class="page-content">
+					<p>You are about to buy:</p>
+					<table id="cart-table" class="shoppingcart-table">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Item</th>
+								<th>Qty</th>
+								<th></th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%= HtmlHelper.getAllShoppingCartItems(request, true) %>
+							
+							<tr>
+								<td></td>
+								<td colspan="2" id="total-col">TOTAL: </td>
+								<td id="total-value-col"><span id="total-value"></span><span>&euro;</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<br>
 					<script
-		    			src="https://www.paypal.com/sdk/js?client-id=AZ96z4mNPJF0N3o-O-L7JcOCRpigZg1YcT5OAmXGjjhjpgsCe-Z1PQyDSanPJQTw27cvADijxClyhHrIJ_V">
+		    			src="https://www.paypal.com/sdk/js?client-id=ARK_RPFij6DPHbSZjNUsPqewvoef-B6q5XJMtDYG2pQerpsFr9oAWtOzYEZVyOJb4UBcf0Lqm0JvLly_">
 		  			</script>
 					<div id="paypal-button-container"></div>
 		
 		  			<script>
 					  paypal.Buttons({
 					    createOrder: function(data, actions) {
-					      // This function sets up the details of the transaction, including the amount and line item details.
 					      return actions.order.create({
 					        purchase_units: [{
 					          amount: {
-					            value: '0.01'
+					            value: parseInt(document.getElementById("total-value").textContent)
 					          }
 					        }]
 					      });
 					    },
 					    onApprove: function(data, actions) {
-					      // This function captures the funds from the transaction.
 					      return actions.order.capture().then(function(details) {
-					        // This function shows a transaction success message to your buyer.
-					        alert('Transaction completed by ' + details.payer.name.given_name);
+					        $.ajax({
+						        type: 'POST',
+						        url: 'purchase'
+						    });
+					        
+					        $.ajax({
+						        type: 'GET',
+						        url: '../shoppingcart/clearall'
+						    });
+					        
+					        alert('Transaction completed! You can find purchased items in User -> Settings -> Previous transactions');
+					        location.href = "/shoppolis/";
 					      });
 					    }
 					  }).render('#paypal-button-container');
-					  //This function displays Smart Payment Buttons on your web page.
 					</script>
 				</div>
 			</div>

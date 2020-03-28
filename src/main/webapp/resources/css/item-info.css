@@ -1,0 +1,11 @@
+.left-col-item-info {
+	width: 30%; 
+	padding: 4px; 
+	border: 1px solid grey;
+}
+
+.right-col-item-info {
+	width: 70%;
+	padding: 4px;
+	border: 1px solid grey;
+}

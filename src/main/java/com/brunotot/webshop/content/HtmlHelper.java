@@ -1,7 +1,8 @@
 package com.brunotot.webshop.content;
 
-import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,25 +21,17 @@ public class HtmlHelper {
 	
 	public static String getAllItemsFromCategory(String category, HttpServletRequest request, ResultSet... filter) {
 		String result = "";
-		Connection conn = null;
 		ResultSet rs = null;
+		String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "`;";
 		try {
-			boolean flag = false;
 			if (filter == null || filter.length == 0) {
-				flag = true;
+				rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 			} else {
 				if (filter[0] == null) {
-					flag = true;
+					rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 				} else {
-					flag = false;
+					rs = filter[0];
 				}
-			}
-			if (flag) {
-				conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
-				String preparedQuery = "select * from `" + Helper.escapeSql(category) + "`;";
-				rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
-			} else {
-				rs = filter[0];
 			}
 			
 			if (rs != null) {
@@ -53,24 +46,27 @@ public class HtmlHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "fail";
+		return "Error";
 	}
 	
-	public static String getAllShoppingCartItems(HttpServletRequest request) {
+	public static String getAllShoppingCartItems(HttpServletRequest request, boolean inPayment) {
 		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
-		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
 		String result = "";
-		
+
+		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
 		for (ShoppingCartItem shoppingCartItemObject : shoppingCartItems) {
 			Item item = shoppingCartItemObject.getItem();
-			result += item.getTableRowElement(shoppingCartItemObject.getCount());
+			result += item.getTableRowElement(shoppingCartItemObject.getCount(), inPayment);
 		}
 		
 		return result;
 	}
 	
 	public static String getItemDiv (int id, String name, int price, String imageUrl, String category) {
-		String formattedName = Helper.getFormattedName(name);
+		String formattedName = name;
+		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
+			formattedName = name.substring(0, Constants.ITEM_NAME_MAX_CHARACTERS-3) + "...";
+		}
 		
 		String div = "";
 		
@@ -79,7 +75,7 @@ public class HtmlHelper {
 		div += addLine("<img id='image' src='" + imageUrl + "'>");
 		div += addLine("<div class='parent-vertical'><p class='child-vertical-middle'><a href='item?id=" + id + "'>" + formattedName + "</a></p></div>");
 		div += addLine("<div class='button-wrapper'>");
-		div += addLine("<div class='parent-vertical'><p id='price-paragraph' class='child-vertical-middle'>" + price + " &euro;</p></div>");
+		div += addLine("<div class='parent-vertical'><p id='price-paragraph' class='child-vertical-middle'>" + price + " " + Constants.EURO + "</p></div>");
 		div += addLine("<div><button class='my-button' onclick=\"addItem(" + id + ", '" + category + "')\">" + Constants.ADD_TO_CART + "</button></div>");
 		div += addLine("</div>");
 		div += addLine("</div>");
@@ -89,42 +85,50 @@ public class HtmlHelper {
 		return div;
 	}
 	
-	public static String getTableRow(int id, String name, int price, String imageUrl, int count, String category, int maxInStock) {
+	public static String getTableRow(int id, String name, int price, String imageUrl, int count, String category, int maxInStock, boolean inPayment, Date date) {
 		String tableRow = "";
 		
 		tableRow += addLine("<tr>");
 		tableRow += addLine("<td class='img-table'><img src='" + imageUrl + "'></td>");
 		tableRow += addLine("<td class='name-table'><div>" + name + "</div></td>");
-		tableRow += addLine("<td class='quantity-table'><input type='number' id='quantity" + id + "' min='0' max='" + maxInStock + "' value='" + count + "'></td>");
+		tableRow += addLine("<td class='quantity-table'><input type='number' id='quantity" + id + "' min='0' max='" + maxInStock + "' value='" + count + "' " + (inPayment == true ? "disabled" : "") + "></td>");
 		tableRow += addLine("<td class='buttons-table btns'>");
 		tableRow += addLine("<div class='buttons-group-table btn-group'>");
-		tableRow += addLine("<button type='button' class='my-button' onclick=\"addItem(" + id + ", '" + category + "')\"><i class='fas fa-sync'></i></button>");
-		tableRow += addLine("<button type='button' class='my-button' onclick=\"removeItem(" + id + ", '" + category + "')\"><i class='fas fa-times'></i></button>");
+		if (id != -1) {
+			tableRow += addLine("<button type='button' class='my-button' onclick=\"addItem(" + id + ", '" + category + "')\"><i class='fas fa-sync'></i></button>");
+			tableRow += addLine("<button type='button' class='my-button' onclick=\"removeItem(" + id + ", '" + category + "')\"><i class='fas fa-times'></i></button>");
+		} else {
+			tableRow += addLine(date + "");
+		}
 		tableRow += addLine("</div>");
 		tableRow += addLine("</td>");
-		tableRow += addLine("<td class='price-table'>" + (count*price) + "&euro;</td>");
+		tableRow += addLine("<td class='price-table'>" + (count*price) + Constants.EURO + "</td>");
 		tableRow += addLine("</tr>");
 		
 		return tableRow;
 	}
 
 	public static String getCheckboxRow(HttpServletRequest request, String category, String element, Map<String, String[]> filteredMap) {
-		String tableRow = "";
-		
 		Map<String, String> map = new HashMap<>();
+		ResultSet rs = null;
 		try {
-			Connection conn = ((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection();
 			String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "`;";
-			ResultSet rs = Helper.getResultSetByPreparedQuery(conn, preparedQuery);
+			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
 			while (rs.next()) {
 				String elem = rs.getString(element);
 				map.put(elem, elem);
 			}
-			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
+		String tableRow = "";
 		tableRow += addLine("<tr>");
 		tableRow += addLine("<td id='left-col'>" + Helper.getLeftColName(element) + ":</td>");
 		tableRow += addLine("<td id='right-col'>");
@@ -189,33 +193,79 @@ public class HtmlHelper {
 	}
 
 	public static String getAllFilterElementsFromCategory(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
-		String filterElements = "";
-				
-		Item item = Helper.getItemInstanceByCategory(category);
-		filterElements += item.getFilterElements(request, category, filteredMap);
-		
-		return filterElements;
+		return Helper
+				.getItemInstanceByCategory(category)
+				.getFilterElements(request, category, filteredMap);
 	}
 
 	public static String getItemInfo(String id, HttpServletRequest request) {
-		String itemInfo = "";
-		
 		String category = Helper.getCategoryById(id);
 		Item item = Helper.getItemInstanceByCategory(category);
-		itemInfo += item.getAllItemInformation();
-		
-		return itemInfo;
+		item.setId(Integer.parseInt(id));
+		return item.getAllItemInformation(request);
 	}
 
+	public static String getAllItemInformation(int id, HttpServletRequest request) {
+		String allItemInformation = "";
+		ResultSetMetaData rsmd = null;
+		ResultSet rs = null;
+		try {			
+			String preparedQuery = "select * from `" + Constants.TABLE_INFO + "` where id=" + Helper.getEscapedQueryVariable(String.valueOf(id)) + ";";
+			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
+
+			@SuppressWarnings("unchecked")
+			Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, Constants.BEAN_INFO_COLUMN_VALUES);
+			
+			rsmd = rs.getMetaData();
+			int columnsNumber = rsmd.getColumnCount();
+			rs.next();
+			for (int i = 2; i < columnsNumber; i++) {
+		        String valueRight = rs.getString(i);
+		        if (valueRight == null) {
+		        	valueRight = "";
+		        }
+		        
+		        String columnName = rsmd.getColumnName(i);
+		        String valueLeft = infoColumnValues.get(columnName);
+		        allItemInformation += HtmlHelper.getItemInfoRow(valueLeft, valueRight);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return allItemInformation;
+	}
+	
 	public static String getItemInfoRow(String valueLeft, String valueRight) {
 		String itemInfoRow = "";
 		
 		itemInfoRow += addLine("<tr>");
-		itemInfoRow += addLine("<td style='width: 40%; background; grey; padding: 4px;'>" + valueLeft + "</td>");
-		itemInfoRow += addLine("<td style='width: 60%; padding: 4px;'>" + valueRight + "</td>");
+		itemInfoRow += addLine("<td bgcolor='lightgrey' class='left-col-item-info'>" + valueLeft + "</td>");
+		itemInfoRow += addLine("<td class='right-col-item-info'>" + valueRight + "</td>");
 		itemInfoRow += addLine("</tr>");
 		
 		return itemInfoRow;
 	}
 	
+	public static String getPurchasedShoppingCartItems(HttpServletRequest request) {
+		String username = request.getUserPrincipal().getName();
+		PurchasedShoppingCart cart = PurchasedShoppingCart.getInstance(username, request);
+		List<PurchasedShoppingCartItem> purchasedShoppingCartItems = cart.getPurchasedItemsList();
+		
+		String result = "";
+		for (PurchasedShoppingCartItem purchasedShoppingCartItemObject : purchasedShoppingCartItems) {
+			String category = Helper.getCategoryById(String.valueOf(purchasedShoppingCartItemObject.getId()));
+			Item item = Helper.getItemInstanceByCategory(category);
+			result += item.getTableRowElement(purchasedShoppingCartItemObject);
+		}
+		
+		return result;
+	}
+
 }

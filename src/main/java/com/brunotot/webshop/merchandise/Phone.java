@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
+import com.brunotot.webshop.content.PurchasedShoppingCartItem;
 import com.brunotot.webshop.util.Helper;
 
 public class Phone implements Item {
+	
 	private int id;
 	
 	private String name;
@@ -161,8 +163,8 @@ public class Phone implements Item {
 	}
 	
 	@Override
-	public String getTableRowElement(int count) {
-		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock);
+	public String getTableRowElement(int count, boolean inPayment) {
+		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock, inPayment, null);
 	}
 	
 	@Override
@@ -221,9 +223,13 @@ public class Phone implements Item {
 	}
 
 	@Override
-	public String getAllItemInformation() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAllItemInformation(HttpServletRequest request) {
+		return HtmlHelper.getAllItemInformation(this.id, request);
+	}
+
+	@Override
+	public String getTableRowElement(PurchasedShoppingCartItem purchasedShoppingCartItemObject) {
+		return HtmlHelper.getTableRow(-1, purchasedShoppingCartItemObject.getName(), purchasedShoppingCartItemObject.getPrice(), purchasedShoppingCartItemObject.getImageUrl(), purchasedShoppingCartItemObject.getCount(), "category", -1, true, purchasedShoppingCartItemObject.getDate());
 	}
 
 }

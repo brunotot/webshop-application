@@ -30,6 +30,9 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_BTNS %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_SHOPPINGCART_TABLE_STYLE %>">
 
+<!-- FAVICON -->
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+
 <!-- JQUERY -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -57,7 +60,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<%= HtmlHelper.getAllShoppingCartItems(request) %>
+							<%= HtmlHelper.getAllShoppingCartItems(request, false) %>
 							
 							<tr>
 								<td></td>
@@ -72,7 +75,7 @@
 					<div class="shoppingcart-btns" id="cart-btns">
 						<div>
 							<button type="button" class="my-button" onclick="location.href='/shoppolis/'">
-								<div id="back-btn">BACK <i class="fas fa-arrow-left"></i></div>
+								<div id="back-btn">HOMEPAGE <i class="fas fa-arrow-left"></i></div>
 							</button>
 							<a href='<c:url value="/shoppingcart/clearall"/>' id="clearall">
 								<button type="button" class="my-button">

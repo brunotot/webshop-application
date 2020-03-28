@@ -1,4 +1,5 @@
 .git
 .settings
-README.md
 /target/
+/sql/
+push-all-to-git.bat
