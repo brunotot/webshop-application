@@ -29,7 +29,7 @@ public class LoginDaoImpl implements LoginDao {
 		try {
 			userInfo = (UserInfo) namedParameterJdbcTemplate.queryForObject(sql, getSqlParameterSource(username, ""), new UserInfoMapper());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Username not found!");
 		}
 
 		return userInfo;

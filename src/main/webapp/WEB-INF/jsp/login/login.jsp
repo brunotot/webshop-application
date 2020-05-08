@@ -30,6 +30,8 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE %>">
 
+<% String msg = (String) request.getAttribute("msg"); %>
+
 </head>
 <body>
 	<div class="main-container">
@@ -54,5 +56,7 @@
 		</div>
 		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
+
+	<script><% if (msg != null) { %> alert('<%= msg %>'); <% } %></script>
 </body>
 </html>

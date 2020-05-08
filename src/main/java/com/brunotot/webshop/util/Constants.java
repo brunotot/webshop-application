@@ -23,7 +23,7 @@ public class Constants {
 	public static final String TABLE_INFO = "info";
 	public static final String TABLE_PURCHASED = "purchased";
 
-	public static final String PATH_SRC = "http://192.168.1.2:8080/shoppolis/";
+	public static final String PATH_SRC = "http://localhost:8080/shoppolis/";
 	public static final String PATH_CSS = "resources/css/";
 	public static final String PATH_JSP = "WEB-INF/jsp/";
 	public static final String PATH_JS = "resources/js/";

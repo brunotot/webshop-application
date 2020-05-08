@@ -31,6 +31,8 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FOOTER_STYLE %>">
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_BUTTON_STYLE %>">
 
+<% String msg = (String) request.getAttribute("msg"); %>
+
 </head>
 <body>
 	<div class="main-container">
@@ -40,13 +42,10 @@
 		<div class="main-wrapper">
 			<div class="signup-block">
 				<h1>Register</h1>
-				<form:form action="${registerURL}" modelAttribute="userForm" method="post">
+				<form:form action="register" modelAttribute="userForm" method="post">
 					<form:input path="username" type="text" placeholder="Username" id="username" required="true" />
-					<form:errors path="username" />
 					<form:input path="password" type="password" placeholder="Password" id="password" required="true" />
-					<form:errors path="password" />
 					<form:input path="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
-					<form:errors path="confirmPassword" />
 					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
 				</form:form>
 				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">HOMEPAGE <i class="fas fa-arrow-left"></i></div></button>
@@ -55,5 +54,7 @@
 	
 		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
+
+	<script><% if (msg != null) { %> alert('<%= msg %>'); <% } %></script>
 </body>
 </html>
