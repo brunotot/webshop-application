@@ -1,7 +1,6 @@
 # TVZ projekt
 
-## Polaganje kolegija:
-  ###- **Programiranje web aplikacija**
+## Polaganje kolegija: Programiranje web aplikacija
 
 Korišteni programi i literatura:
   - _Eclipse IDE_
