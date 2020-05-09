@@ -13,4 +13,6 @@ Korišteni programi i literatura:
     -JavaScript, JQuery
   - _Dizajn:_
     - CSS3, HTML5
+  - _Pomoćna literatura:_
+    - www.jackrutorial.com
   
