@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.PurchasedShoppingCartItem;
+import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
 public class Phone implements Item {
@@ -383,7 +384,7 @@ public class Phone implements Item {
 
 	@Override
 	public String getAllItemInformation(HttpServletRequest request) {
-		return HtmlHelper.getAllItemInformation(this.id, request);
+		return HtmlHelper.getAllItemInformation(this.id, request, Constants.BEAN_INFO_COLUMN_VALUES_PHONE);
 	}
 
 	@Override
@@ -401,4 +402,8 @@ public class Phone implements Item {
 		return this.getCategory();
 	}
 
+	@Override
+	public String getInsertQuery() {
+		return "INSERT INTO `info_phones`(`id`, `image`, `price`, `stock`, `promotion`, `warranty`, `brand`, `color`, `screenSize`, `screenType`, `displayResolution`, `officeIncluded`, `operatingSystem`, `bundledSoftware`, `portsSlotsChassis`, `cameraMicrophone`, `processorBrand`, `processor`, `processorType`, `clockSpeed`, `frontSideBus`, `ramSize`, `maxExpandability`, `memorySlots`, `hardDrive`, `driveRotation`, `opticalDriveType`, `graphicsType`, `wifi`, `dlna`, `bluetooth`, `hdmi`, `usb`, `multicardReader`, `compatibleMemoryCards`, `batteryType`, `batteryUpTo`, `width`, `depth`, `height`, `weight`, `more`) VALUES ((select ifnull(max(id), " + Constants.UNIQUE_IDENTIFIER_PHONE + "0000)+1 from info_phones maxId),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	}
 }

@@ -20,7 +20,9 @@ public class Constants {
 
 	public static final String BEAN_SHOPPING_CART = "cart";
 	public static final String BEAN_DATA_SOURCE = "getDataSource";
-	public static final String BEAN_INFO_COLUMN_VALUES = "infoColumnValues";
+	public static final String BEAN_INFO_COLUMN_VALUES_LAPTOP = "infoColumnValuesLaptop";
+	public static final String BEAN_INFO_COLUMN_VALUES_DESKTOP = "infoColumnValuesDesktop";
+	public static final String BEAN_INFO_COLUMN_VALUES_PHONE = "infoColumnValuesPhone";
 
 	public static final String TABLE_DESKTOPS = "desktops";
 	public static final String TABLE_LAPTOPS = "laptops";

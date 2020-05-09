@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.PurchasedShoppingCartItem;
+import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
 public class Laptop implements Item {
@@ -362,18 +363,18 @@ public class Laptop implements Item {
 	public void setAllDataFromResultSet(ResultSet tableRowData) {
 		try {
 			this.id = tableRowData.getInt("id");
-			this.name = tableRowData.getString("name");
-			this.manufacturer = tableRowData.getString("manufacturer");
-			this.gpu = tableRowData.getString("gpu");
-			this.gpuName = tableRowData.getString("gpuName");
-			this.cpu = tableRowData.getString("cpu");
-			this.ram = tableRowData.getInt("ram");
+			this.name = tableRowData.getString("brand");
+			this.manufacturer = tableRowData.getString("brand");
+			this.gpu = tableRowData.getString("graphicsType");
+			this.gpuName = tableRowData.getString("graphicsType");
+			this.cpu = tableRowData.getString("processorBrand");
+			this.ram = tableRowData.getInt("ramSize");
 			this.ssd = tableRowData.getInt("ssd");
-			this.hdd = tableRowData.getInt("hdd");
+			this.hdd = tableRowData.getInt("hardDrive");
 			this.imageUrl = tableRowData.getString("image");
 			this.price = tableRowData.getInt("price");
-			this.cpuName = tableRowData.getString("cpuname");
-			this.cpuCores = tableRowData.getInt("cpucores");
+			this.cpuName = tableRowData.getString("processorBrand");
+			this.cpuCores = tableRowData.getInt("processor");
 			this.maxInStock = tableRowData.getInt("stock");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -418,12 +419,16 @@ public class Laptop implements Item {
 
 	@Override
 	public String getAllItemInformation(HttpServletRequest request) {
-		return HtmlHelper.getAllItemInformation(this.id, request);
+		return HtmlHelper.getAllItemInformation(this.id, request, Constants.BEAN_INFO_COLUMN_VALUES_LAPTOP);
 	}
 
 	@Override
 	public String getTableRowElement(PurchasedShoppingCartItem purchasedShoppingCartItemObject) {
 		return HtmlHelper.getTableRow(-1, purchasedShoppingCartItemObject.getName(), purchasedShoppingCartItemObject.getPrice(), purchasedShoppingCartItemObject.getImageUrl(), purchasedShoppingCartItemObject.getCount(), "category", -1, true, purchasedShoppingCartItemObject.getDate());
 	}
-	
+
+	@Override
+	public String getInsertQuery() {
+		return "INSERT INTO `info_laptops`(`id`, `image`, `price`, `stock`, `promotion`, `warranty`, `brand`, `color`, `screenSize`, `screenType`, `displayResolution`, `officeIncluded`, `operatingSystem`, `bundledSoftware`, `portsSlotsChassis`, `cameraMicrophone`, `processorBrand`, `processor`, `processorType`, `clockSpeed`, `frontSideBus`, `ramSize`, `maxExpandability`, `memorySlots`, `hardDrive`, `ssd`, `driveRotation`, `opticalDriveType`, `graphicsType`, `wifi`, `dlna`, `bluetooth`, `hdmi`, `usb`, `multicardReader`, `compatibleMemoryCards`, `batteryType`, `batteryUpTo`, `width`, `depth`, `height`, `weight`, `more`) VALUES ((select ifnull(max(id), " + Constants.UNIQUE_IDENTIFIER_LAPTOP + "0000)+1 from info_laptops maxId),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+	}
 }

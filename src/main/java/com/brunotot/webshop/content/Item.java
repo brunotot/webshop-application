@@ -111,4 +111,6 @@ public interface Item {
 	 */
 	String getImageUrl();
 
+	String getInsertQuery();
+	
 }

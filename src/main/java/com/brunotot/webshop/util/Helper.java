@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -240,8 +239,10 @@ public class Helper {
 					stmt.setInt(i + 1, (Integer) param);
 				} else if (param instanceof String) {
 					stmt.setString(i + 1, (String) param);
-				} else if (param instanceof Date){
+				} else if (param instanceof Date) {
 					stmt.setDate(i + 1, (Date) param);
+				} else if (param instanceof Float) {
+					stmt.setFloat(i + 1, (Float) param);
 				} else {
 					stmt.close();
 					throw new Exception("Wrong parameter type. Check syntax!");
@@ -587,4 +588,25 @@ public class Helper {
 	public static boolean isUserAuthenticated(HttpServletRequest request) {
 		return request.isUserInRole("ROLE_ADMIN");
 	}
+
+	public static Object getFormattedObjectByVariableType(String variableType, String value) {
+		if (value == null || value.equals("")) {
+			if (variableType.equals("varchar")) {
+				return new String("");
+			} else if (variableType.equals("int")) {
+				return Integer.valueOf(-1);
+			} else {
+				return Float.valueOf(-1.0F);
+			}
+		}
+		
+		if (variableType.equals("varchar")) {
+			return new String(value);
+		} else if (variableType.equals("int")) {
+			return Integer.valueOf(value);
+		} else {
+			return Float.valueOf(value);
+		}
+	}
+
 }

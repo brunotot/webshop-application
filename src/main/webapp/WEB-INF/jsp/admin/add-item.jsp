@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="com.brunotot.webshop.util.*" %>
+<%@ page import="com.brunotot.webshop.content.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,7 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- TITLE -->
-<title><%= Constants.TITLE_ADMIN_PANEL %></title>
+<title><%= Constants.TITLE_ADMIN_USERS %></title>
 
 <!-- BOOTSTRAP -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -40,10 +41,45 @@
 						HOMEPAGE <i class="fas fa-arrow-left"></i>
 					</button>
 					
-					<ul>
-						<li><a href='<c:url value="/admin/users"/>'>Users</a></li>
-						<li><a href='<c:url value="/admin/additem"/>'>Add new item</a></li>
-					</ul>
+					<div style="text-align: center;">
+				        <select id="categorySelect">
+				            <option selected="true" disabled>Choose item category</option>
+				            <option id="laptop">Laptop</option>
+				            <option id="desktop">Desktop</option>
+				            <option id="phone">Phone</option>
+				        </select>
+				
+						<br></br>
+				
+				        <form style="text-align: center;" action="additem" method="post">
+				        	<table style="margin: 0 auto;" id="add-item-table">
+
+							</table>
+							
+							</br>
+							
+							<button id="submit-btn" type="submit" style="display: none; margin: 0 auto;">SUBMIT</button>
+				        </form>
+				    </div>
+				
+				    <script type="text/javascript">
+				        window.onload = function() {
+				            var categorySelect = document.getElementById("categorySelect");
+				
+				            categorySelect.onchange = function() {
+				            	var elemSubmitButton = document.getElementById("submit-btn");
+				            	elemSubmitButton.style.display = 'inherit';
+				                var elemTable = document.getElementById("add-item-table");
+				                if (categorySelect.selectedIndex === 1) {
+				                	elemTable.innerHTML = "<%= HtmlHelper.getAddItemTableForm(Constants.BEAN_INFO_COLUMN_VALUES_LAPTOP, request, "laptops") %>";
+				                } else if (categorySelect.selectedIndex === 2) {
+				                	elemTable.innerHTML = "<%= HtmlHelper.getAddItemTableForm(Constants.BEAN_INFO_COLUMN_VALUES_DESKTOP, request, "desktops") %>";
+				                } else {
+				                	elemTable.innerHTML = "<%= HtmlHelper.getAddItemTableForm(Constants.BEAN_INFO_COLUMN_VALUES_PHONE, request, "phones") %>";
+				                }
+				            }
+				        }
+				    </script>
 				</div>
 			</div>
 		</div>

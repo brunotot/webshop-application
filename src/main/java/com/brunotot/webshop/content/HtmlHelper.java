@@ -3,6 +3,8 @@ package com.brunotot.webshop.content;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,7 @@ public class HtmlHelper {
 	public static String getAllItemsFromCategory(String category, HttpServletRequest request, ResultSet... filter) {
 		String result = "";
 		ResultSet rs = null;
-		String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "`;";
+		String preparedQuery = "select * from `info_" + Helper.getEscapedQueryVariable(category) + "`;";
 		try {
 			if (filter == null || filter.length == 0) {
 				rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
@@ -292,13 +294,13 @@ public class HtmlHelper {
 	}
 
 	/**
-	 * Logic for information retrieval of all items.
+	 * Logic for information retrieval of item.
 	 * 
 	 * @param id Item id
 	 * @param request Servlet request
-	 * @return Formatted information for all items
+	 * @return Formatted information for item
 	 */
-	public static String getAllItemInformation(int id, HttpServletRequest request) {
+	public static String getAllItemInformation(int id, HttpServletRequest request, String beanName) {
 		String allItemInformation = "";
 		ResultSetMetaData rsmd = null;
 		ResultSet rs = null;
@@ -307,7 +309,7 @@ public class HtmlHelper {
 			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 
 			@SuppressWarnings("unchecked")
-			Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, Constants.BEAN_INFO_COLUMN_VALUES);
+			Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, beanName);
 			
 			rsmd = rs.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
@@ -403,4 +405,40 @@ public class HtmlHelper {
 		
 		return usersData;
 	}
+	
+	public static String getAddItemTableForm(String beanName, HttpServletRequest request, String category) {
+		String itemTableForm = "";
+		
+		DataSource dataSource = (DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE);
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			st = dataSource.getConnection().createStatement();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		@SuppressWarnings("unchecked")
+		Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, beanName);
+		for (Map.Entry<String, String> entry : infoColumnValues.entrySet()) {
+			String valueLeft = entry.getValue();
+			String commandLeft = entry.getKey();
+			String query = "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'info_" + category + "' AND COLUMN_NAME = '" + commandLeft + "'";
+			String type = "";
+			try {
+				rs = st.executeQuery(query);
+				rs.next();
+				type = rs.getString("DATA_TYPE");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			itemTableForm += "<tr>" + "\\n";
+			itemTableForm += "<td style='text-align: right' bgcolor='lightgrey' class='left-col-item-info'>" + valueLeft + ": " + "</td>" + "\\n";
+			itemTableForm += "<td class='right-col-item-info'>" + "<input type='text' name='" + category + "_" + type + "_" + commandLeft + "'" + "</td>" + "\\n";
+			itemTableForm += "</tr>" + "\\n";
+		}
+		
+		return itemTableForm;
+	}
+	
 }

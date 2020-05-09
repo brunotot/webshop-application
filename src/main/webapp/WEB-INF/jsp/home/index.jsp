@@ -39,7 +39,7 @@
 			<div class="page-wrapper container">
 				<div class="page-content">
 					<p>Pick a category:</p>
-					<ul>
+					<ul style="margin: 0 auto; text-align: center; list-style-type: none; margin-right: 35px;">
 						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_LAPTOPS %>"/></c:url>'>Laptops</a></li>
 						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_PHONES %>"/></c:url>'>Phones</a></li>
 						<li><a href='<c:url value="/category"><c:param name="category" value="<%= Constants.CATEGORY_DESKTOPS %>"/></c:url>'>Desktops</a></li>

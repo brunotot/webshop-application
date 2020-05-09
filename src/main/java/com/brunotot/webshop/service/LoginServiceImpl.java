@@ -59,7 +59,7 @@ public class LoginServiceImpl implements UserDetailsService {
 		}
 
 		UserDetails userDetails = new User(userInfo.getUsername(), userInfo.getPassword(), grantList);
-
+		
 		return userDetails;
 	}
 

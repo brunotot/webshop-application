@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.PurchasedShoppingCartItem;
+import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
 /**
@@ -424,12 +425,17 @@ public class Desktop implements Item {
 
 	@Override
 	public String getAllItemInformation(HttpServletRequest request) {
-		return HtmlHelper.getAllItemInformation(this.id, request);
+		return HtmlHelper.getAllItemInformation(this.id, request, Constants.BEAN_INFO_COLUMN_VALUES_DESKTOP);
 	}
 
 	@Override
 	public String getTableRowElement(PurchasedShoppingCartItem purchasedShoppingCartItemObject) {
 		return HtmlHelper.getTableRow(-1, purchasedShoppingCartItemObject.getName(), purchasedShoppingCartItemObject.getPrice(), purchasedShoppingCartItemObject.getImageUrl(), purchasedShoppingCartItemObject.getCount(), "category", -1, true, purchasedShoppingCartItemObject.getDate());
+	}
+	
+	@Override
+	public String getInsertQuery() {
+		return "INSERT INTO `info_desktops`(`id`, `image`, `price`, `stock`, `promotion`, `warranty`, `brand`, `screenSize`, `screenType`, `displayResolution`, `officeIncluded`, `operatingSystem`, `bundledSoftware`, `portsSlotsChassis`, `cameraMicrophone`, `processorBrand`, `processor`, `processorType`, `clockSpeed`, `frontSideBus`, `ramSize`, `maxExpandability`, `memorySlots`, `hardDrive`, `ssd`, `driveRotation`, `opticalDriveType`, `graphicsType`, `wifi`, `dlna`, `bluetooth`, `hdmi`, `usb`, `multicardReader`, `compatibleMemoryCards`, `width`, `height`, `weight`, `more`) VALUES ((select ifnull(max(id), " + Constants.UNIQUE_IDENTIFIER_DESKTOP + "0000)+1 from info_desktops maxId),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"; 
 	}
 	
 }
