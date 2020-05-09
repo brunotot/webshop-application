@@ -13,148 +13,306 @@ import com.brunotot.webshop.util.Helper;
 
 public class Phone implements Item {
 	
+	/**
+	 * Phone id.
+	 */
 	private int id;
-	
+
+	/**
+	 * Phone name.
+	 */
 	private String name;
-	
-	private String manufacturer;	
-	
-	private String gpu;
-	
+
+	/**
+	 * Phone manufacturer.
+	 */
+	private String manufacturer;
+
+	/**
+	 * Phone graphics card.
+	 */
+	private String gpu;	
+
+	/**
+	 * Phone graphics card name.
+	 */
 	private String gpuName;
-	
+
+	/**
+	 * Phone processor.
+	 */
 	private String cpu;	
-	
-	private String cpuName;	
-	
+
+	/**
+	 * Phone processor name.
+	 */
+	private String cpuName;
+
+	/**
+	 * Phone processor cores count.
+	 */
 	private int cpuCores;
-	
+
+	/**
+	 * Phone RAM amount.
+	 */
 	private int ram;
-	
+
+	/**
+	 * Phone HDD amount.
+	 */
 	private int hdd;
-	
+
+	/**
+	 * Phone image URL.
+	 */
 	private String imageUrl;
-	
+
+	/**
+	 * Phone price.
+	 */
 	private int price;
 	
+	/**
+	 * Phone maximum quantity in stock.
+	 */
 	private int maxInStock;
 	
+	/**
+	 * Item category.
+	 */
 	private String category = "phones";
 	
+	/**
+	 * Empty constructor for Phone.
+	 */
 	public Phone() {
 		
 	}
-
-	public int getId() {
-		return id;
-	}
 	
+	/**
+	 * Getter method for item name.
+	 * 
+	 * @return Item name
+	 */
 	public String getName() {
 		return name;
 	}
-	
+
+	/**
+	 * Getter method for item manufacturer.
+	 * 
+	 * @return Item manufacturer
+	 */
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	/**
+	 * Getter method for item graphics card.
+	 * 
+	 * @return Item graphics card
+	 */
+	public String getGpu() {
+		return gpu;
+	}
+
+	/**
+	 * Getter method for item processor.
+	 * 
+	 * @return Item processor
+	 */
+	public String getCpu() {
+		return cpu;
+	}
+
+	/**
+	 * Getter method for item RAM quantity.
+	 * 
+	 * @return Item RAM quantity
+	 */
+	public int getRam() {
+		return ram;
+	}
+
+	/**
+	 * Getter method for item HDD quantity.
+	 * 
+	 * @return Item HDD quantity
+	 */
+	public int getHdd() {
+		return hdd;
+	}
+
+	/**
+	 * Getter method for item image URL.
+	 * 
+	 * @return Item image URL
+	 */
 	public String getImageUrl() {
 		return imageUrl;
 	}
-	
+
+	/**
+	 * Getter method for item price.
+	 * 
+	 * @return Item price
+	 */
 	public int getPrice() {
 		return price;
 	}
-	
-	public String getCategory() {
-		return category;
+
+	/**
+	 * Getter method for item id.
+	 * 
+	 * @return Item id
+	 */
+	public int getId() {
+		return id;
 	}
-	
+
+	/**
+	 * Getter method for max item quantity.
+	 * 
+	 * @return Maximum item quantity in stock
+	 */
 	public int getMaxInStock() {
 		return maxInStock;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+	/**
+	 * Setter method for item name.
+	 * 
+	 * @param name New item name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-	
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	
-	public void setMaxInStock(int maxInStock) {
-		this.maxInStock = maxInStock;
-	}
-	
-	public String getManufacturer() {
-		return manufacturer;
-	}
-	
-	public String getGpu() {
-		return gpu;
-	}
-	
-	public String getGpuName() {
-		return gpuName;
-	}
-	
-	public String getCpu() {
-		return cpu;
-	}
-	
-	public String getCpuName() {
-		return cpuName;
-	}
-	
-	public int getCpuCores() {
-		return cpuCores;
-	}
-	
-	public int getRam() {
-		return ram;
-	}
-	
-	public int getHdd() {
-		return hdd;
-	}
-	
+
+	/**
+	 * Setter method for item manufacturer.
+	 * 
+	 * @param manufacturer New item manufacturer
+	 */
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
-	
+
+	/**
+	 * Setter method for item graphics card.
+	 * 
+	 * @param gpu New item graphics card
+	 */
 	public void setGpu(String gpu) {
 		this.gpu = gpu;
 	}
-	
-	public void setGpuName(String gpuName) {
-		this.gpuName = gpuName;
-	}
-	
+
+	/**
+	 * Setter method for item processor.
+	 * 
+	 * @param cpu New item processor
+	 */
 	public void setCpu(String cpu) {
 		this.cpu = cpu;
 	}
-	
+
+	/**
+	 * Setter method for item RAM quantity.
+	 * 
+	 * @param ram New item RAM quantity
+	 */
+	public void setRam(int ram) {
+		this.ram = ram;
+	}
+
+	/**
+	 * Setter method for item HDD quantity.
+	 * 
+	 * @param hdd New item HDD quantity
+	 */
+	public void setHdd(int hdd) {
+		this.hdd = hdd;
+	}
+
+	/**
+	 * Setter method for item image URL.
+	 * 
+	 * @param imageUrl New item image URL
+	 */
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	/**
+	 * Setter method for item price.
+	 * 
+	 * @param price New item price
+	 */
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	/**
+	 * Setter method for item id.
+	 * 
+	 * @param id New item id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * Getter method for item processor name.
+	 * 
+	 * @return Processor name
+	 */
+	public String getCpuName() {
+		return cpuName;
+	}
+
+	/**
+	 * Setter method for item processor name.
+	 * 
+	 * @param cpuName New item processor name
+	 */
 	public void setCpuName(String cpuName) {
 		this.cpuName = cpuName;
 	}
 	
+	/**
+	 * Getter method for item processor cores.
+	 * 
+	 * @return Processor cores
+	 */
+	public int getCpuCores() {
+		return cpuCores;
+	}
+
+	/**
+	 * Setter method for item processor cores.
+	 * 
+	 * @param cpuCores New item processor cores
+	 */
 	public void setCpuCores(int cpuCores) {
 		this.cpuCores = cpuCores;
 	}
 	
-	public void setRam(int ram) {
-		this.ram = ram;
+	/**
+	 * Getter method for item graphics card name.
+	 * 
+	 * @return String graphics card name
+	 */
+	public String getGpuName() {
+		return gpuName;
 	}
-	
-	public void setHdd(int hdd) {
-		this.hdd = hdd;
+
+	/**
+	 * Setter method for item graphics card name.
+	 * 
+	 * @param gpuName New item graphics card name
+	 */
+	public void setGpuName(String gpuName) {
+		this.gpuName = gpuName;
 	}
 	
 	@Override
@@ -231,6 +389,16 @@ public class Phone implements Item {
 	@Override
 	public String getTableRowElement(PurchasedShoppingCartItem purchasedShoppingCartItemObject) {
 		return HtmlHelper.getTableRow(-1, purchasedShoppingCartItemObject.getName(), purchasedShoppingCartItemObject.getPrice(), purchasedShoppingCartItemObject.getImageUrl(), purchasedShoppingCartItemObject.getCount(), "category", -1, true, purchasedShoppingCartItemObject.getDate());
+	}
+
+	@Override
+	public void setMaxInStock(int stock) {
+		this.maxInStock = stock;
+	}
+
+	@Override
+	public String getCategory() {
+		return this.getCategory();
 	}
 
 }

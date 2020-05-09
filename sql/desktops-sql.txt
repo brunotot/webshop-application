@@ -1,0 +1,4 @@
+INSERT INTO `desktops`(`id`, `name`, `manufacturer`, `gpu`, `gpuName`, `cpu`, `cpuName`, `cpuCores`, `ram`, `ssd`, `hdd`, `image`, `price`, `stock`) 
+VALUES (56780001,'Razer','HP','NVidia','GeForce GTX 1080','AMD','FX6300',4,8,256,1000,'https://asset.conrad.com/media10/isa/160267/c1/-/global/873922_RB_01_FB/image.jpg?x=1000&y=1000&ex=1000&ey=1000&align=center',3000,10);
+INSERT INTO `desktops`(`id`, `name`, `manufacturer`, `gpu`, `gpuName`, `cpu`, `cpuName`, `cpuCores`, `ram`, `ssd`, `hdd`, `image`, `price`, `stock`) 
+VALUES (56780001,'Blackbourne','Logitech','Ryzen','R1180','Intel','i5',8,8,512,1000,'https://egarner.hr/images/made/6665/slike/medion-erazer-p66056-desktop-pc-intel-i5-9400-8gb-ram-128gb-ssd-1tb-hdd-nvidia-geforce-gtx-1050-ti-win10-30618.jpg',5000,10);

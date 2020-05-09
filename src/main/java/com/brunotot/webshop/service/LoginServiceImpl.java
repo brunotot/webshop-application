@@ -15,16 +15,31 @@ import org.springframework.stereotype.Service;
 import com.brunotot.webshop.dao.LoginDao;
 import com.brunotot.webshop.model.UserInfo;
 
+/**
+ * Login service implementation class.
+ * 
+ * @author Bruno
+ *
+ */
 @Service
 public class LoginServiceImpl implements UserDetailsService {
 
+	/**
+	 * Login data access.
+	 */
 	LoginDao loginDao;
 
+	/**
+	 * Autowired method for setting login data access bean.
+	 *
+	 * @param loginDao Login data access bean.
+	 */
 	@Autowired
 	public void setLoginDao(LoginDao loginDao) {
 		this.loginDao = loginDao;
 	}
 
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserInfo userInfo = loginDao.findUserInfo(username);
 

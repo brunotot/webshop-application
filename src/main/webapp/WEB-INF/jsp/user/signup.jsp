@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="com.brunotot.webshop.util.*" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -37,17 +36,16 @@
 <body>
 	<div class="main-container">
 		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
-		<spring:url value="/user/register" var="registerURL" />
 	
 		<div class="main-wrapper">
 			<div class="signup-block">
 				<h1>Register</h1>
-				<form:form action="register" modelAttribute="userForm" method="post">
-					<form:input path="username" type="text" placeholder="Username" id="username" required="true" />
-					<form:input path="password" type="password" placeholder="Password" id="password" required="true" />
-					<form:input path="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
+				<form action="register" method="post">
+					<input name="username" type="text" placeholder="Username" id="username" required="true" />
+					<input name="password" type="password" placeholder="Password" id="password" required="true" />
+					<input name="confirmPassword" type="password" placeholder="Confirm password" id="confirmPassword" required="true" />
 					<button id="submit" class="my-button" type="submit">GO <i class="fas fa-arrow-right"></i></button>
-				</form:form>
+				</form>
 				<button type="button" class="my-button" onclick="location.href='/shoppolis/'"><div id="back-btn">HOMEPAGE <i class="fas fa-arrow-left"></i></div></button>
 			</div>
 		</div>
@@ -55,6 +53,14 @@
 		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
 
-	<script><% if (msg != null) { %> alert('<%= msg %>'); <% } %></script>
+	<script>
+		<% if (msg != null) { %>
+			document.addEventListener('readystatechange', event => { 
+			    if (event.target.readyState === "complete") {
+					alert('<%= msg %>'); 
+			    }
+			});
+		<% } %>
+	</script>
 </body>
 </html>

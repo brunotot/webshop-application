@@ -1,0 +1,48 @@
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340001, 'Lenovo AMD A9-9425 Dual-Core 15.6" 4GB/128GB Laptop - Black | 81MT000SUK','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/1/81mt000suk.jpg',400, 0);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340002, 'Lenovo AMD A9-9425 15.6" 8GB/256GB Laptop - Black | V145-81MT002','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/v/1/v145-81mt002_5.jpg',500, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340003, 'HP AMD A9-9425 15.6" 4GB/128GB SSD Laptop - Dark Ash | 8AC00ES','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/a/8ac00es_4.jpg',600, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340004, 'Lenovo AMD A9-9425 15.6" 8GB/256GB Laptop - Black | 81MT00015UK','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/1/81mt00015uk_9.jpg',700, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340005, 'HP AMD Ryzen 3 2200U 15.6" 8GB/256GB Laptop - Black | 8AB99ES','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/d/o/download_3.jpg',800, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340006, 'Toshiba Satellite Pro 14" Intel Core i3 4GB/128GB Laptop - Cosmo Silver | R40-C-163','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/r/4/r40-c-163_5.jpg',900, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340007, 'Asus ROG Strix Intel Core i5-9300H 15.6" 8GB/512GB Gaming Laptop - Black | G531GUAL-PKH','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/_/6/_6737_g531gu-carousel_images_1000x1000_1__hero_image_1.jpg',1000, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340008, 'Lenovo Ideapad S145-14API AMD Ryzen 3 3200U 14" 4GB/128GB Laptop - Granite Black | 81UV0002UK','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/1/81uv0002uk_1.jpg',1100, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340009, 'HP AMD Ryzen 5 2500U 15.6" 8GB/256GB Laptop | 8AB98ES','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/a/8ab98es_5.jpg',1200, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340010, 'Asus TUF AMD Ryzen 5 3550H 15.6" 8GB/256GB Gaming Laptop - Stealth Black | FX505DTAL-PKM','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/_/6/_6658_fx505_blue_1000x1000_3_.jpg',1300, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340011, 'Asus VivoBook 15 Intel Core i3 7020U 15.6" 4GB/256GB Laptop - Grey | X509UA-EJ064T','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/x/5/x509ua-ej064t_9.jpg',1400, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340012, 'Lenovo Ideapad AMD A6-9220 Dual core 14" 4GB/1TB Laptop - Denim Blue | 80XU002YUK','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/0/80xu002yuk_4.jpg',1500, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340013, 'Asus ROG Strix Scar II Intel Core i7-8750H 17.3" 16GB/256GB Gaming Laptop - Black | GL704GM-EV00','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/g/l/gl704_scar_ii_11-1_light.jpg',1600, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340014, 'Asus TUF AMD Ryzen 5 3550H 17.3" 8GB/512GB Gaming Laptop - Stealth Black | FX705DTAU-PKM','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/_/6/_6654_fx705dt_1000x1000_7_.jpg',1700, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340015, 'Lenovo Ideapad S145 AMD Athlon 300U 14" 4GB/128GB Laptop - Granite Black | 81UV0000UK','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/8/1/81uv0000uk.jpg',1800, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340016, 'HP Intel Core i7 8565U 15.6" 8GB/256GB Laptop - Dark Ash Silver | 6MP37ES','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/6/m/6mp37es_2.jpg',1900, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340017, 'Microsoft Surface Laptop 3 Intel Core i5 13.5" 8GB/128GB Surface Laptop - Platinum | VGY-00003','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/v/g/vgy-00003_1.jpg',2000, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340018, 'Asus VivoBook 15 AMD Ryzen 5-3500U 15.6" 8GB/256GB Laptop - Grey | X512DA-EJ254T','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/x/5/x512da-ej254t_1_1.jpg',2100, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340019, 'Asus ROG Strix Intel Core i5-9300H 15.6" 8GB/512GB Gaming Laptop - Black | G531GTAL-PKH','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/_/6/_6737_g531gu-carousel_images_1000x1000_1__hero_image.jpg',2200, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340020, 'Asus VivoBook S15 Intel Core i5 8265U 15.6" 8GB/256GB Laptop - Red & Grey | S530FA-EJ101T','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/6/3/6388_red_5..jpg',2300, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340021, 'Microsoft Surface Go Intel Pentium 4415Y 10" 8GB/128GB Laptop - Silver | JTW-00002','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/j/t/jtw-00002_1.jpg',2400, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340022, 'Asus VivoBook Intel Core I5-8265U 15.6" 8GB/256GB Laptop - Grey | X509FA-EJ077T','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/x/5/x509fa-ej077t_7.jpg',2500, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340023, 'Apple MacBook Air Intel Core i5 13.3" 128GB 8GB RAM Laptop - Space Grey | MVFH2B/A','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/m/v/mvfh2ba_1.jpg',2600, 10);
+INSERT INTO `laptops`(`ID`, `Name`, `Manufacturer`, `Gpu`, `Cpu`, `Ram`, `Ssd`, `Hdd`, `Image`, `Price`, `Stock`) 
+VALUES (12340024, 'Apple MacBook Air Intel Core i5 13.3" 256GB RAM Laptop - Silver | MVFL2B/A','','','','','','','https://www.did.ie/media/catalog/product/cache/1/small_image/160x/9df78eab33525d08d6e5fb8d27136e95/m/v/mvfl2ba_3.jpg',2700, 0);

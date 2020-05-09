@@ -1,5 +1,11 @@
 package com.brunotot.webshop.util;
 
+/**
+ * Class for all constants.
+ * 
+ * @author Bruno
+ *
+ */
 public class Constants {
 	
 	public static final int COOKIE_EXPIRATION_SECONDS = 30 * 7 * 24 * 60 * 60;

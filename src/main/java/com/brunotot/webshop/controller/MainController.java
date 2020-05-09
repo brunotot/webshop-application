@@ -33,31 +33,49 @@ import com.brunotot.webshop.content.ShoppingCartItem;
 import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
+/**
+ * Main controller class.
+ * 
+ * @author Bruno
+ *
+ */
 @RestController
 public class MainController {
 
+	/**
+	 * Autowired datasource connection bean.
+	 */
 	@Autowired
 	DataSource dataSource;
 	
+	/**
+	 * Autowired shopping cart bean.
+	 */
 	@Autowired
 	ShoppingCart cart;
 	
+	/**
+	 * Maps to shoppolis/instock.
+	 * 
+	 * @param id Item id
+	 * @param category Item category
+	 * @param wantedAmount Item quantity
+	 * @param start "home" or "shoppingcart"
+	 * @param request Servlet request
+	 * @return true if there are enough items in stock
+	 */
 	@PostMapping("/instock") 
 	public boolean isInStock(@RequestParam(value = "id") int id, 
 							 @RequestParam(value = "category") String category, 
 							 @RequestParam(value = "wantedamount") int wantedAmount,
 							 @RequestParam(value = "start") String start,
 							 HttpServletRequest request) {
-		boolean exists = false;
-		
 		try {
 			ResultSet rs = Helper.getResultSetById(dataSource.getConnection().createStatement(), id, category);
-			
 			int totalInStock = rs.getInt("stock");
 			int itemCountInCart = Helper.getShoppingCartItemCountViaId(id, request);
 		
 			int currentTotalLeftInStock;
-		
 			if (start.equals("home")) {
 				currentTotalLeftInStock = totalInStock - itemCountInCart;
 			} else {
@@ -65,15 +83,23 @@ public class MainController {
 			}
 			
 			if (currentTotalLeftInStock >= wantedAmount) {
-				exists = true;
+				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return exists;
+		return false;
 	}
 	
+	/**
+	 * Maps to shoppolis/removeitem.
+	 * 
+	 * @param id Item id
+	 * @param category Item category
+	 * @param cartCookie Cart cookie value
+	 * @param response Servlet response
+	 * @return Model for shopping cart
+	 */
 	@PostMapping("/removeitem")
 	public ModelAndView removeItem(@RequestParam(value = "id") int id, 
 								   @RequestParam(value = "category") String category, 
@@ -91,6 +117,19 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/additem.
+	 * 
+	 * @param id Item id
+	 * @param category Item category
+	 * @param quantity Item quantity
+	 * @param start "home" or "shoppingcart"
+	 * @param cartCookie Cart cookie value
+	 * @param request Servlet request
+	 * @param response Servlet response
+	 * @return Model for home
+	 * @throws SQLException If database error happens
+	 */
 	@PostMapping("/additem") 
 	public ModelAndView appendNewItem(@RequestParam(value = "id") int id, 
 									  @RequestParam(value = "category") String category,
@@ -118,21 +157,25 @@ public class MainController {
 				}
 				model.setViewName("home/shoppingcart");
 			}
-			Helper.updateCookies(response, newCookieValue);
-			return model;
+		} else {
+			Statement st = dataSource.getConnection().createStatement();
+			Item item = Helper.getCategoryItemFromTableRowData(category, Helper.getResultSetById(st, id, category), st);
+			st.close();
+			cart.add(new ShoppingCartItem(item, 1));
+			newCookieValue = cartCookie + selectedItemCookieName;
 		}
 		
-		Statement st = dataSource.getConnection().createStatement();
-		Item item = Helper.getCategoryItemFromTableRowData(category, Helper.getResultSetById(st, id, category), st);
-		st.close();
-		cart.add(new ShoppingCartItem(item, 1));
-		
-		newCookieValue = cartCookie + selectedItemCookieName;
 		Helper.updateCookies(response, newCookieValue);
-		
 		return model;
 	}
-	
+
+	/**
+	 * Maps to shoppolis/shoppingcart/clearall.
+	 * 
+	 * @param request Servlet request
+	 * @param response Servlet response
+	 * @return Model for shopping cart
+	 */
 	@RequestMapping(value = "shoppingcart/clearall", method = RequestMethod.GET)
 	public ModelAndView clearAllItems(HttpServletRequest request, HttpServletResponse response) {
 		Helper.updateCookies(response, null);
@@ -152,6 +195,12 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/login.
+	 * 
+	 * @param error If login was unsuccessful, null by default
+	 * @return Model for login or home (whether user is already logged in or not)
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
 		ModelAndView model = new ModelAndView();
@@ -169,6 +218,13 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Adds "category" attribute to model and redirects to shoppolis/home.
+	 * 
+	 * @param category Item category
+	 * @param request Servlet request
+	 * @return Model for home
+	 */
 	@RequestMapping(value = "/category")
 	public ModelAndView category(@RequestParam(value = "category", defaultValue = "") String category, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
@@ -177,6 +233,11 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/ or shoppolis/home.
+	 * 
+	 * @return Model for index
+	 */
 	@RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
 	public ModelAndView home() {
 		ModelAndView model = new ModelAndView();
@@ -184,6 +245,13 @@ public class MainController {
 		return model;
 	}
 
+	/**
+	 * Maps to shoppolis/logout.
+	 * 
+	 * @param request Servlet request
+	 * @param response Servlet response
+	 * @return Model for index
+	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logoutPage(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -204,6 +272,11 @@ public class MainController {
 		return model;
 	}
 
+	/**
+	 * Maps to shoppolis/accessDenied.
+	 * 
+	 * @return Model for access denied
+	 */
 	@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
 	public ModelAndView accessDenied() {
 		ModelAndView model = new ModelAndView();
@@ -211,6 +284,11 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/shoppingcart.
+	 * 
+	 * @return Model for shopping cart
+	 */
 	@RequestMapping(value = "/shoppingcart", method = RequestMethod.GET) 
 	public ModelAndView shoppingCart (){
 		ModelAndView model = new ModelAndView();
@@ -218,6 +296,13 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/filter.
+	 * 
+	 * @param category Item category
+	 * @param request Servlet request
+	 * @return Model for filtered home
+	 */
 	@PostMapping("/filter") 
 	public ModelAndView submitFilter(@RequestParam(value = "category") String category, HttpServletRequest request) {
 		Map<String, String[]> map = request.getParameterMap();
@@ -234,10 +319,16 @@ public class MainController {
 		model.addObject("filteredResultSet", rs);
 		model.addObject("filteredMap", map);
 		model.setViewName("home/home");
-		
 		return model;
 	}
 
+	/**
+	 * Maps to shoppolis/item.
+	 * 
+	 * @param id Item id
+	 * @param request Servlet request
+	 * @return Model for item visit
+	 */
 	@GetMapping("/item") 
 	public ModelAndView visitItem(@RequestParam(value = "id") String id, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView();
@@ -247,6 +338,13 @@ public class MainController {
 		return model;
 	}
 	
+	/**
+	 * Maps to shoppolis/user/purchased.
+	 * 
+	 * @param request Servlet request
+	 * @return True if successful purchase
+	 * @throws SQLException If database errorr occurs.
+	 */
 	@PostMapping("/user/purchase") 
 	public boolean purchase(HttpServletRequest request) throws SQLException {
 		try {

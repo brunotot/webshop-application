@@ -6,9 +6,20 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+/**
+ * Initializator component class.
+ * 
+ * @author Bruno
+ *
+ */
 @Component
 public class OnStartValues {
 
+	/**
+	 * Method for getting column values info bean.
+	 * 
+	 * @return Column values bean
+	 */
 	@Bean
 	public Map<String, String> infoColumnValues() {
 		Map<String, String> map = new HashMap<>();

@@ -10,9 +10,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 
+/**
+ * Database connection configuration class.
+ * 
+ * @author Bruno
+ *
+ */
 @Component
 public class DatabaseConfiguration {
 
+	/**
+	 * Connection to database bean.
+	 * 
+	 * @return DataSource object connection bean
+	 */
 	@Bean
 	public static DataSource getDataSource() {
 		DriverManagerDataSource ds = null;

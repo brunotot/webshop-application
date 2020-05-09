@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.brunotot.webshop.config"},{"l":"com.brunotot.webshop.content"},{"l":"com.brunotot.webshop.controller"},{"l":"com.brunotot.webshop.dao"},{"l":"com.brunotot.webshop.merchandise"},{"l":"com.brunotot.webshop.model"},{"l":"com.brunotot.webshop.service"},{"l":"com.brunotot.webshop.util"}]

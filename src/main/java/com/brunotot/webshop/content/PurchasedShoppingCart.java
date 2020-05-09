@@ -11,11 +11,27 @@ import javax.sql.DataSource;
 import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
-
+/**
+ * Shopping cart of purchased items class.
+ * 
+ * @author Bruno
+ *
+ */
 public class PurchasedShoppingCart {
 	
+	/**
+	 * List of purchased items.
+	 */
 	private List<PurchasedShoppingCartItem> purchasedItemsList;
 	
+	/**
+	 * Static method that returns an instance of PurchasedShoppingCart
+	 * based on username and current servlet request.
+	 * 
+	 * @param username Client's username
+	 * @param request Servlet request
+	 * @return Instance of PurchasedShoppingCart
+	 */
 	public static PurchasedShoppingCart getInstance(String username, HttpServletRequest request) {
 		PurchasedShoppingCart purchasedShoppingCart = new PurchasedShoppingCart();
 		List<PurchasedShoppingCartItem> list = new ArrayList<PurchasedShoppingCartItem>();
@@ -47,10 +63,20 @@ public class PurchasedShoppingCart {
 		return purchasedShoppingCart;
 	}
 
+	/**
+	 * Getter method for purchased items list.
+	 * 
+	 * @return Purchased items list
+	 */
 	public List<PurchasedShoppingCartItem> getPurchasedItemsList() {
 		return purchasedItemsList;
 	}
 
+	/**
+	 * Setter method for purchased items list.
+	 * 
+	 * @param purchasedItemsList Purchased items list object to set
+	 */
 	public void setPurchasedItemsList(List<PurchasedShoppingCartItem> purchasedItemsList) {
 		this.purchasedItemsList = purchasedItemsList;
 	}

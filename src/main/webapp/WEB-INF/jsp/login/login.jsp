@@ -57,6 +57,14 @@
 		<footer><jsp:include page="<%= Helper.getFooterPath(request) %>" /></footer>
 	</div>
 
-	<script><% if (msg != null) { %> alert('<%= msg %>'); <% } %></script>
+	<script>
+		<% if (msg != null) { %>
+			document.addEventListener('readystatechange', event => { 
+			    if (event.target.readyState === "complete") {
+					alert('<%= msg %>'); 
+			    }
+			});
+		<% } %>
+	</script>
 </body>
 </html>

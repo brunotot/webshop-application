@@ -1,0 +1,8 @@
+com.brunotot.webshop.config
+com.brunotot.webshop.content
+com.brunotot.webshop.controller
+com.brunotot.webshop.dao
+com.brunotot.webshop.merchandise
+com.brunotot.webshop.model
+com.brunotot.webshop.service
+com.brunotot.webshop.util

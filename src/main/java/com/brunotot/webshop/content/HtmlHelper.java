@@ -13,12 +13,32 @@ import javax.sql.DataSource;
 import com.brunotot.webshop.util.Constants;
 import com.brunotot.webshop.util.Helper;
 
+/**
+ * All HTML java logic class.
+ * 
+ * @author Bruno
+ *
+ */
 public class HtmlHelper {
 	
+	/**
+	 * Adds new line to given string parameter.
+	 * 
+	 * @param line String parameter
+	 * @return Given string parameter with new line
+	 */
 	private static String addLine(String line) {
 		return line + "\n";
 	}
 	
+	/**
+	 * Calculates and returns all items from a category as HTML string.
+	 * 
+	 * @param category Item category
+	 * @param request Servlet request
+	 * @param filter If existed, is filtration made by client
+	 * @return All items from specific category
+	 */
 	public static String getAllItemsFromCategory(String category, HttpServletRequest request, ResultSet... filter) {
 		String result = "";
 		ResultSet rs = null;
@@ -46,9 +66,16 @@ public class HtmlHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "Error";
+		return "404";
 	}
-	
+
+	/**
+	 * Calculates and returns all shopping cart items as HTML string.
+	 * 
+	 * @param request Servlet request
+	 * @param inPayment Indication of whether user is in payment, false by default
+	 * @return All shopping cart items
+	 */
 	public static String getAllShoppingCartItems(HttpServletRequest request, boolean inPayment) {
 		ShoppingCart cart = (ShoppingCart) Helper.getBeanFromRequest(request, Constants.BEAN_SHOPPING_CART);
 		String result = "";
@@ -62,6 +89,16 @@ public class HtmlHelper {
 		return result;
 	}
 	
+	/**
+	 * Generic div element as HTML string of an item.
+	 *  
+	 * @param id Item id
+	 * @param name Item name
+	 * @param price Item price
+	 * @param imageUrl Item image URL
+	 * @param category Item category
+	 * @return Div element of an item
+	 */
 	public static String getItemDiv (int id, String name, int price, String imageUrl, String category) {
 		String formattedName = name;
 		if (name.length() >= Constants.ITEM_NAME_MAX_CHARACTERS) {
@@ -84,7 +121,21 @@ public class HtmlHelper {
 		
 		return div;
 	}
-	
+
+	/**
+	 * Generic item table row (tr) element as HTML string of a table.
+	 * 
+	 * @param id Item id
+	 * @param name Item name
+	 * @param price Item price
+	 * @param imageUrl Item image URL
+	 * @param count Item count
+	 * @param category Item category
+	 * @param maxInStock Maximum number of stock left for the item
+	 * @param inPayment Indication of whether the client is in payment, false by default
+	 * @param date Date
+	 * @return Item table row (tr) element of a table
+	 */
 	public static String getTableRow(int id, String name, int price, String imageUrl, int count, String category, int maxInStock, boolean inPayment, Date date) {
 		String tableRow = "";
 		
@@ -108,6 +159,15 @@ public class HtmlHelper {
 		return tableRow;
 	}
 
+	/**
+	 * Generic item table row (tr) checkbox element as HTML string of a table.
+	 * 
+	 * @param request Servlet request
+	 * @param category Item category
+	 * @param element Element name
+	 * @param filteredMap Map of filtered checkbox elements
+	 * @return Item table row (tr) checkbox element of a table 
+	 */
 	public static String getCheckboxRow(HttpServletRequest request, String category, String element, Map<String, String[]> filteredMap) {
 		Map<String, String> map = new HashMap<>();
 		ResultSet rs = null;
@@ -166,6 +226,17 @@ public class HtmlHelper {
 		return tableRow;
 	}
 	
+	/**
+	 * Generic item table row (tr) slider element as HTML string of a table.
+	 * 
+	 * @param request Servlet request
+	 * @param category Item category
+	 * @param element Element name
+	 * @param valute Price valute
+	 * @param currentLow Default low value
+	 * @param currentHigh Default high value
+	 * @return Item table row (tr) slider element of a table 
+	 */
 	public static String getSlider(HttpServletRequest request, String category, String element, String valute, int currentLow, int currentHigh) {
 		String tableRow = "";
 	
@@ -192,12 +263,27 @@ public class HtmlHelper {
 		return tableRow;
 	}
 
+	/**
+	 * Gets an item instance by category and retrieves filter elements from filtered map.
+	 * 
+	 * @param request Servlet request
+	 * @param category Item category
+	 * @param filteredMap Filtered map
+	 * @return Filtered elements as HTML string based on the category
+	 */
 	public static String getAllFilterElementsFromCategory(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
 		return Helper
 				.getItemInstanceByCategory(category)
 				.getFilterElements(request, category, filteredMap);
 	}
 
+	/**
+	 * Logic for item information retrieval.
+	 * 
+	 * @param id Item id
+	 * @param request Servlet request
+	 * @return Formatted item information
+	 */
 	public static String getItemInfo(String id, HttpServletRequest request) {
 		String category = Helper.getCategoryById(id);
 		Item item = Helper.getItemInstanceByCategory(category);
@@ -205,6 +291,13 @@ public class HtmlHelper {
 		return item.getAllItemInformation(request);
 	}
 
+	/**
+	 * Logic for information retrieval of all items.
+	 * 
+	 * @param id Item id
+	 * @param request Servlet request
+	 * @return Formatted information for all items
+	 */
 	public static String getAllItemInformation(int id, HttpServletRequest request) {
 		String allItemInformation = "";
 		ResultSetMetaData rsmd = null;
@@ -241,7 +334,14 @@ public class HtmlHelper {
 		
 		return allItemInformation;
 	}
-	
+
+	/**
+	 * Generic item info row (tr) element as HTML string of a table.
+	 * 
+	 * @param valueLeft Left column value
+	 * @param valueRight Right column value
+	 * @return Item info table row (tr) element of the information table 
+	 */
 	public static String getItemInfoRow(String valueLeft, String valueRight) {
 		String itemInfoRow = "";
 		
@@ -253,6 +353,12 @@ public class HtmlHelper {
 		return itemInfoRow;
 	}
 	
+	/**
+	 * Logic for displaying purchased items of a user.
+	 * 
+	 * @param request Servlet request
+	 * @return Display of user's purchased items as HTML string.
+	 */
 	public static String getPurchasedShoppingCartItems(HttpServletRequest request) {
 		String username = request.getUserPrincipal().getName();
 		PurchasedShoppingCart cart = PurchasedShoppingCart.getInstance(username, request);
@@ -268,6 +374,12 @@ public class HtmlHelper {
 		return result;
 	}
 
+	/**
+	 * Logic for displaying all users data (admin).
+	 * 
+	 * @param request Servlet request
+	 * @return All users data as HTML string for admin panel
+	 */
 	public static String getAllUsersData(HttpServletRequest request) {
 		String usersData = "";
 		
