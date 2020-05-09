@@ -9,7 +9,7 @@ Korišteni programi i literatura:
     - @Component, @Bean, @RequestMapping...
   - _Java Servlet Page sadržaj kao frontend_ 
   - _Učitavanje sadržaja i animacije:_
-    -JavaScript, JQuery
+    - JavaScript, JQuery
   - _Dizajn:_
     - CSS3, HTML5
   - developer.paypal.com
