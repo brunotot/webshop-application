@@ -18,3 +18,5 @@ Korišteni programi i literatura:
   
 Općenito o web stranici:
 Web trgovina u kojoj se mogu pretraživati kategorije i filtrirati. Ideja je bila da to bude trgovina elektroničkih naprava kao što su laptopi, kompjuteri, mobiteli itd. Za svaku kategoriju je moguće pretraživati po nekim stavkama kao što su cijena, naziv, RAM, HDD, SSD itd. Postoje 3 'razine' autentikacije: anonymous, user i admin. Admin ima posebnu "Admin panel" sekciju u kojoj može vidjeti koji su sve useri registrirani (ujedno pokazuje mogućnost ručnog spajanja na bazu i upravljanje istim). User ne može pristupiti admin sekciji, no može pristupiti user postavkama kao i prošlosti svojih kupovina. Anonymous može samo pregledavati i filtrirati proizvode, stavljati ih u košaricu i uređivati košaricu. Ukoliko anonymous želi obaviti transakciju onda se mora registrirati. Transakcija se obavlja preko developer paypala u svrhe testiranja.
+
+Sva potrebna dokumentacija za JAVA kod se nalazi u https://github.com/brunotot/webshop-application/tree/master/doc
