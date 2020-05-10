@@ -357,7 +357,7 @@ public class MainController {
 				int id = item.getItem().getId();
 				int count = item.getCount();
 				String name = item.getItem().getFullName();
-				String image = item.getItem().getImageUrl();
+				String image = item.getItem().getImage();
 				int price = item.getItem().getPrice();
 				Helper.executePreparedQuery(conn, preparedQuery, username, id, count, date, name, image, price);
 			}

@@ -1,10 +1,14 @@
 package com.brunotot.webshop.merchandise;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.brunotot.webshop.content.HtmlHelper;
 import com.brunotot.webshop.content.Item;
@@ -14,334 +18,443 @@ import com.brunotot.webshop.util.Helper;
 
 public class Phone implements Item {
 	
-	/**
-	 * Phone id.
-	 */
 	private int id;
-
-	/**
-	 * Phone name.
-	 */
-	private String name;
-
-	/**
-	 * Phone manufacturer.
-	 */
-	private String manufacturer;
-
-	/**
-	 * Phone graphics card.
-	 */
-	private String gpu;	
-
-	/**
-	 * Phone graphics card name.
-	 */
-	private String gpuName;
-
-	/**
-	 * Phone processor.
-	 */
-	private String cpu;	
-
-	/**
-	 * Phone processor name.
-	 */
-	private String cpuName;
-
-	/**
-	 * Phone processor cores count.
-	 */
-	private int cpuCores;
-
-	/**
-	 * Phone RAM amount.
-	 */
-	private int ram;
-
-	/**
-	 * Phone HDD amount.
-	 */
-	private int hdd;
-
-	/**
-	 * Phone image URL.
-	 */
-	private String imageUrl;
-
-	/**
-	 * Phone price.
-	 */
+	private String image;
 	private int price;
-	
-	/**
-	 * Phone maximum quantity in stock.
-	 */
-	private int maxInStock;
-	
-	/**
-	 * Item category.
-	 */
+	private int stock;
+	private String name;
+	private String brand;
+	private String processorBrand;
+	private String processorType;
+	private int processorCores;
+	private String gpuBrand;
+	private String gpuType;
+	private int ramSize;
+	private int hardDrive;
+	private String promotion;
+	private int warranty;
+	private String color;
+	private float screenSize;
+	private String screenType;
+	private String displayResolution;
+	private String operatingSystem;
+	private String bundledSoftware;
+	private String portsSlotsChassis;
+	private String cameraMicrophone;
+	private float clockSpeed;
+	private float frontSideBus;
+	private int maxExpandability;
+	private int memorySlots;
+	private int driveRotation;
+	private String opticalDriveType;
+	private String graphicsType;
+	private String wifi;
+	private String dlna;
+	private String bluetooth;
+	private String hdmi;
+	private String usb;
+	private String multicardReader;
+	private String compatibleMemoryCards;
+	private String batteryType;
+	private float batteryUpTo;
+	private float width;
+	private float depth;
+	private float height;
+	private float weight;
+	private String more;
 	private String category = "phones";
 	
-	/**
-	 * Empty constructor for Phone.
-	 */
-	public Phone() {
-		
+	public int getStock() {
+		return stock;
 	}
-	
-	/**
-	 * Getter method for item name.
-	 * 
-	 * @return Item name
-	 */
+
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Getter method for item manufacturer.
-	 * 
-	 * @return Item manufacturer
-	 */
-	public String getManufacturer() {
-		return manufacturer;
+	public String getBrand() {
+		return brand;
 	}
 
-	/**
-	 * Getter method for item graphics card.
-	 * 
-	 * @return Item graphics card
-	 */
-	public String getGpu() {
-		return gpu;
+	public String getProcessorBrand() {
+		return processorBrand;
 	}
 
-	/**
-	 * Getter method for item processor.
-	 * 
-	 * @return Item processor
-	 */
-	public String getCpu() {
-		return cpu;
+	public String getProcessorType() {
+		return processorType;
 	}
 
-	/**
-	 * Getter method for item RAM quantity.
-	 * 
-	 * @return Item RAM quantity
-	 */
-	public int getRam() {
-		return ram;
+	public int getProcessorCores() {
+		return processorCores;
 	}
 
-	/**
-	 * Getter method for item HDD quantity.
-	 * 
-	 * @return Item HDD quantity
-	 */
-	public int getHdd() {
-		return hdd;
+	public String getGpuBrand() {
+		return gpuBrand;
 	}
 
-	/**
-	 * Getter method for item image URL.
-	 * 
-	 * @return Item image URL
-	 */
-	public String getImageUrl() {
-		return imageUrl;
+	public String getGpuType() {
+		return gpuType;
 	}
 
-	/**
-	 * Getter method for item price.
-	 * 
-	 * @return Item price
-	 */
-	public int getPrice() {
-		return price;
+	public int getRamSize() {
+		return ramSize;
 	}
 
-	/**
-	 * Getter method for item id.
-	 * 
-	 * @return Item id
-	 */
-	public int getId() {
-		return id;
+	public int getHardDrive() {
+		return hardDrive;
 	}
 
-	/**
-	 * Getter method for max item quantity.
-	 * 
-	 * @return Maximum item quantity in stock
-	 */
-	public int getMaxInStock() {
-		return maxInStock;
-	}
-	
-	/**
-	 * Setter method for item name.
-	 * 
-	 * @param name New item name
-	 */
-	public void setName(String name) {
-		this.name = name;
+	public String getPromotion() {
+		return promotion;
 	}
 
-	/**
-	 * Setter method for item manufacturer.
-	 * 
-	 * @param manufacturer New item manufacturer
-	 */
-	public void setManufacturer(String manufacturer) {
-		this.manufacturer = manufacturer;
+	public int getWarranty() {
+		return warranty;
 	}
 
-	/**
-	 * Setter method for item graphics card.
-	 * 
-	 * @param gpu New item graphics card
-	 */
-	public void setGpu(String gpu) {
-		this.gpu = gpu;
+	public String getColor() {
+		return color;
 	}
 
-	/**
-	 * Setter method for item processor.
-	 * 
-	 * @param cpu New item processor
-	 */
-	public void setCpu(String cpu) {
-		this.cpu = cpu;
+	public float getScreenSize() {
+		return screenSize;
 	}
 
-	/**
-	 * Setter method for item RAM quantity.
-	 * 
-	 * @param ram New item RAM quantity
-	 */
-	public void setRam(int ram) {
-		this.ram = ram;
+	public String getScreenType() {
+		return screenType;
 	}
 
-	/**
-	 * Setter method for item HDD quantity.
-	 * 
-	 * @param hdd New item HDD quantity
-	 */
-	public void setHdd(int hdd) {
-		this.hdd = hdd;
+	public String getDisplayResolution() {
+		return displayResolution;
 	}
 
-	/**
-	 * Setter method for item image URL.
-	 * 
-	 * @param imageUrl New item image URL
-	 */
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public String getOperatingSystem() {
+		return operatingSystem;
 	}
 
-	/**
-	 * Setter method for item price.
-	 * 
-	 * @param price New item price
-	 */
+	public String getBundledSoftware() {
+		return bundledSoftware;
+	}
+
+	public String getPortsSlotsChassis() {
+		return portsSlotsChassis;
+	}
+
+	public String getCameraMicrophone() {
+		return cameraMicrophone;
+	}
+
+	public float getClockSpeed() {
+		return clockSpeed;
+	}
+
+	public float getFrontSideBus() {
+		return frontSideBus;
+	}
+
+	public int getMaxExpandability() {
+		return maxExpandability;
+	}
+
+	public int getMemorySlots() {
+		return memorySlots;
+	}
+
+	public int getDriveRotation() {
+		return driveRotation;
+	}
+
+	public String getOpticalDriveType() {
+		return opticalDriveType;
+	}
+
+	public String getGraphicsType() {
+		return graphicsType;
+	}
+
+	public String getWifi() {
+		return wifi;
+	}
+
+	public String getDlna() {
+		return dlna;
+	}
+
+	public String getBluetooth() {
+		return bluetooth;
+	}
+
+	public String getHdmi() {
+		return hdmi;
+	}
+
+	public String getUsb() {
+		return usb;
+	}
+
+	public String getMulticardReader() {
+		return multicardReader;
+	}
+
+	public String getCompatibleMemoryCards() {
+		return compatibleMemoryCards;
+	}
+
+	public String getBatteryType() {
+		return batteryType;
+	}
+
+	public float getBatteryUpTo() {
+		return batteryUpTo;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public float getDepth() {
+		return depth;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public float getWeight() {
+		return weight;
+	}
+
+	public String getMore() {
+		return more;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
 
-	/**
-	 * Setter method for item id.
-	 * 
-	 * @param id New item id
-	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	/**
-	 * Getter method for item processor name.
-	 * 
-	 * @return Processor name
-	 */
-	public String getCpuName() {
-		return cpuName;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 
-	/**
-	 * Setter method for item processor name.
-	 * 
-	 * @param cpuName New item processor name
-	 */
-	public void setCpuName(String cpuName) {
-		this.cpuName = cpuName;
-	}
-	
-	/**
-	 * Getter method for item processor cores.
-	 * 
-	 * @return Processor cores
-	 */
-	public int getCpuCores() {
-		return cpuCores;
+	public void setProcessorBrand(String processorBrand) {
+		this.processorBrand = processorBrand;
 	}
 
-	/**
-	 * Setter method for item processor cores.
-	 * 
-	 * @param cpuCores New item processor cores
-	 */
-	public void setCpuCores(int cpuCores) {
-		this.cpuCores = cpuCores;
-	}
-	
-	/**
-	 * Getter method for item graphics card name.
-	 * 
-	 * @return String graphics card name
-	 */
-	public String getGpuName() {
-		return gpuName;
+	public void setProcessorType(String processorType) {
+		this.processorType = processorType;
 	}
 
-	/**
-	 * Setter method for item graphics card name.
-	 * 
-	 * @param gpuName New item graphics card name
-	 */
-	public void setGpuName(String gpuName) {
-		this.gpuName = gpuName;
+	public void setProcessorCores(int processorCores) {
+		this.processorCores = processorCores;
 	}
-	
+
+	public void setGpuBrand(String gpuBrand) {
+		this.gpuBrand = gpuBrand;
+	}
+
+	public void setGpuType(String gpuType) {
+		this.gpuType = gpuType;
+	}
+
+	public void setRamSize(int ramSize) {
+		this.ramSize = ramSize;
+	}
+
+	public void setHardDrive(int hardDrive) {
+		this.hardDrive = hardDrive;
+	}
+
+	public void setPromotion(String promotion) {
+		this.promotion = promotion;
+	}
+
+	public void setWarranty(int warranty) {
+		this.warranty = warranty;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public void setScreenSize(float screenSize) {
+		this.screenSize = screenSize;
+	}
+
+	public void setScreenType(String screenType) {
+		this.screenType = screenType;
+	}
+
+	public void setDisplayResolution(String displayResolution) {
+		this.displayResolution = displayResolution;
+	}
+
+	public void setOperatingSystem(String operatingSystem) {
+		this.operatingSystem = operatingSystem;
+	}
+
+	public void setBundledSoftware(String bundledSoftware) {
+		this.bundledSoftware = bundledSoftware;
+	}
+
+	public void setPortsSlotsChassis(String portsSlotsChassis) {
+		this.portsSlotsChassis = portsSlotsChassis;
+	}
+
+	public void setCameraMicrophone(String cameraMicrophone) {
+		this.cameraMicrophone = cameraMicrophone;
+	}
+
+	public void setClockSpeed(float clockSpeed) {
+		this.clockSpeed = clockSpeed;
+	}
+
+	public void setFrontSideBus(float frontSideBus) {
+		this.frontSideBus = frontSideBus;
+	}
+
+	public void setMaxExpandability(int maxExpandability) {
+		this.maxExpandability = maxExpandability;
+	}
+
+	public void setMemorySlots(int memorySlots) {
+		this.memorySlots = memorySlots;
+	}
+
+	public void setDriveRotation(int driveRotation) {
+		this.driveRotation = driveRotation;
+	}
+
+	public void setOpticalDriveType(String opticalDriveType) {
+		this.opticalDriveType = opticalDriveType;
+	}
+
+	public void setGraphicsType(String graphicsType) {
+		this.graphicsType = graphicsType;
+	}
+
+	public void setWifi(String wifi) {
+		this.wifi = wifi;
+	}
+
+	public void setDlna(String dlna) {
+		this.dlna = dlna;
+	}
+
+	public void setBluetooth(String bluetooth) {
+		this.bluetooth = bluetooth;
+	}
+
+	public void setHdmi(String hdmi) {
+		this.hdmi = hdmi;
+	}
+
+	public void setUsb(String usb) {
+		this.usb = usb;
+	}
+
+	public void setMulticardReader(String multicardReader) {
+		this.multicardReader = multicardReader;
+	}
+
+	public void setCompatibleMemoryCards(String compatibleMemoryCards) {
+		this.compatibleMemoryCards = compatibleMemoryCards;
+	}
+
+	public void setBatteryType(String batteryType) {
+		this.batteryType = batteryType;
+	}
+
+	public void setBatteryUpTo(float batteryUpTo) {
+		this.batteryUpTo = batteryUpTo;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public void setDepth(float depth) {
+		this.depth = depth;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
+	public void setWeight(float weight) {
+		this.weight = weight;
+	}
+
+	public void setMore(String more) {
+		this.more = more;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	@Override
 	public String getDivElement() {
-		return HtmlHelper.getItemDiv(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), this.category);
+		return HtmlHelper.getItemDiv(this.id, this.getFullName(), this.price, this.image, this.category);
 	}
 	
 	@Override
 	public String getTableRowElement(int count, boolean inPayment) {
-		return HtmlHelper.getTableRow(this.getId(), this.getFullName(), this.getPrice(), this.getImageUrl(), count, this.category, this.maxInStock, inPayment, null);
+		return HtmlHelper.getTableRow(this.id, this.getFullName(), this.price, this.image, count, this.category, this.stock, inPayment, null);
 	}
 	
 	@Override
 	public void setAllDataFromResultSet(ResultSet tableRowData) {
 		try {
 			this.id = tableRowData.getInt("id");
-			this.name = tableRowData.getString("name");
-			this.manufacturer = tableRowData.getString("manufacturer");
-			this.gpu = tableRowData.getString("gpu");
-			this.gpuName = tableRowData.getString("gpuName");
-			this.cpu = tableRowData.getString("cpu");
-			this.ram = tableRowData.getInt("ram");
-			this.hdd = tableRowData.getInt("hdd");
-			this.imageUrl = tableRowData.getString("image");
+			this.image = tableRowData.getString("image");
 			this.price = tableRowData.getInt("price");
-			this.cpuName = tableRowData.getString("cpuname");
-			this.cpuCores = tableRowData.getInt("cpucores");
-			this.maxInStock = tableRowData.getInt("stock");
+			this.stock = tableRowData.getInt("stock");
+			this.name = tableRowData.getString("name");
+			this.brand = tableRowData.getString("brand");
+			this.processorBrand = tableRowData.getString("processorBrand");
+			this.processorType = tableRowData.getString("processorType");
+			this.processorCores = tableRowData.getInt("processorCores");
+			this.gpuBrand = tableRowData.getString("gpuBrand");
+			this.gpuType = tableRowData.getString("gpuType");
+			this.ramSize = tableRowData.getInt("ramSize");
+			this.hardDrive = tableRowData.getInt("hardDrive");
+			this.promotion = tableRowData.getString("promotion");
+			this.warranty = tableRowData.getInt("warranty");
+			this.color = tableRowData.getString("color");
+			this.screenSize = tableRowData.getFloat("screenSize");
+			this.displayResolution = tableRowData.getString("displayResolution");
+			this.operatingSystem = tableRowData.getString("operatingSystem");
+			this.bundledSoftware = tableRowData.getString("bundledSoftware");
+			this.portsSlotsChassis = tableRowData.getString("portsSlotsChassis");
+			this.cameraMicrophone = tableRowData.getString("cameraMicrophone");
+			this.clockSpeed = tableRowData.getFloat("clockSpeed");
+			this.frontSideBus = tableRowData.getFloat("frontSideBus");
+			this.maxExpandability = tableRowData.getInt("maxExpandability");
+			this.memorySlots = tableRowData.getInt("memorySlots");
+			this.driveRotation = tableRowData.getInt("driveRotation");
+			this.opticalDriveType = tableRowData.getString("opticalDriveType");
+			this.wifi = tableRowData.getString("wifi");
+			this.dlna = tableRowData.getString("dlna");
+			this.bluetooth = tableRowData.getString("bluetooth");
+			this.hdmi = tableRowData.getString("hdmi");
+			this.usb = tableRowData.getString("usb");
+			this.multicardReader = tableRowData.getString("multicardReader");
+			this.compatibleMemoryCards = tableRowData.getString("compatibleMemoryCards");
+			this.batteryType = tableRowData.getString("batteryType");
+			this.batteryUpTo = tableRowData.getFloat("batteryUpTo");
+			this.width = tableRowData.getFloat("width");
+			this.depth = tableRowData.getFloat("depth");
+			this.height = tableRowData.getFloat("height");
+			this.weight = tableRowData.getFloat("weight");
+			this.more = tableRowData.getString("more");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -349,15 +462,14 @@ public class Phone implements Item {
 	
 	@Override
 	public String getFullName() {
-		return this.manufacturer + " " +
+		return this.brand + " " +
 				   this.name + " " +
-				   this.cpu + " " +
-				   this.cpuName + " " +
-				   Helper.getNumberOfCoresAsWord(this.cpuCores) + "-" + "Core, " +
-				   this.gpu + " " + 
-				   this.gpuName + " " +
-				   this.ram + "GB RAM" + 
-				   (this.hdd == 0 ? "" : (", " + this.hdd + "GB HDD"));
+				   this.processorBrand + " " +
+				   this.processorType + " " +
+				   this.processorCores + "-" + "Core, " +
+				   this.graphicsType + 
+				   this.ramSize + "GB RAM" + 
+				   (this.hardDrive == 0 ? "" : (", " + this.hardDrive + "GB HDD"));
 	}
 	
 	@Override
@@ -376,9 +488,9 @@ public class Phone implements Item {
 		}
 		
 		result += HtmlHelper.getSlider(request, category, "price", "&euro;", price1, price2);
-		result += HtmlHelper.getSlider(request, category, "ram", "GB", ram1, ram2);
-		result += HtmlHelper.getCheckboxRow(request, category, "manufacturer", filteredMap);
-		result += HtmlHelper.getCheckboxRow(request, category, "gpu", filteredMap);
+		result += HtmlHelper.getSlider(request, category, "ramSize", "GB", ram1, ram2);
+		result += HtmlHelper.getCheckboxRow(request, category, "brand", filteredMap);
+		result += HtmlHelper.getCheckboxRow(request, category, "gpuBrand", filteredMap);
 		return result;
 	}
 
@@ -393,8 +505,8 @@ public class Phone implements Item {
 	}
 
 	@Override
-	public void setMaxInStock(int stock) {
-		this.maxInStock = stock;
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	@Override
@@ -403,7 +515,72 @@ public class Phone implements Item {
 	}
 
 	@Override
-	public String getInsertQuery() {
-		return "INSERT INTO `info_phones`(`id`, `image`, `price`, `stock`, `promotion`, `warranty`, `brand`, `color`, `screenSize`, `screenType`, `displayResolution`, `officeIncluded`, `operatingSystem`, `bundledSoftware`, `portsSlotsChassis`, `cameraMicrophone`, `processorBrand`, `processor`, `processorType`, `clockSpeed`, `frontSideBus`, `ramSize`, `maxExpandability`, `memorySlots`, `hardDrive`, `driveRotation`, `opticalDriveType`, `graphicsType`, `wifi`, `dlna`, `bluetooth`, `hdmi`, `usb`, `multicardReader`, `compatibleMemoryCards`, `batteryType`, `batteryUpTo`, `width`, `depth`, `height`, `weight`, `more`) VALUES ((select ifnull(max(id), " + Constants.UNIQUE_IDENTIFIER_PHONE + "0000)+1 from info_phones maxId),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public void setId(int id) {
+		this.id = id;
 	}
+
+	@Override
+	public int getPrice() {
+		return this.price;
+	}
+
+	@Override
+	public int getId() {
+		return this.id;
+	}
+
+	@Override
+	public String getImage() {
+		return this.image;
+	}
+
+	@Override
+	public void insertIntoDatabase(HttpServletRequest request) throws Exception {
+		String preparedQuery = "INSERT INTO `info_phones`(`id`, `image`, `price`, `stock`, `name`, `brand`, `processorBrand`, `processorType`, `processorCores`, `gpuBrand`, `gpuType`, `ramSize`, `hardDrive`, `promotion`, `warranty`, `color`, `screenSize`, `screenType`, `displayResolution`, `operatingSystem`, `bundledSoftware`, `portsSlotsChassis`, `cameraMicrophone`, `clockSpeed`, `frontSideBus`, `maxExpandability`, `memorySlots`, `driveRotation`, `opticalDriveType`, `wifi`, `dlna`, `bluetooth`, `hdmi`, `usb`, `multicardReader`, `compatibleMemoryCards`, `batteryType`, `batteryUpTo`, `width`, `depth`, `height`, `weight`, `more`) VALUES ((select ifnull(max(id), " + Constants.UNIQUE_IDENTIFIER_PHONE + "0000)+1 from info_phones maxId),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Connection conn = ((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection();
+		Helper.executePreparedQuery(conn, preparedQuery,
+				this.image,
+				this.price,
+				this.stock,
+				this.name,
+				this.brand,
+				this.processorBrand,
+				this.processorType,
+				this.processorCores,
+				this.gpuBrand,
+				this.gpuType,
+				this.ramSize,
+				this.hardDrive,
+				this.promotion,
+				this.warranty,
+				this.color,
+				this.screenSize,
+				this.screenType,
+				this.displayResolution,
+				this.operatingSystem,
+				this.bundledSoftware,
+				this.portsSlotsChassis,
+				this.cameraMicrophone,
+				this.clockSpeed,
+				this.frontSideBus,
+				this.maxExpandability,
+				this.memorySlots,
+				this.driveRotation,
+				this.opticalDriveType,
+				this.wifi,
+				this.dlna,
+				this.bluetooth,
+				this.hdmi,
+				this.usb,
+				this.multicardReader,
+				this.compatibleMemoryCards,
+				this.batteryType,
+				this.batteryUpTo,
+				this.width,
+				this.depth,
+				this.height,
+				this.weight,
+				this.more);
+	}
+	
 }

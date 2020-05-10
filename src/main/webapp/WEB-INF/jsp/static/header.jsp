@@ -25,7 +25,7 @@
 				<div class="dropdown-content">
 					<a id="dropdown-shoppingcart" href='<c:url value="/shoppingcart"/>'>Shopping cart <span id="items-counter-mobile">(<%= itemsCounter %>)</span></a>
 					<a href='<c:url value="/user/settings"/>'>Settings</a>
-					<c:if test="<%= Helper.isUserAuthenticated(request) %>">
+					<c:if test="<%= Helper.isUserInRole(request) %>">
          				<a href='<c:url value="/admin/panel"/>'>Admin panel</a>
       				</c:if> 
 					<a href='<c:url value="/logout"/>'>Logout</a>

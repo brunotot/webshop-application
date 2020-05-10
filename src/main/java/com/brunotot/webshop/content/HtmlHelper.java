@@ -3,7 +3,6 @@ package com.brunotot.webshop.content;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +20,7 @@ import com.brunotot.webshop.util.Helper;
  * @author Bruno
  *
  */
+@SuppressWarnings("unchecked")
 public class HtmlHelper {
 	
 	/**
@@ -58,7 +58,7 @@ public class HtmlHelper {
 			
 			if (rs != null) {
 				while (rs.next()) {
-					Item item = Helper.getItemInstanceByCategory(category);
+					Item item = ((Map<String, Item>) Helper.getBeanFromRequest(request, Constants.BEAN_ITEM_INSTANCE_BY_CATEGORY_MAP)).get(category);
 					item.setAllDataFromResultSet(rs);
 					result += HtmlHelper.addLine(item.getDivElement());		
 				}
@@ -174,7 +174,7 @@ public class HtmlHelper {
 		Map<String, String> map = new HashMap<>();
 		ResultSet rs = null;
 		try {
-			String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "`;";
+			String preparedQuery = "select * from `info_" + Helper.getEscapedQueryVariable(category) + "`;";
 			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
 			while (rs.next()) {
 				String elem = rs.getString(element);
@@ -190,14 +190,17 @@ public class HtmlHelper {
 			}
 		}
 		
+		String leftColumn = ((Map<String, String>) Helper.getBeanFromRequest(request, Constants.BEAN_INFO_TABLE_LEFT_COLUMN_KEY_MAP)).get(element);
+		String option = ((Map<String, String>) Helper.getBeanFromRequest(request, Constants.BEAN_OPTIONS_MAP)).get(element);
+		
 		String tableRow = "";
 		tableRow += addLine("<tr>");
-		tableRow += addLine("<td id='left-col'>" + Helper.getLeftColName(element) + ":</td>");
+		tableRow += addLine("<td id='left-col'>" + leftColumn + ":</td>");
 		tableRow += addLine("<td id='right-col'>");
 		tableRow += addLine("<div class='multiselect'>");
 		tableRow += addLine("<div class='selectBox' onclick=\"showCheckboxes('" + element + "')\">");
 		tableRow += addLine("<select>");
-		tableRow += addLine("<option>" + Helper.getOptionDescription(element) + "</option>");
+		tableRow += addLine("<option>" + option + "</option>");
 		tableRow += addLine("</select>");
 		tableRow += addLine("<div class='overSelect'></div>");
 		tableRow += addLine("</div>");
@@ -245,13 +248,15 @@ public class HtmlHelper {
 		int low = Helper.getLowestFromCategory(request, category, element);
 		int high = Helper.getHighestFromCategory(request, category, element);
 		
-		if (element.equals("ram")) {
+		if (element.equals("ramSize")) {
 			low = (int) (Math.log(low) / Math.log(2));
 			high = (int) (Math.log(high) / Math.log(2));
 		}
 		
+		String leftColumn = ((Map<String, String>) Helper.getBeanFromRequest(request, Constants.BEAN_INFO_TABLE_LEFT_COLUMN_KEY_MAP)).get(element);
+
 		tableRow += addLine("<tr>");
-		tableRow += addLine("<td id='left-col'>" + Helper.getLeftColName(element) + ":</td>");
+		tableRow += addLine("<td id='left-col'>" + leftColumn + ":</td>");
 		tableRow += addLine("<td id='right-col-slider'>");
 		tableRow += addLine("<section class='range-slider'>");
 		tableRow += addLine("<span class='rangeValues1'></span><span id='valute'>" + valute + "</span>");
@@ -274,8 +279,9 @@ public class HtmlHelper {
 	 * @return Filtered elements as HTML string based on the category
 	 */
 	public static String getAllFilterElementsFromCategory(HttpServletRequest request, String category, Map<String, String[]> filteredMap) {
-		return Helper
-				.getItemInstanceByCategory(category)
+		return ((Map<String, Item>) Helper
+				.getBeanFromRequest(request, Constants.BEAN_ITEM_INSTANCE_BY_CATEGORY_MAP))
+				.get(category)
 				.getFilterElements(request, category, filteredMap);
 	}
 
@@ -288,7 +294,7 @@ public class HtmlHelper {
 	 */
 	public static String getItemInfo(String id, HttpServletRequest request) {
 		String category = Helper.getCategoryById(id);
-		Item item = Helper.getItemInstanceByCategory(category);
+		Item item = ((Map<String, Item>) Helper.getBeanFromRequest(request, Constants.BEAN_ITEM_INSTANCE_BY_CATEGORY_MAP)).get(category);
 		item.setId(Integer.parseInt(id));
 		return item.getAllItemInformation(request);
 	}
@@ -296,6 +302,7 @@ public class HtmlHelper {
 	/**
 	 * Logic for information retrieval of item.
 	 * 
+	 * @param beanName Bean name
 	 * @param id Item id
 	 * @param request Servlet request
 	 * @return Formatted information for item
@@ -305,10 +312,9 @@ public class HtmlHelper {
 		ResultSetMetaData rsmd = null;
 		ResultSet rs = null;
 		try {			
-			String preparedQuery = "select * from `" + Constants.TABLE_INFO + "` where id=" + Helper.getEscapedQueryVariable(String.valueOf(id)) + ";";
+			String preparedQuery = "select * from `info_" + Helper.getCategoryById(id + "") + "` where id=" + Helper.getEscapedQueryVariable(String.valueOf(id)) + ";";
 			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 
-			@SuppressWarnings("unchecked")
 			Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, beanName);
 			
 			rsmd = rs.getMetaData();
@@ -366,10 +372,11 @@ public class HtmlHelper {
 		PurchasedShoppingCart cart = PurchasedShoppingCart.getInstance(username, request);
 		List<PurchasedShoppingCartItem> purchasedShoppingCartItems = cart.getPurchasedItemsList();
 		
+		Map<String, Item> itemInstanceByCategoryMap = ((Map<String, Item>) Helper.getBeanFromRequest(request, Constants.BEAN_ITEM_INSTANCE_BY_CATEGORY_MAP));
 		String result = "";
 		for (PurchasedShoppingCartItem purchasedShoppingCartItemObject : purchasedShoppingCartItems) {
 			String category = Helper.getCategoryById(String.valueOf(purchasedShoppingCartItemObject.getId()));
-			Item item = Helper.getItemInstanceByCategory(category);
+			Item item = itemInstanceByCategoryMap.get(category);
 			result += item.getTableRowElement(purchasedShoppingCartItemObject);
 		}
 		
@@ -391,7 +398,8 @@ public class HtmlHelper {
 			rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 			while (rs.next()) {
 				String username = rs.getString("username");
-				usersData += addLine("<p>" + username + "</p>");
+				String password = rs.getString("password");
+				usersData += addLine("<p>" + username + " : " + password + "</p>");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -406,9 +414,15 @@ public class HtmlHelper {
 		return usersData;
 	}
 	
-	public static String getAddItemTableForm(String beanName, HttpServletRequest request, String category) {
-		String itemTableForm = "";
-		
+	/**
+	 * Returns HTML representation of table form for adding items.
+	 * 
+	 * @param beanName Bean name
+	 * @param request Servlet request
+	 * @param category Item category
+	 * @return Add item table form
+	 */
+	public static String getAddItemTableForm(String beanName, HttpServletRequest request, String category) {		
 		DataSource dataSource = (DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE);
 		Statement st = null;
 		ResultSet rs = null;
@@ -418,12 +432,12 @@ public class HtmlHelper {
 			e.printStackTrace();
 		}
 		
-		@SuppressWarnings("unchecked")
+		String itemTableForm = "";
 		Map<String, String> infoColumnValues = (Map<String, String>) Helper.getBeanFromRequest(request, beanName);
 		for (Map.Entry<String, String> entry : infoColumnValues.entrySet()) {
 			String valueLeft = entry.getValue();
-			String commandLeft = entry.getKey();
-			String query = "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'info_" + category + "' AND COLUMN_NAME = '" + commandLeft + "'";
+			String input = entry.getKey();
+			String query = "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'info_" + category + "' AND COLUMN_NAME = '" + input + "'";
 			String type = "";
 			try {
 				rs = st.executeQuery(query);
@@ -432,9 +446,13 @@ public class HtmlHelper {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			String required = "";
+			if (Helper.isInputRequired(input)) {
+				required = "required";
+			}
 			itemTableForm += "<tr>" + "\\n";
 			itemTableForm += "<td style='text-align: right' bgcolor='lightgrey' class='left-col-item-info'>" + valueLeft + ": " + "</td>" + "\\n";
-			itemTableForm += "<td class='right-col-item-info'>" + "<input type='text' name='" + category + "_" + type + "_" + commandLeft + "'" + "</td>" + "\\n";
+			itemTableForm += "<td class='right-col-item-info'>" + "<input class='inputClass' placeholder='" + type + "' id='" + input + "' name='" + input + "' type='text' " + required + "/>" + "</td>" + "\\n";
 			itemTableForm += "</tr>" + "\\n";
 		}
 		

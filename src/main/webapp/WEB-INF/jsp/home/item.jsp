@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 
 <!-- FAVICON -->
-<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon' />
 
 <!-- CSS STYLING -->
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_MAIN %>">
@@ -43,7 +43,7 @@
 </head>
 <body>
 	<div class="main-container">
-		<header><jsp:include page="<%=Helper.getHeaderPath(request)%>" /></header>
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
 		
 		
 		<div class="main-wrapper">
@@ -52,11 +52,11 @@
 					HOMEPAGE <i class="fas fa-arrow-left"></i>
 				</button>
 				
-				<table style="width: 100%; margin-top: 20px;">
+				<table id="item-info">
 					<%= HtmlHelper.getItemInfo(id, request) %>
 				</table>
 				
-				<div style="width: 100%; text-align: center">
+				<div id="btn-div">
 					<button style="margin-top: 20px; padding: 8px 20px;" class='my-button' onclick="addItem(<%= id %>, '<%= Helper.getCategoryById(id) %>')"> <%= Constants.ADD_TO_CART %></button>
 				</div>
 				

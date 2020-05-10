@@ -32,7 +32,7 @@
 <link rel="stylesheet" type="text/css" href="<%= Constants.PATH_SRC + Constants.PATH_CSS + Constants.CSS_FILTER_STYLE %>">
 
 <!-- FAVICON -->
-<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon'/ >
+<link rel='icon' href='<%= Constants.FAVICON_URL %>' type='image/x-icon' />
 
 <!-- JQUERY -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

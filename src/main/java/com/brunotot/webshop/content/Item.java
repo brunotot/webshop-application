@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 public interface Item {
-
+	
 	/**
 	 * Sets all data to item from result set.
 	 * 
@@ -25,7 +25,7 @@ public interface Item {
 	 * 
 	 * @param stock Stock amount
 	 */
-	void setMaxInStock(int stock);
+	void setStock(int stock);
 
 	/**
 	 * Setter method for item id.
@@ -109,8 +109,13 @@ public interface Item {
 	 * 
 	 * @return Item image URL
 	 */
-	String getImageUrl();
-
-	String getInsertQuery();
+	String getImage();
 	
+	/**
+	 * Inserts item into database.
+	 * 
+	 * @param request Servlet request
+	 * @throws Exception If unable to insert item into database
+	 */
+	void insertIntoDatabase(HttpServletRequest request) throws Exception;
 }

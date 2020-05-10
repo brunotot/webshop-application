@@ -32,7 +32,7 @@
 </head>
 <body>
 	<div class="main-container">
-		<header><jsp:include page="../static/header.jsp"/></header>
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
 		
 		<div class="main-wrapper">
 			<div class="page-wrapper container">

@@ -8,7 +8,7 @@ package com.brunotot.webshop.util;
  */
 public class Constants {
 	
-	public static final int COOKIE_EXPIRATION_SECONDS = 30 * 7 * 24 * 60 * 60;
+	public static final int COOKIE_EXPIRATION_SECONDS = 60 * 60 * 24 * 30 * 6;
 	public static final int ITEM_NAME_MAX_CHARACTERS = 80;
 	public static final int JSP_PATH_DELIMITER = 4;
 	public static final String FAVICON_URL = "https://www.tvz.hr/app/themes/webdev/dist/img/logos/tvz-logo.svg";
@@ -23,6 +23,9 @@ public class Constants {
 	public static final String BEAN_INFO_COLUMN_VALUES_LAPTOP = "infoColumnValuesLaptop";
 	public static final String BEAN_INFO_COLUMN_VALUES_DESKTOP = "infoColumnValuesDesktop";
 	public static final String BEAN_INFO_COLUMN_VALUES_PHONE = "infoColumnValuesPhone";
+	public static final String BEAN_OPTIONS_MAP = "optionsMap";
+	public static final String BEAN_INFO_TABLE_LEFT_COLUMN_KEY_MAP = "infoTableLeftColumnKeyMap";
+	public static final String BEAN_ITEM_INSTANCE_BY_CATEGORY_MAP = "itemInstanceByCategoryMap";
 
 	public static final String TABLE_DESKTOPS = "desktops";
 	public static final String TABLE_LAPTOPS = "laptops";
@@ -55,6 +58,7 @@ public class Constants {
 	public static final String TITLE_PURCHASED_ITEMS = "Purchased items";
 	public static final String TITLE_ADMIN_PANEL = "Admin panel";
 	public static final String TITLE_ADMIN_USERS = "Users";
+	public static final String TITLE_ADMIN_ADDITEM = "Add new item";
 
 	public static final String UNIQUE_IDENTIFIER_LAPTOP = "1234";
 	public static final String UNIQUE_IDENTIFIER_PHONE = "4321";

@@ -1,21 +1,22 @@
 package com.brunotot.webshop.controller;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.brunotot.webshop.content.Item;
-import com.brunotot.webshop.util.Helper;
+import com.brunotot.webshop.merchandise.Desktop;
+import com.brunotot.webshop.merchandise.Laptop;
+import com.brunotot.webshop.merchandise.Phone;
 
 /**
  * Admin controller class.
@@ -57,11 +58,14 @@ public class AdminController {
 	/**
 	 * Maps to shoppolis/admin/additem.
 	 * 
+	 * @param success True or false whether new item was added successfully
 	 * @return Model for additem panel.
 	 */
 	@RequestMapping(value = "/additem", method = RequestMethod.GET)
-	public ModelAndView addItem() {
+	public ModelAndView addItem(@RequestParam(value = "success", defaultValue = "") String success) {
 		ModelAndView model = new ModelAndView();
+		model.addObject("success", success);
+		model.addObject("item", new Laptop());
 		model.setViewName("admin/add-item");
 		return model;
 	}
@@ -69,39 +73,64 @@ public class AdminController {
 	/**
 	 * Maps to shoppolis/admin/additem.
 	 * 
-	 * @return Post model for additem panel.
+	 * @param request Servlet request
+	 * @param laptop Laptop to add
+	 * @param bindingResult Binding result
+	 * @param model Current model
+	 * @param redirectAttributes Redirect attributes
+	 * @return Redirection URL
 	 */
-	@RequestMapping(value = "/additem", method = RequestMethod.POST)
-	public ModelAndView postAddItem(HttpServletRequest request) {
-		Map<String, String[]> inputs = request.getParameterMap();
-		List<Object> queryVariablesList = new ArrayList<>();
-		String category = "";
-		boolean flag = true;
-		for (Map.Entry<String, String[]> entry : inputs.entrySet()) {
-			String[] split = entry.getKey().split("_");
-			if (flag) {
-				flag = false;
-				category = split[0];
-			}
-			String value = entry.getValue()[0];
-			String variableType = split[1];
-			Object object = Helper.getFormattedObjectByVariableType(variableType, value);
-			queryVariablesList.add(object);
-		}
-		Object[] queryVariables = queryVariablesList.toArray(new Object[0]);
+	@RequestMapping(value = "/addlaptop", method = RequestMethod.POST)
+	public String postAddLaptopItem(HttpServletRequest request, @ModelAttribute("laptopitem") Laptop laptop, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 		try {
-			Connection conn = dataSource.getConnection().createStatement().getConnection();
-			Item item = Helper.getItemInstanceByCategory(category);
-			String preparedQuery = item.getInsertQuery();
-			Helper.executePreparedQuery(conn, preparedQuery, queryVariables);
-			conn.close();
+			laptop.insertIntoDatabase(request);
+			return "redirect:additem?success=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		ModelAndView model = new ModelAndView();
-		model.setViewName("admin/add-item");
-		return model;
+		return "redirect:additem?success=false";
+	}
+
+	/**
+	 * Maps to shoppolis/admin/additem.
+	 * 
+	 * @param request Servlet request
+	 * @param desktop Desktop to add
+	 * @param bindingResult Binding result
+	 * @param model Current model
+	 * @param redirectAttributes Redirect attributes
+	 * @return Redirection URL
+	 */
+	@RequestMapping(value = "/adddesktop", method = RequestMethod.POST)
+	public String postAddDesktopItem(HttpServletRequest request, @ModelAttribute("desktopitem") Desktop desktop, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+		try {
+			desktop.insertIntoDatabase(request);
+			return "redirect:additem?success=true";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:additem?success=false";
+	}
+
+	/**
+	 * Maps to shoppolis/admin/additem.
+	 * 
+	 * @param request Servlet request
+	 * @param phone Phone to add
+	 * @param bindingResult Binding result
+	 * @param model Current model
+	 * @param redirectAttributes Redirect attributes
+	 * @return Redirection URL
+	 */
+	@RequestMapping(value = "/addphone", method = RequestMethod.POST)
+	public String postAddPhoneItem(HttpServletRequest request, @ModelAttribute("phoneitem") Phone phone, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+		try {
+			phone.insertIntoDatabase(request);
+			return "redirect:additem?success=true";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:additem?success=false";
 	}
 	
 }

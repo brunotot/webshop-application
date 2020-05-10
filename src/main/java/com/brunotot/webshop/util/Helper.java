@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +23,6 @@ import org.springframework.web.util.UrlPathHelper;
 import com.brunotot.webshop.content.Item;
 import com.brunotot.webshop.content.ShoppingCart;
 import com.brunotot.webshop.content.ShoppingCartItem;
-import com.brunotot.webshop.merchandise.Desktop;
-import com.brunotot.webshop.merchandise.Laptop;
-import com.brunotot.webshop.merchandise.Phone;
 
 /**
  * Helper class.
@@ -46,7 +41,7 @@ public class Helper {
 	 * @return Result set by id.
 	 */
 	public static ResultSet getResultSetById(Statement st, int id, String dbName) {
-		String sql = "select * from `" + Helper.getEscapedQueryVariable(dbName) + "`;";
+		String sql = "select * from `info_" + Helper.getEscapedQueryVariable(dbName) + "`;";
 		try {
 			ResultSet rs = Helper.executePreparedQuery(st.getConnection(), sql); 
 			while (rs.next()) {
@@ -153,12 +148,12 @@ public class Helper {
 			item = clazz.getDeclaredConstructor().newInstance();
 			item.setAllDataFromResultSet(tableRowData);
 			
-			String sql = "select * from `" + Helper.getEscapedQueryVariable(category) + "` where id=?";
+			String sql = "select * from `info_" + Helper.getEscapedQueryVariable(category) + "` where id=?";
 			ResultSet rs = Helper.executePreparedQuery(st.getConnection(), sql, item.getId());
 			if (rs != null) {
 				rs.first();
 				int stock = rs.getInt("stock");
-				item.setMaxInStock(stock);
+				item.setStock(stock);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -178,7 +173,6 @@ public class Helper {
 		List<ShoppingCartItem> shoppingCartItems = cart.getItems();
 		for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
 			Item item = shoppingCartItem.getItem();
-			/* PROBLEM KADA SE DODAJU LAPTOP I PC U ISTO VRIJEME */
 			if (item != null) {
 				if (shoppingCartItem.getItem().getId() == id) {
 					return shoppingCartItem.getCount();
@@ -262,69 +256,6 @@ public class Helper {
 	}
 
 	/**
-	 * Initializator method for user role ant matchers.
-	 * 
-	 * @return Array of strings as ant matchers for user role.
-	 */
-	public static String[] getAntMatchersForUserRole() {
-		String[] allowed = new String[3];
-
-		allowed[0] = "/user";
-		allowed[1] = "/user/settings";
-		allowed[2] = "/user/payment";
-		
-		return allowed;
-	}
-
-	/**
-	 * Initializator method for admin role ant matchers.
-	 * 
-	 * @return Array of strings as ant matchers for admin role.
-	 */
-	public static String[] getAntMatchersForAdminRole() {
-		String[] allowed = new String[5];
-
-		allowed[0] = "/admin";
-		allowed[1] = "/admin/panel";
-		allowed[2] = "/user";
-		allowed[3] = "/user/settings";
-		allowed[4] = "/user/payment";
-		
-		return allowed;
-	}
-
-	/**
-	 * Initializator method for all roles ant matchers.
-	 * 
-	 * @return Array of strings as ant matchers for all roles.
-	 */
-	public static String[] getAntMatchersForAllRoles() {
-		String[] allowed = new String[1];
-
-		allowed[0] = "/";
-		
-		return allowed;
-	}
-
-	/**
-	 * Creates item instance by given category.
-	 * 
-	 * @param category Item category
-	 * @return Item instance by category
-	 */
-	public static Item getItemInstanceByCategory(String category) {
-		if (category.equals(Constants.CATEGORY_LAPTOPS)) {
-			return new Laptop();
-		} else if (category.equals(Constants.CATEGORY_PHONES)) {
-			return new Phone();
-		} else if (category.equals(Constants.CATEGORY_DESKTOPS)) {
-			return new Desktop();
-		}
-		
-		return null;
-	}
-	
-	/**
 	 * Finds lowest value from database by category and table column.
 	 * 
 	 * @param request Servlet request
@@ -334,7 +265,7 @@ public class Helper {
 	 */
 	public static int getLowestFromCategory(HttpServletRequest request, String category, String tableColumn) {
 		try {
-			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallest FROM `" + Helper.getEscapedQueryVariable(category) + "`;"; 
+			String preparedQuery = "SELECT MIN(" + tableColumn + ") AS smallest FROM `info_" + Helper.getEscapedQueryVariable(category) + "`;"; 
 			
 			ResultSet rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, Constants.BEAN_DATA_SOURCE)).getConnection(), preparedQuery);
 			rs.next();
@@ -357,7 +288,7 @@ public class Helper {
 	 */
 	public static int getHighestFromCategory(HttpServletRequest request, String category, String tableColumn) {
 		try {
-			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largest FROM `" + Helper.getEscapedQueryVariable(category) + "`;"; 
+			String preparedQuery = "SELECT MAX(" + tableColumn + ") AS largest FROM `info_" + Helper.getEscapedQueryVariable(category) + "`;"; 
 			
 			ResultSet rs = Helper.executePreparedQuery(((DataSource) Helper.getBeanFromRequest(request, "getDataSource")).getConnection(), preparedQuery);
 			rs.next();
@@ -371,58 +302,6 @@ public class Helper {
 	}
 	
 	/**
-	 * Formats number of cores as a word.
-	 * 
-	 * @param numberOfCores Item's number of cores
-	 * @return Formatted word for number of cores
-	 */
-	public static String getNumberOfCoresAsWord(int numberOfCores) {
-		if (numberOfCores == 2) {
-			return "Dual";
-		} else if (numberOfCores == 4) {
-			return "Quad";
-		} else if (numberOfCores == 6) {
-			return "Six";
-		} else if (numberOfCores == 8) {
-			return "Octa";
-		} else {
-			return numberOfCores + "";
-		}
-	}
-
-	/**
-	 * Formats content for left column of information table.
-	 * 
-	 * @param element Element name
-	 * @return Left column content of information table
-	 */
-	public static String getLeftColName(String element) {
-		if (element.equals("manufacturer")) {
-			return "Manufacturers";
-		} else if (element.equals("ram")){
-			return "RAM";
-		} else if (element.equals("price")) {
-			return "Price";
-		} else {
-			return "GPU brands";
-		}
-	}
-
-	/**
-	 * Formats option descriptions.
-	 * 
-	 * @param element Element name
-	 * @return Formatted option description
-	 */
-	public static String getOptionDescription(String element) {
-		if (element.equals("manufacturer")) {
-			return "Select manufacturers";
-		} else {
-			return "Select GPU brand";
-		}
-	}
-
-	/**
 	 * Finds submit form query from map by category.
 	 * 
 	 * @param category Item category
@@ -430,7 +309,7 @@ public class Helper {
 	 * @return Submit form query as string
 	 */
 	public static String getSubmitFormQuery(String category, Map<String, String[]> map) {
-		String preparedQuery = "select * from `" + Helper.getEscapedQueryVariable(category) + "` where ";
+		String preparedQuery = "select * from `info_" + Helper.getEscapedQueryVariable(category) + "` where ";
 		Map<String, List<String>> checkboxes = getCheckboxesMap(map);
 		String checkboxesConditions = getCheckboxesConditions(checkboxes);
 		for (Map.Entry<String, String[]> entry : map.entrySet()) {
@@ -565,48 +444,33 @@ public class Helper {
 	}
 
 	/**
-	 * Checks if given username is valid.
+	 * Checks if given input is marked as mandatory.
 	 * 
-	 * @param username Client's username
-	 * @return True if username is valid
+	 * @param input Input element
+	 * @return True if input is mandatory
 	 */
-	public static boolean isValid(String username) {
-		Pattern p = Pattern.compile("[^A-Za-z0-9]");
-	    Matcher m = p.matcher(username);
-	    if (m.find()) {
-	    	return false;
-	    }
-	    return true;
+	public static boolean isInputRequired(String input) {
+		if (input.equals("image") || input.equals("hardDrive") ||
+				input.equals("price") || input.equals("stock") ||
+				input.equals("ramSize") || input.equals("gpuBrand") ||
+				input.equals("gpuType") || input.equals("processorCores") ||
+				input.equals("processorBrand") || input.equals("processorType") ||
+				input.equals("name") || input.equals("brand")) {
+			return true;
+		}
+			
+		
+		return false;
 	}
-	
+
 	/**
-	 * Checks if user is authenticated.
+	 * Checks if user is admin.
 	 * 
 	 * @param request Servlet request
-	 * @return True if user is admin.
+	 * @return True if user is admin
 	 */
-	public static boolean isUserAuthenticated(HttpServletRequest request) {
+	public static boolean isUserInRole(HttpServletRequest request) {
 		return request.isUserInRole("ROLE_ADMIN");
 	}
-
-	public static Object getFormattedObjectByVariableType(String variableType, String value) {
-		if (value == null || value.equals("")) {
-			if (variableType.equals("varchar")) {
-				return new String("");
-			} else if (variableType.equals("int")) {
-				return Integer.valueOf(-1);
-			} else {
-				return Float.valueOf(-1.0F);
-			}
-		}
-		
-		if (variableType.equals("varchar")) {
-			return new String(value);
-		} else if (variableType.equals("int")) {
-			return Integer.valueOf(value);
-		} else {
-			return Float.valueOf(value);
-		}
-	}
-
+	
 }

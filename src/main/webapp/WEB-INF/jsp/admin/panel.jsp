@@ -31,7 +31,7 @@
 </head>
 <body>
 	<div class="main-container">
-		<header><jsp:include page="../static/header.jsp"/></header>
+		<header><jsp:include page="<%= Helper.getHeaderPath(request) %>" /></header>
 		
 		<div class="main-wrapper">
 			<div class="page-wrapper container">
@@ -40,7 +40,7 @@
 						HOMEPAGE <i class="fas fa-arrow-left"></i>
 					</button>
 					
-					<ul>
+					<ul style="list-style-type: none; margin: 0 auto; text-align: center; padding-right: 30px;">
 						<li><a href='<c:url value="/admin/users"/>'>Users</a></li>
 						<li><a href='<c:url value="/admin/additem"/>'>Add new item</a></li>
 					</ul>

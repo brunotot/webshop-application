@@ -1,5 +1,8 @@
 package com.brunotot.webshop.controller;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +72,12 @@ public class UserController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ModelAndView register(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword) {
 		String errorMessage = "";
-		if (!Helper.isValid(username)) {
+		Pattern p = Pattern.compile("[^A-Za-z0-9]");
+	    Matcher m = p.matcher(username);
+	    if (m.find()) {
 			errorMessage += "Invalid username!\\n";
-		}
-		
+	    }
+	    
 		if (userService.userExists(username)) {
 			errorMessage += "Username already exists!\\n";
 		}
