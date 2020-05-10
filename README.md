@@ -8,6 +8,7 @@ Korišteni programi i literatura:
   - _Spring Boot MVC tehnologija_
     - @Component, @Bean, @RequestMapping...
   - _Java Servlet Page sadržaj kao frontend_ 
+    - Cookies
   - _Učitavanje sadržaja i animacije:_
     - JavaScript, JQuery
   - _Dizajn:_
